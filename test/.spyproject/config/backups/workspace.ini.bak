@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['t1.py', 'text.txt', 't2.py', 'autoTest1.py', 't3.py']
+recent_files = ['t3.py', 'fixed.py', 'auto.py', 't1.py', 't2.py']
 
 [main]
 version = 0.2.0
