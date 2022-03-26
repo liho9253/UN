@@ -20,6 +20,7 @@ element = WebDriverWait(driver, 10).until(
     EC.presence_of_element_located((By.LINK_TEXT, "66,435,527"))
 )
 number = driver.find_elements_by_class_name("number")
+
 with open('text.txt', "a") as f:
     for num in number:
         f.write(num.text)
