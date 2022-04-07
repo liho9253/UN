@@ -18,7 +18,7 @@ def Task():
     #     for i in range(0,len(s)):
     #         msg.append(s[i])
     driver.get("http://yibian.hopto.org/acu/")
-    for i in range(1,8):
+    for i in range(1,3):
         for j in range(1,3):
             t1 = driver.find_element_by_xpath("/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table/tbody/tr[2]/td[1]/table/tbody/tr["+str(i)+"]/td["+str(j)+"]/a")
             t1.click()
@@ -26,11 +26,11 @@ def Task():
                 for k in range(1,40):
                     for z in range(1,3):
                         try:
-                            t2 = driver.find_element_by_xpath("/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table/tbody/tr[2]/td[3]/table/tbody/tr["+str(k)+"]/td["+str(z)+"]/a")
-                            t2.click()
-                            WebDriverWait(driver, 10).until(
-                                EC.presence_of_element_located((By.XPATH, "/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table[2]/tbody/tr/td/font[1]"))
-                                )
+                            # t2 = driver.find_element_by_xpath("/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table/tbody/tr[2]/td[3]/table/tbody/tr["+str(k)+"]/td["+str(z)+"]/a")
+                            # t2.click()
+                            # WebDriverWait(driver, 10).until(
+                            #     EC.presence_of_element_located((By.XPATH, "/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table[2]/tbody/tr/td/font[1]"))
+                            #     )
                             driver.back()
                             # print(driver.find_element_by_xpath("/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table[1]/tbody/tr[1]/td[2]/b").text)
                             # name_s = driver.find_element_by_xpath("/html/body/table/tbody/tr[3]/td/table/tbody/tr[2]/td[1]/table[1]/tbody/tr[1]/td[2]/b").text
