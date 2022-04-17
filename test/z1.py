@@ -1,16 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/Test_farP"
-
 db = SQLAlchemy(app)
 
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
+db.init_app(app)
+
 class Model(db.Model):
+    
     __tablename__ = 'Test_farP'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +28,17 @@ class Model(db.Model):
 
     
 
+@app.route('/')
+def index():
 
+    sql_cmd = """
+        select *
+        from product
+        """
+
+    query_data = db.engine.execute(sql_cmd)
+    print(query_data)
+    return 'ok'
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5000, debug=True)
