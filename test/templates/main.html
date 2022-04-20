@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遠傳NT工單匯入系統</title>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/style.css" rel="stylesheet">
+    <script src="../static/js/jquery.min.js"></script>
+    <SCRIPT type="text/javascript">
+        $(function () {
+            //+展開 -收合
+            $("a").click(function () {
+                var _this = $(this).attr("href");
+                if ($(_this).css("display") == "none") {
+                    $(_this).slideDown();
+                    $(this).html("-");
+                } else {
+                    $(_this).slideUp();
+                    $(this).html("+");
+                }
+                return false;
+            });
+        });
+    </SCRIPT>
+
+
+</head>
+<style>
+    .page-item.active .page-link {
+        background-color: crimson;
+        color: aliceblue;
+        border-color: crimson;
+    }
+
+    .page-link {
+        color: black;
+    }
+
+    .a {
+        color: rgb(0, 0, 0);
+    }
+
+    a:not([href]):not([tabindex]):focus,
+    a:not([href]):not([tabindex]):hover {
+        color: white;
+        background-color: rgb(204, 13, 51);
+        border-color: rgb(204, 13, 51);
+    }
+
+    .table td,
+    .table th {
+        vertical-align: inherit;
+    }
+
+    #picture {
+        width: 100%;
+        height: 30vh;
+        background-color: crimson;
+        margin-bottom: 0px;
+    }
+</style>
+
+<body>
+    <section id="picture">
+        <div class="picture-container">
+            <h1>遠傳NT工單匯入系統</h1>
+            <h2>FET NT work order import system</h2>
+            <a href="#about" class="btn-get-started scrollto"><i class="fas fa-angle-double-down"></i></a>
+        </div>
+    </section>
+    <div class="container" style="padding-top: 50px;">
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr style="background-color: crimson; color: white;">
+                    <th style="text-align: center;">SR_ID</th>
+
+                    <th style="text-align: center;">PLAN_START_DATE_TEXT</th>
+
+                    <th style="text-align: center;">PLAN_END_DATE_TEXT</th>
+
+                    <th style="text-align: center;">SUBJECT</th>
+
+                    <th style="text-align: center;">SPECIALIST_NAME</th>
+
+                    <th style="text-align: center;">Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr style="text-align: center;">
+                    <td>{{ item['SR_ID'] }}</td>
+                    <td>{{ item['PLAN_START_DATE_TEXT'] }}</td>
+                    <td>{{ item['PLAN_END_DATE_TEXT'] }}</td>
+                    <td>{{ item['SUBJECT'] }}</td>
+                    <td>{{ item['SPECIALIST_NAME'] }}</td>
+                    <td style="font-size: 20px; "><a style="text-decoration: none;color: rgb(0, 0, 0);"
+                            href="#{{ item['SR_ID'] }}">+</a>
+                    </td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td colspan="6" class="content" style="padding-bottom: 50px;">
+                        <div id="{{ item['SR_ID'] }}" style="display:none;">
+                            <!--顯示與隱藏 -->
+                            <table style="width: 100%;">
+                                <h2 style="padding: 25px;">詳細內容</h2>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th style="text-align: center;">CLOSE_DATE_TEXT</th>
+                                    <th style="text-align: center;">CREATOR_WORKGROUP_CODE</th>
+                                    <th style="text-align: center;">PLAN_START_DATE_TEXT</th>
+                                    <th style="text-align: center;">PLAN_END_DATE_TEXT</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ item['CLOSE_DATE_TEXT'] }}</td>
+                                    <td>{{ item['CREATOR_WORKGROUP_CODE'] }}</td>
+                                    <td>{{ item['PLAN_START_DATE_TEXT'] }}</td>
+                                    <td>{{ item['PLAN_END_DATE_TEXT'] }}</td>
+                                </tr>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th style="text-align: center;">SR_SUB_CATEGORY</th>
+                                    <th style="text-align: center;">COX_TEXT</th>
+                                    <th style="text-align: center;">SUBJECT</th>
+                                    <th style="text-align: center;">SPECIALIST_NAME</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ item['SR_SUB_CATEGORY'] }}</td>
+                                    <td>{{ item['COX_TEXT'] }}</td>
+                                    <td>{{ item['SUBJECT'] }}</td>
+                                    <td>{{ item['SPECIALIST_NAME'] }}</td>
+                                </tr>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th colspan="3" style="text-align: center;">DESCRIPTION</th>
+                                    <th colspan="1" style="text-align: center;">CREATOR_NAME</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">{{ item['DESCRIPTION'] }}</td>
+                                    <td colspan="1">{{ item['CREATOR_NAME'] }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4">
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                {{ pagination.links }}
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
