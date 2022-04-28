@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['app.py', 'z1.py', 'templates\\index.html', 'templates\\table_raw.html']
+recent_files = ['z1.py', 'app.py', 'auto.py', 'templates\\Test.html', 'templates\\table_raw.html', 'test1.py']
 
 [main]
 version = 0.2.0
