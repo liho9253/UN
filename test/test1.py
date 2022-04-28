@@ -29,10 +29,7 @@ def index():
                            page=page,
                            per_page=per_page,
                            pagination=pagination)
+
+
 if __name__ == "__main__":
-    """
-        export FLASK_APP=fet_main.py
-        export FLASK_ENV=fet_develop
-        flask run
-    """
     app.run(host="localhost", port=5000, debug=True)
