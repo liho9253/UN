@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['z1.py', 'templates\\Test.html', 'app.py', 'test1.py', 'templates\\main.html', 'templates\\mix.html']
+recent_files = ['z1.py', 'templates\\mix.html', 'test1.py', 'templates\\main.html', 'app.py', 'FET_user.py', 'z2.py', 'templates\\FET_main.html', 'te1.py', 'templates\\main2.html']
 
 [main]
 version = 0.2.0

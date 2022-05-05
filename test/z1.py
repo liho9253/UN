@@ -39,6 +39,8 @@ def index():
     # query = Test_farP.query.filter(Test_farP.ID.like("47387")).all()
     
     # return query.ID
+    
+    
     return render_template('mix.html',query=query)
 
 if __name__ == "__main__":
