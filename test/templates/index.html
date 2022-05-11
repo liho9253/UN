@@ -12,18 +12,6 @@
     <input id="add" name="add" type="submit" value="添加"><br/>
 </form>
 
-<ul>
-     {% for person in persons %}
-        <li>{{ person.name }}</li>
-        <ul>
-        {% for phone in person.phones %}
-            <li>{{ phone.name }}</li>
-        {% else %}
-            <li>无</li>
-        {% endfor %}
-        </ul>
-    {% endfor %}
-</ul>
 
 </body>
 </html>
