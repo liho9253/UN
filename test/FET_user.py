@@ -13,7 +13,7 @@ class User(db.Model):
     
     __tablename__ = 'Users'
 
-    ID = db.Column(db.Integer, primary_key=True)
+    ID = db.Column(db.String(10), primary_key=True)
     StartDate = db.Column(db.String(20))
     EndDate = db.Column(db.String(20))
     Sub = db.Column(db.String(999))
