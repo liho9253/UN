@@ -24,33 +24,50 @@ df.to_csv("test16.csv",encoding = 'utf-8',index=False)
 df = pd.read_csv('./test16.csv',encoding = 'utf-8')
 
 for row in data:
+    inf = User( row['SR_ID'],
+                row['PLAN_START_DATE_TEXT'],
+                row['PLAN_END_DATE_TEXT'],
+                row['SUBJECT'],
+                row['SPECIALIST_NAME'],
+                row['CLOSE_DATE_TEXT'],
+                row['CREATOR_WORKGROUP_CODE'],
+                row['SR_SUB_CATEGORY'],
+                row['COX_TEXT'],
+                row['DESCRIPTION'],
+                row['CREATOR_NAME'])
+    inf_list = [row['SR_ID'],
+                row['PLAN_START_DATE_TEXT'],
+                row['PLAN_END_DATE_TEXT'],
+                row['SUBJECT'],
+                row['SPECIALIST_NAME'],
+                row['CLOSE_DATE_TEXT'],
+                row['CREATOR_WORKGROUP_CODE'],
+                row['SR_SUB_CATEGORY'],
+                row['COX_TEXT'],
+                row['DESCRIPTION'],
+                row['CREATOR_NAME']]
     if (User.query.filter_by(ID=str(row['SR_ID'])).all() != ""):
-        qu = User.query.filter(or_(User.StartDate == row['PLAN_START_DATE_TEXT'],
-                                   User.EndDate == row['PLAN_END_DATE_TEXT'],
-                                   User.Sub == row['SUBJECT'],
-                                   User.SpN == row['SPECIALIST_NAME'],
-                                   User.CloseDate == row['CLOSE_DATE_TEXT'],
-                                   User.CreWGro == row['CREATOR_WORKGROUP_CODE'],
-                                   User.SR == row['SR_SUB_CATEGORY'],
-                                   User.CoxT == row['COX_TEXT'],
-                                   User.Dec == row['DESCRIPTION'],
-                                   User.CreN == row['CREATOR_NAME'])).all()
-        continue
+        inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
+        infdb_list = []
+        infdb_list.append(inf_db[0].ID)
+        infdb_list.append(inf_db[0].StartDate)
+        infdb_list.append(inf_db[0].EndDate)
+        infdb_list.append(inf_db[0].Sub)
+        infdb_list.append(inf_db[0].SpN)
+        infdb_list.append(inf_db[0].CloseDate)
+        infdb_list.append(inf_db[0].CreWGro)
+        infdb_list.append(inf_db[0].SR)
+        infdb_list.append(inf_db[0].CoxT)
+        infdb_list.append(inf_db[0].Dec)
+        infdb_list.append(inf_db[0].CreN)
+        if(inf_list == infdb_list):
+            continue
+        else:
+            User.query.filter_by(ID=str(row['SR_ID'])).delete()
+            db.session.commit()
+            db.session.add(inf)
+            db.session.commit()
     else:
-        de = User.query.filter_by(ID=str(row['SR_ID'])).all()
-        inf = User(row['SR_ID'],
-                   row['PLAN_START_DATE_TEXT'],
-                   row['PLAN_END_DATE_TEXT'],
-                   row['SUBJECT'],
-                   row['SPECIALIST_NAME'],
-                   row['CLOSE_DATE_TEXT'],
-                   row['CREATOR_WORKGROUP_CODE'],
-                   row['SR_SUB_CATEGORY'],
-                   row['COX_TEXT'],
-                   row['DESCRIPTION'],
-                   row['CREATOR_NAME'])
-        db.session.delete(de)
-        db.session.commit()
         db.session.add(inf)
         db.session.commit()
         
