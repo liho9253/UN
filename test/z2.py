@@ -94,25 +94,39 @@ def index():
 
 @app.route('/search',methods=['GET','POST'])
 def search():
-    session['pos'] = False
-    if(request.form['pos'] != ''):
-        se = request.form['pos'].strip()
-        session['pos'] = se
-    
-        qu = User.query.filter(or_( User.ID.contains(session.get('pos')),
-                                    User.StartDate.contains(se),
-                                    User.EndDate.contains(se),
-                                    User.Sub.contains(se),
-                                    User.SpN.contains(se),
-                                    User.CloseDate.contains(se),
-                                    User.CreWGro.contains(se),
-                                    User.SR.contains(se),
-                                    User.CoxT.contains(se),
-                                    User.Dec.contains(se),
-                                    User.CreN.contains(se))).all()
+    if(request.method == 'POST'):
+        if request.form.get('pos'):
+            session['pos'] = False
+            se = request.form.get('pos').strip()
+            session['pos'] = se
+            qu = User.query.filter(or_( User.ID.contains(session.get('pos')),
+                                        User.StartDate.contains(session.get('pos')),
+                                        User.EndDate.contains(session.get('pos')),
+                                        User.Sub.contains(session.get('pos')),
+                                        User.SpN.contains(session.get('pos')),
+                                        User.CloseDate.contains(session.get('pos')),
+                                        User.CreWGro.contains(session.get('pos')),
+                                        User.SR.contains(session.get('pos')),
+                                        User.CoxT.contains(session.get('pos')),
+                                        User.Dec.contains(session.get('pos')),
+                                        User.CreN.contains(session.get('pos')))).all()
+        if request.form.get('cancel'):
+            session['pos'] = False
+            qu = User.query.all()
+    elif session['pos'] == False:
+        qu = User.query.all()
     else:
-        qu = User.query.all() 
-                         
+        qu = User.query.filter(or_( User.ID.contains(session.get('pos')),
+                                    User.StartDate.contains(session.get('pos')),
+                                    User.EndDate.contains(session.get('pos')),
+                                    User.Sub.contains(session.get('pos')),
+                                    User.SpN.contains(session.get('pos')),
+                                    User.CloseDate.contains(session.get('pos')),
+                                    User.CreWGro.contains(session.get('pos')),
+                                    User.SR.contains(session.get('pos')),
+                                    User.CoxT.contains(session.get('pos')),
+                                    User.Dec.contains(session.get('pos')),
+                                    User.CreN.contains(session.get('pos')))).all()
     total = len(qu)  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)

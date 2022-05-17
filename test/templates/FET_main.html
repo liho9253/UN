@@ -70,6 +70,7 @@
     </section>
     <div class="container" style="padding-top: 50px;">
         <form action="/search" style="float: right; margin-top: -40px;" method="post">
+            <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
             <input type="txt" cols="40" placeholder="  查詢..."  
             name="pos" style="height:40px;width:200px;">  
             <button type="submit" class="search-submit"
@@ -151,8 +152,10 @@
                                 </tr>
                                 <tr style="text-align: center;">
                                     <td colspan="3"></td>
-                                    <td colspan="1"><input type="button" value="修改"></td>
-                                    <td colspan="1"><input type="button" value="刪除"></td>
+                                    <form action="/search" method="post">
+                                        <td colspan="1"><input type="button" value="修改"></td>
+                                        <td colspan="1"><input type="button" value="刪除"></td>
+                                    </form>
                                     <td colspan="3"></td>
                                 </tr>
                             </table>
