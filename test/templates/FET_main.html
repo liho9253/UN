@@ -59,6 +59,12 @@
         background-color: crimson;
         margin-bottom: 0px;
     }
+    nav{
+        display: flex;
+        justify-content: center; 
+        align-items: center; 
+    }
+    
 </style>
 
 <body>
@@ -79,17 +85,17 @@
         <table class="table table-hover table-responsive">
             <thead>
                 <tr style="background-color: crimson; color: white;">
-                    <th style="text-align: center;">SR_ID</th>
+                    <th style="text-align: center; width:10%;">SR_ID</th>
 
-                    <th style="text-align: center;">PLAN_START_DATE_TEXT</th>
+                    <th style="text-align: center; width:30%;">PLAN_START_DATE_TEXT</th>
 
-                    <th style="text-align: center;">PLAN_END_DATE_TEXT</th>
+                    <th style="text-align: center; width:30%;">PLAN_END_DATE_TEXT</th>
 
-                    <th style="text-align: center;">SUBJECT</th>
+                    <th style="text-align: center; width:30%;">SUBJECT</th>
 
-                    <th style="text-align: center;">SPECIALIST_NAME</th>
+                    <th style="text-align: center; width:15%;">SPECIALIST_NAME</th>
 
-                    <th style="text-align: center;">Details</th>
+                    <th style="text-align: center; width:10%;">Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -166,12 +172,8 @@
             </tbody>
         </table>
         <div class="row">
-            <div class="col-sm-3 col-md-3 col-lg-3">
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="col-12">
                 {{ pagination.links }}
-            </div>
-            <div class="col-sm-3 col-md-3 col-lg-3">
             </div>
         </div>
     </div>

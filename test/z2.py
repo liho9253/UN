@@ -84,6 +84,7 @@ def index():
     total = len(qu)
     pagination = Pagination(page=page, 
                             per_page=per_page, 
+                            offset=offset,
                             total=total,
                             css_framework='bootstrap4')
     
@@ -94,6 +95,7 @@ def index():
 
 @app.route('/search',methods=['GET','POST'])
 def search():
+    qu = User.query.all()
     if(request.method == 'POST'):
         if request.form.get('pos'):
             session['pos'] = False
@@ -133,6 +135,7 @@ def search():
     
     pagination = Pagination(page=page, 
                             per_page=per_page, 
+                            offset=offset,
                             total=total,
                             css_framework='bootstrap4')
     
@@ -142,5 +145,5 @@ def search():
 
 if __name__ == "__main__":
     
-    app.run(host="localhost", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
