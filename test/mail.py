@@ -4,11 +4,11 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 
 app.config.update(    
-    MAIL_SERVER='timmy89566@gmail.com',
+    MAIL_SERVER='',
     MAIL_PROT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME='曾偉國',
-    MAIL_PASSWORD='as785241963')
+    MAIL_USERNAME='',
+    MAIL_PASSWORD='')
 
 mail = Mail(app)
 
