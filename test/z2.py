@@ -142,7 +142,28 @@ def search():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
-
+@app.route('/delete',methods=['GET','POST'])
+def delete():
+    if(request.method == 'POST'):
+        de = request.form.get('del')
+        User.query.filter_by(ID=str(de)).delete()
+        db.session.commit()
+    
+    
+    qu = User.query.all()
+    total = len(qu)  
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
+    
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -158,9 +158,9 @@
                                 </tr>
                                 <tr style="text-align: center;">
                                     <td colspan="3"></td>
-                                    <form action="/search" method="post">
                                         <td colspan="1"><input type="button" value="修改"></td>
-                                        <td colspan="1"><input type="button" value="刪除"></td>
+                                    <form action="/delete" method="post">
+                                        <td colspan="1"><input type="button" name="{{ user.ID }}" value="刪除"></td>
                                     </form>
                                     <td colspan="3"></td>
                                 </tr>
