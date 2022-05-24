@@ -46,25 +46,29 @@ for row in data:
                 row['COX_TEXT'],
                 row['DESCRIPTION'],
                 row['CREATOR_NAME']]
-    if (User.query.filter_by(ID=str(row['SR_ID'])).all() != ""):
+    if (User.query.filter_by(ID=str(row['SR_ID'])).all() != None):
         inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
         infdb_list = []
-        infdb_list.append(inf_db[0].ID)
-        infdb_list.append(inf_db[0].StartDate)
-        infdb_list.append(inf_db[0].EndDate)
-        infdb_list.append(inf_db[0].Sub)
-        infdb_list.append(inf_db[0].SpN)
-        infdb_list.append(inf_db[0].CloseDate)
-        infdb_list.append(inf_db[0].CreWGro)
-        infdb_list.append(inf_db[0].SR)
-        infdb_list.append(inf_db[0].CoxT)
-        infdb_list.append(inf_db[0].Dec)
-        infdb_list.append(inf_db[0].CreN)
-        if(inf_list == infdb_list):
-            continue
-        else:
-            User.query.filter_by(ID=str(row['SR_ID'])).delete()
-            db.session.commit()
+        try:
+            infdb_list.append(inf_db[0].ID)
+            infdb_list.append(inf_db[0].StartDate)
+            infdb_list.append(inf_db[0].EndDate)
+            infdb_list.append(inf_db[0].Sub)
+            infdb_list.append(inf_db[0].SpN)
+            infdb_list.append(inf_db[0].CloseDate)
+            infdb_list.append(inf_db[0].CreWGro)
+            infdb_list.append(inf_db[0].SR)
+            infdb_list.append(inf_db[0].CoxT)
+            infdb_list.append(inf_db[0].Dec)
+            infdb_list.append(inf_db[0].CreN)
+            if(inf_list == infdb_list):
+                continue
+            else:
+                User.query.filter_by(ID=str(row['SR_ID'])).delete()
+                db.session.commit()
+                db.session.add(inf)
+                db.session.commit()
+        except IndexError:
             db.session.add(inf)
             db.session.commit()
     else:
@@ -142,13 +146,31 @@ def search():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
-@app.route('/delete',methods=['GET','POST'])
-def delete():
-    if(request.method == 'POST'):
-        de = request.form.get('del')
-        User.query.filter_by(ID=str(de)).delete()
-        db.session.commit()
+@app.route('/delete/<ID>')
+def delete(ID):
+    User.query.filter_by(ID=str(ID)).delete()
+    db.session.commit()
     
+    qu = User.query.all()
+    total = len(qu)  
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
+    
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
+@app.route('/revise/<ID>',methods=['GET','POST'])
+def revise(ID):
+    rev = request.form.get("sub")
+    Users = User.query.filter_by(ID=str(ID)).first()
+    Users.Sub = rev
+    db.session.commit()
     
     qu = User.query.all()
     total = len(qu)  

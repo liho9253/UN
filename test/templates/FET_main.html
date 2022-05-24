@@ -21,10 +21,23 @@
                 }
                 return false;
             });
-        });
+        });   
+        function del() {
+            var msg = "確定要刪除嗎？";
+            if (confirm(msg)==true){
+                return true
+            }else{
+                return false
+                }
+            }
+        function resizeInput() {
+            $(this).attr('size', $(this).val().length);
+        }
+
+        $('input[type="text"]')
+            .keyup(resizeInput)
+            .each(resizeInput);
     </SCRIPT>
-
-
 </head>
 <style>
     .page-item.active .page-link {
@@ -112,8 +125,9 @@
                 </tr>
                 <tr style="text-align: center;">
                     <td colspan="6" class="content">
-                        <div id="{{ user.ID  }}" style="display:none;">
-                            <table style="width: 100%;">
+                    <form action="/revise/{{ user.ID }}" method="post">
+                        <div id="{{ user.ID }}" name="ID" style="display:none;">
+                            <table style="width: 100%;" class="htm">
                                 <h2 style="padding: 25px;">詳細內容</h2>
                                 <tr style="color:#FFFFFF;background-color: crimson;">
                                     <th colspan="2" style="text-align: center;">CLOSE_DATE_TEXT</th>
@@ -135,7 +149,7 @@
                                 <tr>
                                     <td colspan="2">{{ user.SR }}</td>
                                     <td colspan="2">{{ user.CoxT }}</td>
-                                    <td colspan="4">{{ user.Sub }}</td>
+                                    <td colspan="4"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value="{{ user.Sub }}"></td>
                                 </tr>
                                 <tr style="color:#FFFFFF;background-color: crimson;">
                                     <th colspan="6" style="text-align: center;">DESCRIPTION</th>
@@ -143,7 +157,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="6" rowspan="4" style="text-align: left; padding-left: 5%;">
-                                    {{user.Dec|safe }}
+                                    {{ user.Dec|safe }}
                                     </td>
                                 <tr>
                                     <td>{{ user.SpN }}</td>
@@ -158,16 +172,15 @@
                                 </tr>
                                 <tr style="text-align: center;">
                                     <td colspan="3"></td>
-                                        <td colspan="1"><input type="button" value="修改"></td>
-                                    <form action="/delete" method="post">
-                                        <td colspan="1"><input type="button" name="{{ user.ID }}" value="刪除"></td>
-                                    </form>
+                                        <td colspan="1"><input type="submit" value="修改"></td>
+                                        </form>
+                                        <td colspan="1"><a href="/delete/{{ user.ID }}" style="text-decoration:none;color:red;" onclick="javascript:return del()">刪除</a></td>
                                     <td colspan="3"></td>
                                 </tr>
                             </table>
                         </div>
                     </td>
-                </tr>
+                </tr>          
                 {% endfor %}
             </tbody>
         </table>

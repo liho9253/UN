@@ -1,35 +1,27 @@
-from flask import Flask
-from flask_mail import Mail, Message
+import email.message
+#建立訊息物件
+msg=email.message.EmailMessage()
+#利用物件建立基本設定
 
-app = Flask(__name__)
+from_a=input("")
+to_b=input("")
 
-app.config.update(    
-    MAIL_SERVER='',
-    MAIL_PROT=587,
-    MAIL_USE_TLS=True,
-    MAIL_USERNAME='',
-    MAIL_PASSWORD='')
 
-mail = Mail(app)
+msg["From"]=from_a
+msg["To"]=to_b
+msg["Subject"]="你好"
 
-@app.route("/message")
-def index():
-    msg_title = "Test"
-    msg_sender = "曾偉國 timmy89566@gmail.com"
-    msg_recipients = ['timmy89566@gmail.com']
-    msg_body = "測試"
-    
-    msg = Message(msg_title,
-                  sender=msg_sender,
-                  recipients=msg_recipients)
-    msg.body = msg_body
+#寄送郵件主要內容
+#msg.set_content("測試郵件純文字內容") #純文字信件內容
+msg.add_alternative("<h3>HTML內容</h3>安安這是寄送郵件測試",subtype="html") #HTML信件內容
 
-    mail.send(msg)
-    return 'You Send Mail by Flask-Mail Success!!'
+acc=input("請輸入gmail帳號：")
+password=input("請輸入密碼")
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
-    
-    
-    
-    
+#連線到SMTP Sevver
+import smtplib
+#可以從網路上找到主機名稱和連線埠
+server=smtplib.SMTP_SSL("smtp.gmail.com",465) #建立gmail連驗
+server.login(acc,password)
+server.send_message(msg)
+server.close() #發送完成後關閉連線
