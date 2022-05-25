@@ -169,7 +169,7 @@ def delete(ID):
 def revise(ID):
     rev = request.form.get("sub")
     Users = User.query.filter_by(ID=str(ID)).first()
-    Users.Sub = rev
+    Users.Sub = str(rev)
     db.session.commit()
     
     qu = User.query.all()
