@@ -168,8 +168,13 @@ def delete(ID):
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
     rev = request.form.get("sub")
+    sd = request.form.get("sd")
+    ed = request.form.get("ed")
+    
     Users = User.query.filter_by(ID=str(ID)).first()
     Users.Sub = str(rev)
+    Users.StartDate = str(sd)
+    Users.EndDate = str(ed)
     db.session.commit()
     
     qu = User.query.all()
