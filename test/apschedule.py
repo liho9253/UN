@@ -12,7 +12,7 @@ class Config(object):
             'func': 'apschedule:msg',
             'args': (),
             'trigger': 'interval',
-            'seconds': 30.55
+            'seconds': 30.55555
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
