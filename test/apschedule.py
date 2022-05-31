@@ -2,7 +2,9 @@ from flask import Flask
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 import os
-
+    
+    
+    
 app = Flask(__name__)
 
 class Config(object):
@@ -11,8 +13,9 @@ class Config(object):
             'id': 'job1',
             'func': 'apschedule:msg',
             'args': (),
-            'trigger': 'interval',
-            'seconds': 30.55555
+            'trigger': 'cron',
+            'hour' : '12',
+            'minute' : '31'
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
@@ -23,11 +26,8 @@ scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 def msg():
     os.system("ipconfig/all")
 
-    os.system("python line.py")
+    os.system("python z2.py")
 
-# @scheduler.task('interval', id='job_2', seconds=30, misfire_grace_time=900)
-# def job2():
-#     print('Job 2 executed')
 
 
 if __name__ == '__main__':

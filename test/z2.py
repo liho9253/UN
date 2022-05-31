@@ -35,39 +35,32 @@ for row in data:
                 row['COX_TEXT'],
                 row['DESCRIPTION'],
                 row['CREATOR_NAME'])
-    inf_list = [row['SR_ID'],
-                row['PLAN_START_DATE_TEXT'],
-                row['PLAN_END_DATE_TEXT'],
-                row['SUBJECT'],
-                row['SPECIALIST_NAME'],
-                row['CLOSE_DATE_TEXT'],
-                row['CREATOR_WORKGROUP_CODE'],
-                row['SR_SUB_CATEGORY'],
-                row['COX_TEXT'],
-                row['DESCRIPTION'],
-                row['CREATOR_NAME']]
     if (User.query.filter_by(ID=str(row['SR_ID'])).all() != None):
         inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
-        infdb_list = []
         try:
-            infdb_list.append(inf_db[0].ID)
-            infdb_list.append(inf_db[0].StartDate)
-            infdb_list.append(inf_db[0].EndDate)
-            infdb_list.append(inf_db[0].Sub)
-            infdb_list.append(inf_db[0].SpN)
-            infdb_list.append(inf_db[0].CloseDate)
-            infdb_list.append(inf_db[0].CreWGro)
-            infdb_list.append(inf_db[0].SR)
-            infdb_list.append(inf_db[0].CoxT)
-            infdb_list.append(inf_db[0].Dec)
-            infdb_list.append(inf_db[0].CreN)
-            if(inf_list == infdb_list):
-                continue
-            else:
-                User.query.filter_by(ID=str(row['SR_ID'])).delete()
-                db.session.commit()
-                db.session.add(inf)
-                db.session.commit()
+            if inf_db[0].ID != row['SR_ID']:
+                inf_db[0].ID = row['SR_ID']
+            if inf_db[0].StartDate != row['PLAN_START_DATE_TEXT']:
+                inf_db[0].StartDate = row['PLAN_START_DATE_TEXT']
+            if inf_db[0].EndDate != row['PLAN_END_DATE_TEXT']:
+                inf_db[0].EndDate = row['PLAN_END_DATE_TEXT']
+            if inf_db[0].Sub != row['SUBJECT']:
+                inf_db[0].Sub = row['SUBJECT']
+            if inf_db[0].SpN != row['SPECIALIST_NAME']:
+                inf_db[0].SpN = row['SPECIALIST_NAME']
+            if inf_db[0].CloseDate != row['CLOSE_DATE_TEXT']:
+                inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
+            if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
+                inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
+            if inf_db[0].SR != row['SR_SUB_CATEGORY']:
+                inf_db[0].SR = row['SR_SUB_CATEGORY']
+            if inf_db[0].CoxT != row['COX_TEXT']:
+                inf_db[0].CoxT = row['COX_TEXT']
+            if inf_db[0].Dec != row['DESCRIPTION']:
+                inf_db[0].Dec = row['DESCRIPTION']
+            if inf_db[0].CreN != row['CREATOR_NAME']:
+                inf_db[0].CreN = row['CREATOR_NAME']
+            db.session.commit()
         except IndexError:
             db.session.add(inf)
             db.session.commit()
@@ -177,7 +170,7 @@ def revise(ID):
     Users.EndDate = str(ed)
     db.session.commit()
     
-    qu = User.query.all()
+    qu = User.query.filter_by(ID=str(ID)).all()
     total = len(qu)  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
