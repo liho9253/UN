@@ -1,27 +1,17 @@
-import email.message
-#建立訊息物件
-msg=email.message.EmailMessage()
-#利用物件建立基本設定
-
-from_a=input("")
-to_b=input("")
-
-
-msg["From"]=from_a
-msg["To"]=to_b
-msg["Subject"]="你好"
-
-#寄送郵件主要內容
-#msg.set_content("測試郵件純文字內容") #純文字信件內容
-msg.add_alternative("<h3>HTML內容</h3>安安這是寄送郵件測試",subtype="html") #HTML信件內容
-
-acc=input("請輸入gmail帳號：")
-password=input("請輸入密碼")
-
-#連線到SMTP Sevver
 import smtplib
-#可以從網路上找到主機名稱和連線埠
-server=smtplib.SMTP_SSL("smtp.gmail.com",465) #建立gmail連驗
-server.login(acc,password)
-server.send_message(msg)
-server.close() #發送完成後關閉連線
+from email.mime.text import MIMEText
+from email.header import Header
+
+sender = 'timmy89566@gmail.com'
+receivers = ['timmy89566@gmail.com']
+
+message = """
+This is a test e-mail message.
+"""
+
+try:
+   smtpObj = smtplib.SMTP('localhost')
+   smtpObj.sendmail(sender, receivers, message)         
+   print("Successfully sent email")
+except Exception:
+   print ("Error: unable to send email")

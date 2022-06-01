@@ -94,19 +94,19 @@
         <table class="table table-hover table-responsive" style="width:100%">
             <thead>
                 <tr style="background-color: crimson; color: white;">
-                    <th style="text-align: center;width:10%">SR_ID</th>
+                    <th style="text-align: center;width:10%">SR 編號</th>
 
-                    <th style="text-align: center;width:30%">SUBJECT</th>
+                    <th style="text-align: center;width:30%">SR 主旨</th>
                     
-                    <th style="text-align: center;width:10%">PLAN_START_DATE_TEXT</th>
+                    <th style="text-align: center;width:10%">預計開始日</th>
 
-                    <th style="text-align: center;width:10%">PLAN_END_DATE_TEXT</th>
+                    <th style="text-align: center;width:10%">預計結束日</th>
 
-                    <th style="text-align: center;width:20%">CREATOR_NAME</th>
+                    <th style="text-align: center;width:20%">SR 開單人</th>
                     
-                    <th style="text-align: center;width:10%">SPECIALIST_NAME</th>
+                    <th style="text-align: center;width:10%">實驗室支援</th>
 
-                    <th style="text-align: center;width:10%">Details</th>
+                    <th style="text-align: center;width:10%">細目展開</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,10 +129,10 @@
                             <table style="width: 100%;" class="htm">
                                 <h2 style="padding: 25px;">詳細內容</h2>
                                 <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="2" style="text-align: center;">SELECT</th>
-                                    <th colspan="3" style="text-align: center;">PLAN_START_DATE_TEXT</th>
-                                    <th colspan="3" style="text-align: center;">PLAN_END_DATE_TEXT</th>
-                                    <th colspan="2" style="text-align: center;">SCHEDULE</th>
+                                    <th colspan="2" style="text-align: center;">Major</th>
+                                    <th colspan="3" style="text-align: center;">預計開始日</th>
+                                    <th colspan="3" style="text-align: center;">預計結束日</th>
+                                    <th colspan="2" style="text-align: center;">SR 狀態</th>
                                 </tr>
                                 <tr>
                                     <td colspan="2"><input type="checkbox" style="width:20px;height:20px;"></td>
@@ -147,10 +147,10 @@
                                     </td>
                                 </tr>
                                 <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="3" style="text-align: center;">CLOSE_DATE_TEXT</th>
-                                    <th colspan="3" style="text-align: center;">CREATOR_WORKGROUP_CODE</th>
-                                    <th colspan="2" style="text-align: center;">SR_SUB_CATEGORY</th>
-                                    <th colspan="2" style="text-align: center;">COX_TEXT</th>
+                                    <th colspan="3" style="text-align: center;">結案日</th>
+                                    <th colspan="3" style="text-align: center;">SR 開單部門</th>
+                                    <th colspan="2" style="text-align: center;">SR 類別</th>
+                                    <th colspan="2" style="text-align: center;">優先等級</th>
                                 </tr>
                                 <tr>
                                     <td colspan="3">{{ user.CloseDate }}</td>
@@ -159,9 +159,9 @@
                                     <td colspan="2">{{ user.CoxT }}</td>
                                 </tr>
                                 <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="6" style="text-align: center;">SUBJECT</th>
-                                    <th colspan="2" style="text-align: center;">CREATOR_NAME</th>
-                                    <th colspan="2" style="text-align: center;">SPECIALIST_NAME</th>
+                                    <th colspan="6" style="text-align: center;">SR 主旨</th>
+                                    <th colspan="2" style="text-align: center;">SR 開單人</th>
+                                    <th colspan="2" style="text-align: center;">實驗室支援</th>
                                 </tr>
                                 <tr>
                                     <td colspan="6"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value="{{ user.Sub }}"></td>
