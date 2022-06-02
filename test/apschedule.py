@@ -15,7 +15,7 @@ class Config(object):
             'args': (),
             'trigger': 'cron',
             'hour' : '12',
-            'minute' : '31'
+            'minute' : '30'
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
