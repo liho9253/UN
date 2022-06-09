@@ -184,6 +184,10 @@ def revise(ID):
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
+
+@app.route('/settings',methods=['GET','POST'])
+def settings():
+    return render_template('FET_settings.html')
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)
