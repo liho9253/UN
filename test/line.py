@@ -25,6 +25,6 @@ def post_data(message, token):
         print(_)
 
 if __name__ == "__main__":
-    token = "u6bIfRFdGhcO5ysl7AZwCcDFoYs2AlZvOP98DPNO4Xd" # 您的 Token
-    message = "現在時間: "+result     # 要發送的訊息
+    token = "u6bIfRFdGhcO5ysl7AZwCcDFoYs2AlZvOP98DPNO4Xd" 
+    message = "現在時間: "+result
     post_data(message, token)

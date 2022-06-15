@@ -11,11 +11,11 @@ class Config(object):
     JOBS = [
         {
             'id': 'job1',
-            'func': 'apschedule:msg',
+            'func': 'apschedule:main',
             'args': (),
             'trigger': 'cron',
-            'hour' : '12',
-            'minute' : '35'
+            'hour' : '6',
+            'minute' : '00'
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
@@ -28,6 +28,10 @@ def msg():
 
     os.system("python line.py")
 
+def main():
+    os.system("ipconfig/all")
+
+    os.system("python z2.py")
 
 
 if __name__ == '__main__':
@@ -37,6 +41,6 @@ if __name__ == '__main__':
     scheduler.start()
     
     app.run()
-
-
-
+    
+    
+    
