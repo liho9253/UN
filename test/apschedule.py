@@ -15,7 +15,7 @@ class Config(object):
             'args': (),
             'trigger': 'cron',
             'hour' : '12',
-            'minute' : '0015'
+            'minute' : '35'
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
@@ -26,7 +26,7 @@ scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 def msg():
     os.system("ipconfig/all")
 
-    os.system("python z2.py")
+    os.system("python line.py")
 
 
 

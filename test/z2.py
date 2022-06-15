@@ -139,6 +139,22 @@ def search():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
+
+@app.route('/update',methods=['GET','POST'])
+def update():
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    
+    total = len(qu)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 @app.route('/delete/<ID>')
 def delete(ID):
     User.query.filter_by(ID=str(ID)).delete()
@@ -170,7 +186,7 @@ def revise(ID):
     Users.EndDate = str(ed)
     db.session.commit()
     
-    qu = User.query.filter_by(ID=str(ID)).all()
+    qu = User.query.all()
     total = len(qu)  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
@@ -188,6 +204,10 @@ def revise(ID):
 @app.route('/settings',methods=['GET','POST'])
 def settings():
     return render_template('FET_settings.html')
+
+
+
+
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)
