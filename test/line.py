@@ -25,6 +25,8 @@ def post_data(message, token):
         print(_)
 
 if __name__ == "__main__":
-    token = "u6bIfRFdGhcO5ysl7AZwCcDFoYs2AlZvOP98DPNO4Xd" 
-    message = "現在時間: "+result
+    # token = "u6bIfRFdGhcO5ysl7AZwCcDFoYs2AlZvOP98DPNO4Xd" 
+    token = "0jnU6D3Vr5Zgt1zqk5LBaPTWdDjJ1SrStkjOMRn9lGv" 
+    # message = "現在時間: "+result
+    message = "測試"
     post_data(message, token)

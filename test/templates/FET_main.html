@@ -33,6 +33,11 @@
         function sel() {
             var ch = document.getElementById("sel");
         }
+        function chb() {
+            if(checkBox.checked == true){
+                
+            }
+        }
 
     </SCRIPT>
 </head>
@@ -119,7 +124,7 @@
             <tbody>
                 {% for user in qu %}
                 <tr style="text-align: center;">
-                    <td><input type="checkbox" name="cb"  style="width:20px;height:20px;"></td>
+                    <td><input type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
                     <td>{{ user.ID }}</td>
                     <td>{{ user.Sub }}</td>
                     <td>{{ user.StartDate }}</td>
