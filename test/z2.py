@@ -182,7 +182,7 @@ def revise(ID):
     
     Users = User.query.filter_by(ID=str(ID)).first()
     Users.Sub = str(rev)
-    Users.StartDate = str(sd)
+    Users.StartDate = str(sd)  
     Users.EndDate = str(ed)
     db.session.commit()
     
