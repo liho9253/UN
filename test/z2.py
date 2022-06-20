@@ -142,10 +142,10 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
+    total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page)
     
-    total = len(qu)
     pagination = Pagination(page=page, 
                             per_page=per_page, 
                             offset=offset,
@@ -176,16 +176,16 @@ def update():
 #                             pagination=pagination)
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
-    rev = request.form.get("sub")
-    sd = request.form.get("sd")
-    ed = request.form.get("ed")
-    
-    Users = User.query.filter_by(ID=str(ID)).first()
-    Users.Sub = str(rev)
-    Users.StartDate = str(sd)  
-    Users.EndDate = str(ed)
-    db.session.commit()
-    
+    if(request.method == 'POST'):
+        rev = request.form.get("sub")
+        sd = request.form.get("sd")
+        ed = request.form.get("ed")
+        
+        Users = User.query.filter_by(ID=str(ID)).first()
+        Users.Sub = str(rev)
+        Users.StartDate = str(sd)  
+        Users.EndDate = str(ed)
+        db.session.commit()
     qu = User.query.all()
     total = len(qu)  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')

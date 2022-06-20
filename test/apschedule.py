@@ -23,10 +23,10 @@ class Config(object):
 
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
-def msg():
-    os.system("ipconfig/all")
+# def msg():
+#     os.system("ipconfig/all")
 
-    os.system("python line.py")
+#     os.system("python line.py")
 
 def main():
     os.system("ipconfig/all")
