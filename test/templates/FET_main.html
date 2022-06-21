@@ -122,6 +122,7 @@
             </thead>
             <tbody>
                 {% for user in qu %}
+                <form action="/revise/{{ user.ID }}" method="post">
                 <tr style="text-align: center;">
                     <td><input type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
                     <td>{{ user.ID }}</td>
@@ -136,7 +137,6 @@
                 </tr>
                 <tr style="text-align: center;">
                     <td colspan="10" class="content">
-                    <form action="/revise/{{ user.ID }}" method="post">
                         <div id="{{ user.ID }}" name="ID" style="display:none;">
                             <table style="width: 100%;" class="htm">
                                 <h2 style="padding: 25px;">詳細內容</h2>
@@ -149,10 +149,10 @@
                                     <td colspan="3.5"><input type="text"  style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
                                     <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
                                     <td colspan="3">
-                                        <select id="sel" style="width:55%" onClick="sel()">
-                                            <option selected="selected">In Coming</option>
-                                            <option>On Going</option>
-                                            <option>Completed</option>
+                                        <select id="sel" name="sel" style="width:55%" onClick="sel()">
+                                            <option selected value="In Coming">In Coming</option>
+                                            <option value="On Going">On Going</option>
+                                            <option value="Completed">Completed</option>
                                         </select>
                                     </td>
                                 </tr>

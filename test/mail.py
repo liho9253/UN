@@ -1,45 +1,11 @@
-# from threading import Thread
-# from flask import Flask
-# from flask_mail import Mail
-# from flask_mail import Message
-
-# app = Flask(__name__)
-# app.config.update(
-#     MAIL_SERVER='smtp.office365.com',
-#     MAIL_PROT=587,
-#     MAIL_USE_TLS=True,
-#     MAIL_USERNAME='smtp-mail.outlook.com',
-#     MAIL_PASSWORD='STARTTLS'
-# )
-# mail = Mail(app)
-
-
-# @app.route("/message")
-# def index():
-#     msg_title = 'Hello It is Flask-Mail'
-#     msg_sender = 'timmy89566@gmail.com'
-#     msg_recipients = ['timmy89566@gmail.com']
-#     msg_body = 'Hey, I am mail body!'
-#     msg = Message(msg_title,
-#                   sender=msg_sender,
-#                   recipients=msg_recipients)
-#     msg.body = msg_body
-
-#     mail.send(msg)
-#     return 'You Send Mail by Flask-Mail Success!!'
-
-# if __name__ == "__main__":
-#     app.debug = True
-#     app.run()
-
 import smtplib
 from email.mime.text import MIMEText
 from email.header import Header
 import os
 
-os.environ['http_proxy'] = "http://127.0.0.1"
-os.environ['https_proxy'] = "https://127.0.0.1"
-sender = 'from@runoob.com'
+# os.environ['http_proxy'] = "http://127.0.0.1"
+# os.environ['https_proxy'] = "https://127.0.0.1"
+sender = 'from@gmail.com'
 receivers = ['timmy89566@gmail.com']
 message = MIMEText('Python 測試...', 'plain', 'utf-8')
 message['From'] = Header("123", 'utf-8')   
@@ -55,6 +21,33 @@ try:
     print("成功")
 except smtplib.SMTPException:
     print("Error")
+
+# import smtplib
+# from email.mime.text import MIMEText 
+# smtpHost = 'smtp.exmail.qq.com' 
+# sender = '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dfadb0bdb0ab9fb2b6b2a9aff1bcb0b2">[email protected]</a>' 
+# password = "mimvp-password" 
+# receiver = '<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7f061e1118181e11183f121612090f511c1012">[email protected]</a>'
+# content = 'hello mimvp.com' 
+# msg = MIMEText(content) 
+# msg['Subject'] = 'email-subject' 
+# msg['From'] = sender 
+# msg['To'] = receiver 
+   
+
+## smtp port 25
+smtpServer = smtplib.SMTP(smtpHost, 25)         # SMTP
+smtpServer.login(sender, password) 
+smtpServer.sendmail(sender, receiver, msg.as_string()) 
+smtpServer.quit() 
+print('send success by port 25' )
+ 
+## smtp ssl port 465
+smtpServer = smtplib.SMTP_SSL(smtpHost, 465)    # SMTP_SSL
+smtpServer.login(sender, password) 
+smtpServer.sendmail(sender, receiver, msg.as_string()) 
+smtpServer.quit() 
+print('send success by port 465' )
 
 
 

@@ -24,8 +24,12 @@ class User(db.Model):
     CoxT = db.Column(db.String(90))
     Dec = db.Column(db.String(999))
     CreN = db.Column(db.String(20))
+    Major = db.Column(db.String(1))
+    State = db.Column(db.String(20))
+    
 
-    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, SR, CoxT, Dec, CreN):
+
+    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, SR, CoxT, Dec, CreN, Major, State):
         self.ID = ID
         self.StartDate = StartDate
         self.EndDate = EndDate
@@ -37,6 +41,8 @@ class User(db.Model):
         self.CoxT = CoxT
         self.Dec = Dec
         self.CreN = CreN
+        self.Major = Major
+        self.State = State
     def __repr__(self):
         return '<User %r>' % self.ID
     

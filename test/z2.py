@@ -24,6 +24,8 @@ df.to_csv("test16.csv",encoding = 'utf-8',index=False)
 df = pd.read_csv('./test16.csv',encoding = 'utf-8')
 
 for row in data:
+    row['Major'] = 0
+    row['State'] = "In Coming"
     inf = User( row['SR_ID'],
                 row['PLAN_START_DATE_TEXT'],
                 row['PLAN_END_DATE_TEXT'],
@@ -34,7 +36,9 @@ for row in data:
                 row['SR_SUB_CATEGORY'],
                 row['COX_TEXT'],
                 row['DESCRIPTION'],
-                row['CREATOR_NAME'])
+                row['CREATOR_NAME'],
+                row['Major'],
+                row['State'])
     if (User.query.filter_by(ID=str(row['SR_ID'])).all() != None):
         inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
         try:
@@ -60,6 +64,10 @@ for row in data:
                 inf_db[0].Dec = row['DESCRIPTION']
             if inf_db[0].CreN != row['CREATOR_NAME']:
                 inf_db[0].CreN = row['CREATOR_NAME']
+            if inf_db[0].Major != 0:
+                inf_db[0].Major = inf_db[0].Major
+            if inf_db[0].State != "In Coming":
+                inf_db[0].State = inf_db[0].State
             db.session.commit()
         except IndexError:
             db.session.add(inf)
@@ -180,11 +188,18 @@ def revise(ID):
         rev = request.form.get("sub")
         sd = request.form.get("sd")
         ed = request.form.get("ed")
+        sel = request.form.get("sel")
         
         Users = User.query.filter_by(ID=str(ID)).first()
         Users.Sub = str(rev)
         Users.StartDate = str(sd)  
         Users.EndDate = str(ed)
+        Users.State = str(sel)
+        if(request.form.get("cb") == None):
+            Users.Major = 0  
+        else:
+            Users.Major = 1  
+        
         db.session.commit()
     qu = User.query.all()
     total = len(qu)  
