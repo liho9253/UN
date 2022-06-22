@@ -33,6 +33,24 @@
         function sel() {
             var ch = document.getElementById("sel");
         }
+        function ct() {
+            let hour = prompt("請輸入想更新的'時':");
+            let min = prompt("請輸入想更新的'分':");
+            if (hour == null || hour == ""){
+                alert("'時'不變");
+            }else if(hour <= 0 || hour >24){
+                alert("'時'格式不對");
+            }else{
+                alert("'時'更新為" + hour);
+                }
+            if (min == null || min == ""){
+                alert("'分'不變");
+            }else if(min < 0 || min >60){
+                alert("'分'格式不對");
+            }else{
+                alert("'分'更新為" + min);
+                }
+        }
         function chb() {
             if(checkBox.checked == true){
                 
@@ -88,17 +106,22 @@
         </div>
     </section>
     <div class="container" style="padding-top: 50px; width:80%">
-        <div style="float: right; margin-top: -40px;" >
-            <form action="/update" style="position:absolute;margin-left:-65px" method="post">
-                <input type="submit" name="cancel" style="height:38px;width:60px;" value="更新">
-            </form>
-            <form action="/search" method="post">
-                <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
-                <input type="txt" cols="40" placeholder="  查詢..."  
-                name="pos" style="height:40px;width:200px;">  
-                <button type="submit" class="search-submit"
-                style="height:38px;width:60px;">查詢</button> 
-            </form>
+        <div style="float:right; margin-top:-40px; width:80%" >
+            <div style="float:left;margin-left:-11%;">
+                <form action="/update" style="position:absolute;margin-left:-130px" method="post">
+                    <input type="submit" name="cancel" style="height:38px;width:60px;" value="更新">
+                </form>
+                <button style="text-decoration: none;color: rgb(0, 0, 0);position:absolute;margin-left:-65px;" onclick="ct()">修改更新時間</button>
+            </div>
+            <div style="float:right;">
+                <form action="/search" method="post">
+                    <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
+                    <input type="txt" cols="40" placeholder="  查詢..."  
+                    name="pos" style="height:40px;width:200px;">  
+                    <button type="submit" class="search-submit"
+                    style="height:38px;width:60px;">查詢</button> 
+                </form>
+            </div>
         </div>
         <table class="table table-hover table-responsive" style="width:100%">
             <thead>
@@ -131,8 +154,7 @@
                     <td>{{ user.EndDate }}</td>
                     <td>{{ user.CreN }}</td>
                     <td>{{ user.SpN }}</td>
-                    <td style="font-size: 20px; "><a style="text-decoration: none;color: rgb(0, 0, 0);"
-                            href="#{{ user.ID }}">+</a>
+                    <td style="font-size: 20px; "><a style="text-decoration: none;color: rgb(0, 0, 0);" href="#{{ user.ID }}">+</a>
                     </td>
                 </tr>
                 <tr style="text-align: center;">

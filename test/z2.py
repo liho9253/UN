@@ -163,25 +163,6 @@ def update():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
-# @app.route('/delete/<ID>')
-# def delete(ID):
-#     User.query.filter_by(ID=str(ID)).delete()
-#     db.session.commit()
-    
-#     qu = User.query.all()
-#     total = len(qu)  
-#     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-#     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
-    
-#     pagination = Pagination(page=page, 
-#                             per_page=per_page, 
-#                             offset=offset,
-#                             total=total,
-#                             css_framework='bootstrap4')
-    
-#     return render_template('FET_main.html',
-#                             qu=pagination_users,
-#                             pagination=pagination)
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
     if(request.method == 'POST'):
@@ -216,6 +197,24 @@ def revise(ID):
                             qu=pagination_users,
                             pagination=pagination)
 
+@app.route('/ChangeTime',methods=['GET','POST'])
+def ChangeTime(ID):
+    input("時:")
+    input("分:")
+    qu = User.query.all()
+    total = len(qu)  
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
+    
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 
 
 
