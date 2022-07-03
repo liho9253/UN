@@ -114,12 +114,18 @@
                 <button style="text-decoration: none;color: rgb(0, 0, 0);position:absolute;margin-left:-65px;" onclick="ct()">修改更新時間</button>
             </div>
             <div style="float:right;">
+                <form action="/calendar" method="post" style="">
+                    <button type="submit" class="search-submit"
+                    style="height:38px;width:90px;">行事曆</button> 
+                </form>
+            </div>
+            <div style="float:right;">
                 <form action="/search" method="post">
                     <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
                     name="pos" style="height:40px;width:200px;">  
                     <button type="submit" class="search-submit"
-                    style="height:38px;width:60px;">查詢</button> 
+                    style="height:38px;width:60px;">查詢</button>
                 </form>
             </div>
         </div>
@@ -144,10 +150,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in qu %}
+                {% for user in qu %}    
                 <form action="/revise/{{ user.ID }}" method="post">
                 <tr style="text-align: center;">
-                    <td><input type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
+                    {% if user.Major == '0' %}
+                        <td><input type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
+                    {% else %}
+                        <td><input checked type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
+                    {% endif %}
                     <td>{{ user.ID }}</td>
                     <td>{{ user.Sub }}</td>
                     <td>{{ user.StartDate }}</td>
@@ -172,9 +182,19 @@
                                     <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
                                     <td colspan="3">
                                         <select id="sel" name="sel" style="width:55%" onClick="sel()">
-                                            <option selected value="In Coming">In Coming</option>
-                                            <option value="On Going">On Going</option>
-                                            <option value="Completed">Completed</option>
+                                            {% if user.State == 'In Coming' %}
+                                                <option selected value="In Coming">In Coming</option>
+                                                <option value="On Going">On Going</option>
+                                                <option value="Completed">Completed</option>
+                                            {% elif user.State == 'On Going' %}
+                                                <option value="In Coming">In Coming</option>
+                                                <option selected value="On Going">On Going</option>
+                                                <option value="Completed">Completed</option>
+                                            {% else %}
+                                                <option value="In Coming">In Coming</option>
+                                                <option value="On Going">On Going</option>
+                                                <option selected value="Completed">Completed</option>
+                                            {% endif %}
                                         </select>
                                     </td>
                                 </tr>

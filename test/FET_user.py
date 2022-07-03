@@ -3,7 +3,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-
+    
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
 
@@ -20,16 +20,14 @@ class User(db.Model):
     SpN = db.Column(db.String(20))
     CloseDate = db.Column(db.String(20))
     CreWGro = db.Column(db.String(90))
-    SR = db.Column(db.String(90))
     CoxT = db.Column(db.String(90))
-    Dec = db.Column(db.String(999))
     CreN = db.Column(db.String(20))
     Major = db.Column(db.String(1))
     State = db.Column(db.String(20))
     
 
 
-    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, SR, CoxT, Dec, CreN, Major, State):
+    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, CoxT, CreN, Major, State):
         self.ID = ID
         self.StartDate = StartDate
         self.EndDate = EndDate
@@ -37,9 +35,7 @@ class User(db.Model):
         self.SpN = SpN
         self.CloseDate = CloseDate
         self.CreWGro = CreWGro
-        self.SR = SR
         self.CoxT = CoxT
-        self.Dec = Dec
         self.CreN = CreN
         self.Major = Major
         self.State = State

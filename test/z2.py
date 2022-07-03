@@ -33,9 +33,7 @@ for row in data:
                 row['SPECIALIST_NAME'],
                 row['CLOSE_DATE_TEXT'],
                 row['CREATOR_WORKGROUP_CODE'],
-                row['SR_SUB_CATEGORY'],
                 row['COX_TEXT'],
-                row['DESCRIPTION'],
                 row['CREATOR_NAME'],
                 row['Major'],
                 row['State'])
@@ -56,12 +54,8 @@ for row in data:
                 inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
             if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
                 inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
-            if inf_db[0].SR != row['SR_SUB_CATEGORY']:
-                inf_db[0].SR = row['SR_SUB_CATEGORY']
             if inf_db[0].CoxT != row['COX_TEXT']:
                 inf_db[0].CoxT = row['COX_TEXT']
-            if inf_db[0].Dec != row['DESCRIPTION']:
-                inf_db[0].Dec = row['DESCRIPTION']
             if inf_db[0].CreN != row['CREATOR_NAME']:
                 inf_db[0].CreN = row['CREATOR_NAME']
             if inf_db[0].Major != 0:
@@ -76,17 +70,17 @@ for row in data:
         db.session.add(inf)
         db.session.commit()
         
-qu = User.query.all()
+qu = User.query.order_by("ID")
 
 def get_page(offset=0, per_page=10, qu=qu):
     return qu[offset: offset + per_page]
 
 @app.route('/')
 def index():
+    qu = User.query.all()
+    total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page)
-    
-    total = len(qu)
     pagination = Pagination(page=page, 
                             per_page=per_page, 
                             offset=offset,
@@ -113,9 +107,7 @@ def search():
                                         User.SpN.contains(session.get('pos')),
                                         User.CloseDate.contains(session.get('pos')),
                                         User.CreWGro.contains(session.get('pos')),
-                                        User.SR.contains(session.get('pos')),
                                         User.CoxT.contains(session.get('pos')),
-                                        User.Dec.contains(session.get('pos')),
                                         User.CreN.contains(session.get('pos')))).all()
         if request.form.get('cancel'):
             session['pos'] = False
@@ -134,7 +126,8 @@ def search():
                                     User.CoxT.contains(session.get('pos')),
                                     User.Dec.contains(session.get('pos')),
                                     User.CreN.contains(session.get('pos')))).all()
-    total = len(qu)  
+    qu = User.query.order_by("ID")
+    total = len(User.query.all())  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
     
@@ -150,6 +143,7 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
+    qu = User.query.all()
     total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page)
@@ -182,8 +176,9 @@ def revise(ID):
             Users.Major = 1  
         
         db.session.commit()
-    qu = User.query.all()
-    total = len(qu)  
+        
+    qu = User.query.order_by("ID")
+    total = len(User.query.all())  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
     
@@ -201,8 +196,8 @@ def revise(ID):
 def ChangeTime(ID):
     input("時:")
     input("分:")
-    qu = User.query.all()
-    total = len(qu)  
+    qu = User.query.order_by("ID")
+    total = len(User.query.all())  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
     
@@ -218,7 +213,10 @@ def ChangeTime(ID):
 
 
 
+@app.route('/calendar',methods=['GET','POST'])
+def calendar():
 
+    return render_template('calendar.html')
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)
