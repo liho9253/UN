@@ -143,6 +143,63 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
+    df = pandas.read_csv('test16.csv')
+    df.replace("\r\n",'<br>', inplace=True,regex = True)
+    df.replace("\n",'<br>', inplace=True,regex = True)
+    data = df.to_dict(orient = 'records')
+    df = df.dropna()
+    df = df.drop_duplicates(subset=["SR_ID"], keep="last")
+    df.to_csv("test16.csv",encoding = 'utf-8',index=False)
+    df = pd.read_csv('./test16.csv',encoding = 'utf-8')
+    
+    for row in data:
+        row['Major'] = 0
+        row['State'] = "In Coming"
+        inf = User( row['SR_ID'],
+                    row['PLAN_START_DATE_TEXT'],
+                    row['PLAN_END_DATE_TEXT'],
+                    row['SUBJECT'],
+                    row['SPECIALIST_NAME'],
+                    row['CLOSE_DATE_TEXT'],
+                    row['CREATOR_WORKGROUP_CODE'],
+                    row['COX_TEXT'],
+                    row['CREATOR_NAME'],
+                    row['Major'],
+                    row['State'])
+        if (User.query.filter_by(ID=str(row['SR_ID'])).all() != None):
+            inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
+            try:
+                if inf_db[0].ID != row['SR_ID']:
+                    inf_db[0].ID = row['SR_ID']
+                if inf_db[0].StartDate != row['PLAN_START_DATE_TEXT']:
+                    inf_db[0].StartDate = row['PLAN_START_DATE_TEXT']
+                if inf_db[0].EndDate != row['PLAN_END_DATE_TEXT']:
+                    inf_db[0].EndDate = row['PLAN_END_DATE_TEXT']
+                if inf_db[0].Sub != row['SUBJECT']:
+                    inf_db[0].Sub = row['SUBJECT']
+                if inf_db[0].SpN != row['SPECIALIST_NAME']:
+                    inf_db[0].SpN = row['SPECIALIST_NAME']
+                if inf_db[0].CloseDate != row['CLOSE_DATE_TEXT']:
+                    inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
+                if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
+                    inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
+                if inf_db[0].CoxT != row['COX_TEXT']:
+                    inf_db[0].CoxT = row['COX_TEXT']
+                if inf_db[0].CreN != row['CREATOR_NAME']:
+                    inf_db[0].CreN = row['CREATOR_NAME']
+                if inf_db[0].Major != 0:
+                    inf_db[0].Major = inf_db[0].Major
+                if inf_db[0].State != "In Coming":
+                    inf_db[0].State = inf_db[0].State
+                db.session.commit()
+            except IndexError:
+                db.session.add(inf)
+                db.session.commit()
+        else:
+            db.session.add(inf)
+            db.session.commit()
+            
+    qu = User.query.order_by("ID")
     qu = User.query.all()
     total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -157,6 +214,7 @@ def update():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
+
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
     if(request.method == 'POST'):
@@ -215,8 +273,26 @@ def ChangeTime(ID):
 
 @app.route('/calendar',methods=['GET','POST'])
 def calendar():
+    qu = User.query.all()
+    User.query.filter_by(Major = "1")
+    return render_template('calendar.html',qu=qu)
 
-    return render_template('calendar.html')
+@app.route('/Mojor',methods=['GET','POST'])
+def Mojor():
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
+    
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)

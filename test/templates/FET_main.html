@@ -8,7 +8,7 @@
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
     <script src="../static/js/jquery.min.js"></script>
-    <SCRIPT type="text/javascript">
+    <script type="text/javascript">
         $(function () {
             $("a").click(function () {
                 var _this = $(this).attr("href");
@@ -30,9 +30,6 @@
                 return false
                 }
             }
-        function sel() {
-            var ch = document.getElementById("sel");
-        }
         function ct() {
             let hour = prompt("請輸入想更新的'時':");
             let min = prompt("請輸入想更新的'分':");
@@ -51,12 +48,7 @@
                 alert("'分'更新為..." + min);
                 }
         }
-        function chb() {
-            if(checkBox.checked == true){
-                
-            }
-        }
-    </SCRIPT>
+    </script>
 </head>
 <style>
     .page-item.active .page-link {
@@ -114,12 +106,18 @@
                 <button style="text-decoration: none;color: rgb(0, 0, 0);position:absolute;margin-left:-65px;" onclick="ct()">修改更新時間</button>
             </div>
             <div style="float:right;">
+                <form action="/Mojor" method="post" style="">
+                    <button type="submit" class="search-submit"
+                    style="height:38px;width:180px;">顯示已勾選的項目</button> 
+                </form>
+            </div>
+            <div style="float:right;padding-right:5px">
                 <form action="/calendar" method="post" style="">
                     <button type="submit" class="search-submit"
                     style="height:38px;width:90px;">行事曆</button> 
                 </form>
             </div>
-            <div style="float:right;">
+            <div style="float:right;padding-right:5px">
                 <form action="/search" method="post">
                     <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
@@ -154,13 +152,13 @@
                 <form action="/revise/{{ user.ID }}" method="post">
                 <tr style="text-align: center;">
                     {% if user.Major == '0' %}
-                        <td><input type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
+                        <td><input type="checkbox" name="cb" style="width:20px;height:20px;"></td>
                     {% else %}
-                        <td><input checked type="checkbox" name="cb" onclick="chb" style="width:20px;height:20px;"></td>
+                        <td><input checked type="checkbox" name="cb" style="width:20px;height:20px;"></td>
                     {% endif %}
                     <td>{{ user.ID }}</td>
                     <td>{{ user.Sub }}</td>
-                    <td>{{ user.StartDate }}</td>
+                    <td>({{ user.StartDate }}.replace("/","-")).replace(" ","T")</td>
                     <td>{{ user.EndDate }}</td>
                     <td>{{ user.CreN }}</td>
                     <td>{{ user.SpN }}</td>
@@ -181,7 +179,7 @@
                                     <td colspan="3.5"><input type="text"  style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
                                     <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
                                     <td colspan="3">
-                                        <select id="sel" name="sel" style="width:55%" onClick="sel()">
+                                        <select id="sel" name="sel" style="width:55%"">
                                             {% if user.State == 'In Coming' %}
                                                 <option selected value="In Coming">In Coming</option>
                                                 <option value="On Going">On Going</option>
