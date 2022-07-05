@@ -108,7 +108,7 @@ def search():
                                         User.CloseDate.contains(session.get('pos')),
                                         User.CreWGro.contains(session.get('pos')),
                                         User.CoxT.contains(session.get('pos')),
-                                        User.CreN.contains(session.get('pos')))).all()
+                                        User.CreN.contains(session.get('pos')))).order_by("ID").all()
         if request.form.get('cancel'):
             session['pos'] = False
             qu = User.query.all()
@@ -122,12 +122,9 @@ def search():
                                     User.SpN.contains(session.get('pos')),
                                     User.CloseDate.contains(session.get('pos')),
                                     User.CreWGro.contains(session.get('pos')),
-                                    User.SR.contains(session.get('pos')),
                                     User.CoxT.contains(session.get('pos')),
-                                    User.Dec.contains(session.get('pos')),
-                                    User.CreN.contains(session.get('pos')))).all()
-    qu = User.query.order_by("ID")
-    total = len(User.query.all())  
+                                    User.CreN.contains(session.get('pos')))).order_by("ID").all()
+    total = len(qu)  
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
     
@@ -273,9 +270,25 @@ def ChangeTime(ID):
 
 @app.route('/calendar',methods=['GET','POST'])
 def calendar():
-    qu = User.query.all()
-    User.query.filter_by(Major = "1")
-    return render_template('calendar.html',qu=qu)
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    
+    
+    return render_template('calendar.html',qu=qu
+                                          ,total=total)
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
@@ -293,6 +306,26 @@ def Mojor():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
+
+@app.route('/test',methods=['GET','POST'])
+def test():
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    return render_template('testw.html',qu=qu
+                                       ,total=total)
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)

@@ -118,6 +118,12 @@
                 </form>
             </div>
             <div style="float:right;padding-right:5px">
+                <form action="/test" method="post" style="">
+                    <button type="submit" class="search-submit"
+                    style="height:38px;width:90px;">測試</button> 
+                </form>
+            </div>
+            <div style="float:right;padding-right:5px">
                 <form action="/search" method="post">
                     <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
@@ -158,7 +164,7 @@
                     {% endif %}
                     <td>{{ user.ID }}</td>
                     <td>{{ user.Sub }}</td>
-                    <td>({{ user.StartDate }}.replace("/","-")).replace(" ","T")</td>
+                    <td>{{ user.StartDate }}</td>
                     <td>{{ user.EndDate }}</td>
                     <td>{{ user.CreN }}</td>
                     <td>{{ user.SpN }}</td>
