@@ -33,6 +33,7 @@ for row in data:
                 row['SPECIALIST_NAME'],
                 row['CLOSE_DATE_TEXT'],
                 row['CREATOR_WORKGROUP_CODE'],
+                row['SR_SUB_CATEGORY'],
                 row['COX_TEXT'],
                 row['CREATOR_NAME'],
                 row['Major'],
@@ -54,6 +55,8 @@ for row in data:
                 inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
             if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
                 inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
+            if inf_db[0].SR != row['SR_SUB_CATEGORY']:
+                inf_db[0].SR = row['SR_SUB_CATEGORY']
             if inf_db[0].CoxT != row['COX_TEXT']:
                 inf_db[0].CoxT = row['COX_TEXT']
             if inf_db[0].CreN != row['CREATOR_NAME']:
@@ -107,6 +110,7 @@ def search():
                                         User.SpN.contains(session.get('pos')),
                                         User.CloseDate.contains(session.get('pos')),
                                         User.CreWGro.contains(session.get('pos')),
+                                        User.SR.contains(session.get('pos')),
                                         User.CoxT.contains(session.get('pos')),
                                         User.CreN.contains(session.get('pos')))).order_by("ID").all()
         if request.form.get('cancel'):
@@ -122,6 +126,7 @@ def search():
                                     User.SpN.contains(session.get('pos')),
                                     User.CloseDate.contains(session.get('pos')),
                                     User.CreWGro.contains(session.get('pos')),
+                                    User.SR.contains(session.get('pos')),
                                     User.CoxT.contains(session.get('pos')),
                                     User.CreN.contains(session.get('pos')))).order_by("ID").all()
     total = len(qu)  
@@ -159,6 +164,7 @@ def update():
                     row['SPECIALIST_NAME'],
                     row['CLOSE_DATE_TEXT'],
                     row['CREATOR_WORKGROUP_CODE'],
+                    row['SR_SUB_CATEGORY'],
                     row['COX_TEXT'],
                     row['CREATOR_NAME'],
                     row['Major'],
@@ -180,6 +186,8 @@ def update():
                     inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
                 if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
                     inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
+                if inf_db[0].SR != row['SR_SUB_CATEGORY']:
+                    inf_db[0].SR = row['SR_SUB_CATEGORY']
                 if inf_db[0].CoxT != row['COX_TEXT']:
                     inf_db[0].CoxT = row['COX_TEXT']
                 if inf_db[0].CreN != row['CREATOR_NAME']:

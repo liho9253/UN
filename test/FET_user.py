@@ -20,6 +20,7 @@ class User(db.Model):
     SpN = db.Column(db.String(20))
     CloseDate = db.Column(db.String(20))
     CreWGro = db.Column(db.String(90))
+    SR = db.Column(db.String(90))
     CoxT = db.Column(db.String(90))
     CreN = db.Column(db.String(20))
     Major = db.Column(db.String(1))
@@ -27,7 +28,7 @@ class User(db.Model):
     
 
 
-    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, CoxT, CreN, Major, State):
+    def __init__(self, ID, StartDate, EndDate, Sub, SpN, CloseDate, CreWGro, SR, CoxT, CreN, Major, State):
         self.ID = ID
         self.StartDate = StartDate
         self.EndDate = EndDate
@@ -35,6 +36,7 @@ class User(db.Model):
         self.SpN = SpN
         self.CloseDate = CloseDate
         self.CreWGro = CreWGro
+        self.SR = SR
         self.CoxT = CoxT
         self.CreN = CreN
         self.Major = Major
