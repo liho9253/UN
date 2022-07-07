@@ -97,7 +97,7 @@ def index():
 
 @app.route('/search',methods=['GET','POST'])
 def search():
-    qu = User.query.all()
+    qu = User.query.order_by("ID").all()
     if(request.method == 'POST'):
         if request.form.get('pos'):
             session['pos'] = False
@@ -115,9 +115,9 @@ def search():
                                         User.CreN.contains(session.get('pos')))).order_by("ID").all()
         if request.form.get('cancel'):
             session['pos'] = False
-            qu = User.query.all()
+            qu = User.query.order_by("ID").all()
     elif session['pos'] == False:
-        qu = User.query.all()
+        qu = User.query.order_by("ID").all()
     else:
         qu = User.query.filter(or_( User.ID.contains(session.get('pos')),
                                     User.StartDate.contains(session.get('pos')),
