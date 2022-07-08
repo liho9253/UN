@@ -27,7 +27,21 @@
                   title: '{{ qu[i].Sub }}',
                   start: '{{ qu[i].StartDate }}',
                   end: '{{ qu[i].EndDate }}',
-                },
+                    {% if qu[i].State == 'In Coming' %}
+                        color: '#0B14D9',
+                    {% elif qu[i].State == 'On Going' %}
+                        color: '#257e4a',
+                    {% else %}
+                        color: '#D90B37',
+                    {% endif %}
+          constraint: '1',
+                  },
+                  { 
+                    groupId: '1',
+                    start: '2017-09-04T10:00:00',
+                    end: '2017-09-05T10:00:00',
+                    display: 'background'
+                  },
               {% endfor %}
       ]
     });
