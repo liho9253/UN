@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset='utf-8' />
-<link href='../static/css/main.css' rel='stylesheet' />
-<script src='../static/js/main.js'></script>
-<script>
+<meta charset="utf-8" />
+<link href="../static/css/main.css" rel="stylesheet" />
+<script src="../static/js/main.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<script type="text/javascript">
 
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
@@ -14,6 +15,19 @@
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+      },
+      eventClick: function(arg) {  
+              $("a").click(function () {
+                  var _this = $(this).attr("href");
+                  if ($(_this).css("display") == "none") {
+                      $(_this).slideDown();
+                      $(this).html("-");
+                  } else {
+                      $(_this).slideUp();
+                      $(this).html("+");
+                  }
+                  return false;
+              });
       },
       initialDate: '2018-01-05',
       navLinks: true,
@@ -69,8 +83,62 @@
 <body>
     
   <div ></div>
-  <div id='calendar'></div>
-  
-
+  <div id="calendar"></div>
+  {% for user in arr %}
+  <a style="text-decoration: none;color: rgb(0, 0, 0);" href="#{{ user.ID }}">+</a>
+        <div id="{{ user.ID }}" name="ID"  style="display:none;">
+            <table style="width: 100%;text-align: center;" class="htm">
+                <tr style="color:#FFFFFF;background-color: crimson;">
+                    <th colspan="3.5" style="text-align: center;">預計開始日</th>
+                    <th colspan="3.5" style="text-align: center;">預計結束日</th>
+                    <th colspan="3" style="text-align: center;">SR 狀態</th>
+                </tr>
+                <tr>
+                    <td colspan="3.5"><input type="text"  style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
+                    <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
+                    <td colspan="3">
+                        <select id="sel" name="sel" style="width:55%"">
+                            {% if user.State == 'In Coming' %}
+                                <option selected value="In Coming">In Coming</option>
+                                <option value="On Going">On Going</option>
+                                <option value="Completed">Completed</option>
+                            {% elif user.State == 'On Going' %}
+                                <option value="In Coming">In Coming</option>
+                                <option selected value="On Going">On Going</option>
+                                <option value="Completed">Completed</option>
+                            {% else %}
+                                <option value="In Coming">In Coming</option>
+                                <option value="On Going">On Going</option>
+                                <option selected value="Completed">Completed</option>
+                            {% endif %}
+                        </select>
+                    </td>
+                </tr>
+                <tr style="color:#FFFFFF;background-color: crimson;">
+                    <th colspan="3" style="text-align: center;">結案日</th>
+                    <th colspan="3" style="text-align: center;">SR 開單部門</th>
+                    <th colspan="2" style="text-align: center;">SR 類別</th>
+                    <th colspan="2" style="text-align: center;">優先等級</th>
+                </tr>
+                <tr>
+                    <td colspan="3">{{ user.CloseDate }}</td>
+                    <td colspan="3">{{ user.CreWGro }}</td>
+                    <td colspan="2">{{ user.SR }}</td>
+                    <td colspan="2">{{ user.CoxT }}</td>
+                </tr>
+                <tr style="color:#FFFFFF;background-color: crimson;">
+                    <th colspan="6" style="text-align: center;">SR 主旨</th>
+                    <th colspan="2" style="text-align: center;">SR 開單人</th>
+                    <th colspan="2" style="text-align: center;">實驗室支援</th>
+                </tr>
+                <tr>
+                    <td colspan="6"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value="{{ user.Sub }}"></td>
+                    <td colspan="2">{{ user.CreN }}</td>
+                    <td colspan="2">{{ user.SpN }}</td>
+                <tr>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
 </body>
 </html>

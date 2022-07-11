@@ -296,7 +296,8 @@ def calendar():
     
     
     return render_template('calendar.html',qu=qu
-                                          ,total=total)
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all())
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
