@@ -3,10 +3,22 @@
 <head>
 <meta charset="utf-8" />
 <link href="../static/css/main.css" rel="stylesheet" />
-<script src="../static/js/main.js"></script>
 <script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/main.js"></script>
 <script type="text/javascript">
-
+    $(function () {
+        $("a").click(function () {
+            var _this = $(this).attr("href");
+            if ($(_this).css("display") == "none") {
+                $(_this).slideDown();
+                $(this).html("-");
+            } else {
+                $(_this).slideUp();
+                $(this).html("+");
+            }
+            return false;
+        });
+    });   
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
@@ -16,18 +28,18 @@
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       },
-      eventClick: function(arg) {  
-              $("a").click(function () {
-                  var _this = $(this).attr("href");
-                  if ($(_this).css("display") == "none") {
-                      $(_this).slideDown();
-                      $(this).html("-");
-                  } else {
-                      $(_this).slideUp();
-                      $(this).html("+");
-                  }
-                  return false;
-              });
+      eventClick: function(arg) {
+          arg.enent.click(function () {
+              var _this = $(this).attr("href");
+              if ($(_this).css("display") == "none") {
+                  $(_this).slideDown();
+                  $(this).html("-");
+              } else {
+                  $(_this).slideUp();
+                  $(this).html("+");
+              }
+              return false;
+          });
       },
       initialDate: '2018-01-05',
       navLinks: true,
@@ -82,7 +94,6 @@
 </head>
 <body>
     
-  <div ></div>
   <div id="calendar"></div>
   {% for user in arr %}
   <a style="text-decoration: none;color: rgb(0, 0, 0);" href="#{{ user.ID }}">+</a>
@@ -94,8 +105,8 @@
                     <th colspan="3" style="text-align: center;">SR 狀態</th>
                 </tr>
                 <tr>
-                    <td colspan="3.5"><input type="text"  style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
-                    <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
+                    <td colspan="3.5"><input type="text" style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
+                    <td colspan="3.5"><input type="text" style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
                     <td colspan="3">
                         <select id="sel" name="sel" style="width:55%"">
                             {% if user.State == 'In Coming' %}
