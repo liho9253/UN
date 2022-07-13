@@ -5,20 +5,25 @@
 <link href="../static/css/main.css" rel="stylesheet" />
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/main.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $("a").click(function () {
-            var _this = $(this).attr("href");
-            if ($(_this).css("display") == "none") {
-                $(_this).slideDown();
-                $(this).html("-");
-            } else {
-                $(_this).slideUp();
-                $(this).html("+");
-            }
-            return false;
-        });
-    });   
+<script>
+  var dialog;
+  window.onload=function(){
+    dialog=document.getElementById("infoModal");
+  };
+  function showD(){
+    dialog.style.display='block';
+    fade.style.display='block';
+  };
+  function closeD(){
+    dialog.style.display='none';
+    fade.style.display='none';
+  };  
+  function closeDetailed(){
+    {% for user in arr %}
+    w{{ user.ID }}.style.display='none';
+    {% endfor %}
+    fade.style.display='none';
+  }; 
   document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
 
@@ -29,17 +34,10 @@
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       },
       eventClick: function(arg) {
-          arg.enent.click(function () {
-              var _this = $(this).attr("href");
-              if ($(_this).css("display") == "none") {
-                  $(_this).slideDown();
-                  $(this).html("-");
-              } else {
-                  $(_this).slideUp();
-                  $(this).html("+");
-              }
-              return false;
-          });
+        {% for user in arr %} 
+            w{{ user.ID }}.style.display='block';
+        {% endfor %}
+        fade.style.display='block';
       },
       initialDate: '2018-01-05',
       navLinks: true,
@@ -89,41 +87,75 @@
     max-width: 1100px;
     margin: 0 auto;
   }
-
+  
+  .infoModal{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    border-radius: 10px;
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translate(-120px, 0px);
+    width: 240px;
+    padding-top: -15px;
+    padding: 15px;
+    background-color: #eee;
+    z-index: 10;
+    display: none;
+  }
+  #infoModal::backdrop {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  .close{
+    position: absolute; 
+    top: 5px; 
+    right:6px;
+    font-size: 15px;
+    cursor: pointer;
+    font-size: 30px;
+  }
+  .black_overlay {
+      display: none;
+      position: fixed;
+      top: 0%;
+      left: 0%;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 5;
+      -moz-opacity: 0.8;
+      opacity: .80;
+    }
 </style>
 </head>
 <body>
-    
+  <button onclick="showD();">新增聯絡人</button>
+  <div id="infoModal" class="infoModal">
+    <div onclick="closeD();" class="close">X</div>
+    <div id="newPer">
+      <form action="">
+        <p style="font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
+        <p>SR 名稱: </p><input type="text" value="">
+        <p>SR Mail: </p><input type="text" value="">
+      </form>
+    </div>
+  </div>
+  <div id="fade" class="black_overlay"></div>
   <div id="calendar"></div>
   {% for user in arr %}
-  <a style="text-decoration: none;color: rgb(0, 0, 0);" href="#{{ user.ID }}">+</a>
-        <div id="{{ user.ID }}" name="ID"  style="display:none;">
-            <table style="width: 100%;text-align: center;" class="htm">
+    <div style="justify-content: center; align-items: center; display: flex;" >
+        <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 30%;top: 20%;position: fixed;display: none;">
+                <div onclick="closeDetailed();" class="close">X</div>
+            <table style="width: 100%;text-align: center; font-size: 24px; " class="htm">
                 <tr style="color:#FFFFFF;background-color: crimson;">
-                    <th colspan="3.5" style="text-align: center;">預計開始日</th>
-                    <th colspan="3.5" style="text-align: center;">預計結束日</th>
-                    <th colspan="3" style="text-align: center;">SR 狀態</th>
+                    <th colspan="3.5">預計開始日</th>
+                    <th colspan="3.5">預計結束日</th>
+                    <th colspan="3">SR 狀態</th>
                 </tr>
                 <tr>
-                    <td colspan="3.5"><input type="text" style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
-                    <td colspan="3.5"><input type="text" style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
-                    <td colspan="3">
-                        <select id="sel" name="sel" style="width:55%"">
-                            {% if user.State == 'In Coming' %}
-                                <option selected value="In Coming">In Coming</option>
-                                <option value="On Going">On Going</option>
-                                <option value="Completed">Completed</option>
-                            {% elif user.State == 'On Going' %}
-                                <option value="In Coming">In Coming</option>
-                                <option selected value="On Going">On Going</option>
-                                <option value="Completed">Completed</option>
-                            {% else %}
-                                <option value="In Coming">In Coming</option>
-                                <option value="On Going">On Going</option>
-                                <option selected value="Completed">Completed</option>
-                            {% endif %}
-                        </select>
-                    </td>
+                    <td colspan="3.5">{{ user.StartDate }}</td>
+                    <td colspan="3.5">{{ user.EndDate }}</td>
+                    <td colspan="3">{{ user.State }}</td>
                 </tr>
                 <tr style="color:#FFFFFF;background-color: crimson;">
                     <th colspan="3" style="text-align: center;">結案日</th>
@@ -143,13 +175,14 @@
                     <th colspan="2" style="text-align: center;">實驗室支援</th>
                 </tr>
                 <tr>
-                    <td colspan="6"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value="{{ user.Sub }}"></td>
+                    <td colspan="6">{{ user.Sub }}</td>
                     <td colspan="2">{{ user.CreN }}</td>
                     <td colspan="2">{{ user.SpN }}</td>
                 <tr>
                 </tr>
             </table>
         </div>
+    </div>
     {% endfor %}
 </body>
 </html>
