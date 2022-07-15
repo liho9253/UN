@@ -33,7 +33,6 @@ def main():
 
     os.system("python z2.py")
 
-
 if __name__ == '__main__':
     app.config.from_object(Config())
     
