@@ -31,7 +31,6 @@ for row in data:
                 row['PLAN_END_DATE_TEXT'],
                 row['SUBJECT'],
                 row['SPECIALIST_NAME'],
-                row['CLOSE_DATE_TEXT'],
                 row['CREATOR_WORKGROUP_CODE'],
                 row['SR_SUB_CATEGORY'],
                 row['COX_TEXT'],
@@ -51,8 +50,6 @@ for row in data:
                 inf_db[0].Sub = row['SUBJECT']
             if inf_db[0].SpN != row['SPECIALIST_NAME']:
                 inf_db[0].SpN = row['SPECIALIST_NAME']
-            if inf_db[0].CloseDate != row['CLOSE_DATE_TEXT']:
-                inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
             if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
                 inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
             if inf_db[0].SR != row['SR_SUB_CATEGORY']:
@@ -108,7 +105,6 @@ def search():
                                         User.EndDate.contains(session.get('pos')),
                                         User.Sub.contains(session.get('pos')),
                                         User.SpN.contains(session.get('pos')),
-                                        User.CloseDate.contains(session.get('pos')),
                                         User.CreWGro.contains(session.get('pos')),
                                         User.SR.contains(session.get('pos')),
                                         User.CoxT.contains(session.get('pos')),
@@ -124,7 +120,6 @@ def search():
                                     User.EndDate.contains(session.get('pos')),
                                     User.Sub.contains(session.get('pos')),
                                     User.SpN.contains(session.get('pos')),
-                                    User.CloseDate.contains(session.get('pos')),
                                     User.CreWGro.contains(session.get('pos')),
                                     User.SR.contains(session.get('pos')),
                                     User.CoxT.contains(session.get('pos')),
@@ -162,7 +157,6 @@ def update():
                     row['PLAN_END_DATE_TEXT'],
                     row['SUBJECT'],
                     row['SPECIALIST_NAME'],
-                    row['CLOSE_DATE_TEXT'],
                     row['CREATOR_WORKGROUP_CODE'],
                     row['SR_SUB_CATEGORY'],
                     row['COX_TEXT'],
@@ -182,8 +176,6 @@ def update():
                     inf_db[0].Sub = row['SUBJECT']
                 if inf_db[0].SpN != row['SPECIALIST_NAME']:
                     inf_db[0].SpN = row['SPECIALIST_NAME']
-                if inf_db[0].CloseDate != row['CLOSE_DATE_TEXT']:
-                    inf_db[0].CloseDate = row['CLOSE_DATE_TEXT']
                 if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
                     inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
                 if inf_db[0].SR != row['SR_SUB_CATEGORY']:

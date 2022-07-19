@@ -5,6 +5,10 @@
 <link href="../static/css/main.css" rel="stylesheet" />
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/main.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
 <script>
   var dialog;
   window.onload=function(){
@@ -41,7 +45,7 @@
           }
         {% endfor %}
       },
-      initialDate: '2018-01-05',
+      initialDate: '2017-11-05',
       navLinks: true,
       businessHours: true, 
       selectable: true,
@@ -139,7 +143,7 @@
   <form action="/">
       <input type="submit" value="返回">
   </form>
-  <button onclick="showD();">新增聯絡人</button>
+  <button onclick="showD();" style="position:absolute;">新增聯絡人</button>
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
@@ -156,28 +160,28 @@
   <div id="calendar"></div>
   {% for user in arr %}
     <div style="justify-content: center; align-items: center; display: flex;" >
-        <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 30%;top: 20%;position: fixed;display: none;">
+        <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 50%;top: 20%;position: fixed;display: none;">
                 <div onclick="closeDetailed();" class="close">X</div>
             <table style="width: 100%;text-align: center; font-size: 24px; " class="htm">
                 <tr style="color:#FFFFFF;background-color: crimson;">
-                    <th colspan="3.5">預計開始日</th>
-                    <th colspan="3.5">預計結束日</th>
-                    <th colspan="3">SR 狀態</th>
+                    <th colspan="1" style="text-align: center;">SR 編號</th>
+                    <th colspan="4" style="text-align: center;">預計開始日</th>
+                    <th colspan="4" style="text-align: center;">預計結束日</th>
+                    <th colspan="1" style="text-align: center;">SR 狀態</th>
                 </tr>
                 <tr>
-                    <td colspan="3.5">{{ user.StartDate }}</td>
-                    <td colspan="3.5">{{ user.EndDate }}</td>
-                    <td colspan="3">{{ user.State }}</td>
+                    <td colspan="1">{{ user.ID }}</td>
+                    <td colspan="4">{{ user.StartDate }}</td>
+                    <td colspan="4">{{ user.EndDate }}</td>
+                    <td colspan="1">{{ user.State }}</td>
                 </tr>
                 <tr style="color:#FFFFFF;background-color: crimson;">
-                    <th colspan="3" style="text-align: center;">結案日</th>
-                    <th colspan="3" style="text-align: center;">SR 開單部門</th>
+                    <th colspan="6" style="text-align: center;">SR 開單部門</th>
                     <th colspan="2" style="text-align: center;">SR 類別</th>
                     <th colspan="2" style="text-align: center;">優先等級</th>
                 </tr>
                 <tr>
-                    <td colspan="3">{{ user.CloseDate }}</td>
-                    <td colspan="3">{{ user.CreWGro }}</td>
+                    <td colspan="6">{{ user.CreWGro }}</td>
                     <td colspan="2">{{ user.SR }}</td>
                     <td colspan="2">{{ user.CoxT }}</td>
                 </tr>
@@ -193,6 +197,26 @@
                 <tr>
                 </tr>
             </table>
+           	<div class="row" sytle="q">
+           		<div class="col-md-12">
+           			<div class="row">
+           				<div class="col-md-6">
+           					 <span class="badge badge-default" sytle="width:100%">信件內容:</span>
+           					<br>
+           					<textarea name="content" style="width:100%;height:101.5px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;" value="內容"></textarea>				</div>
+           				<div class="col-md-6">
+           					 <span class="badge badge-default" sytle="width:100%">聯絡人:</span>
+           						 <br>
+                                <select id="sel" name="sel" style="width:55%">
+                                    <option selected value="In Coming">In Coming</option>
+                                    <option value="On Going">On Going</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+           					<button type="button" class="btn btn-success" style="bottom:5px;right:15px; position:absolute;">送出</button>
+           				</div>
+           			</div>
+           		</div>
+           	</div>
         </div>
     </div>
     {% endfor %}
