@@ -143,7 +143,7 @@
   <form action="/">
       <input type="submit" value="返回">
   </form>
-  <button onclick="showD();" style="position:absolute;">新增聯絡人</button>
+  <button onclick="showD();" style="float:none;display:inline;">新增聯絡人</button>
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
@@ -208,9 +208,6 @@
            					 <span class="badge badge-default" sytle="width:100%">聯絡人:</span>
            						 <br>
                                 <select id="sel" name="sel" style="width:55%">
-                                    <option selected value="In Coming">In Coming</option>
-                                    <option value="On Going">On Going</option>
-                                    <option value="Completed">Completed</option>
                                 </select>
            					<button type="button" class="btn btn-success" style="bottom:5px;right:15px; position:absolute;">送出</button>
            				</div>
