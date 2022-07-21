@@ -122,7 +122,6 @@ if(path_excel):
         else:
             db.session.add(inf)
             db.session.commit()
-
         
 qu = User.query.order_by("ID")
 
