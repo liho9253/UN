@@ -17,7 +17,7 @@ path_excel = os.path.isfile('order/SRTT.xls')
 
 db.init_app(app)
 if(path_csv):
-    df = pd.read_csv('order/test16.csv', encoding = 'utf-8')
+    df = pd.read_csv('order/SR-Sample.csv', encoding ='utf-8')
     df.replace("\r\n",'<br>', inplace=True,regex = True)
     df.replace("\n",'<br>', inplace=True,regex = True)
     df.replace("1(High)",'Critical', inplace=True)
