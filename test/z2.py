@@ -1,5 +1,6 @@
 from FET_user import User
 from FET_user import db
+from SR_db import SR
 from flask import Flask, render_template, request, session
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import or_
@@ -17,7 +18,7 @@ path_excel = os.path.isfile('order/SRTT.xls')
 
 db.init_app(app)
 if(path_csv):
-    df = pd.read_csv('order/SR-Sample.csv', encoding ='utf-8')
+    df = pd.read_csv('order/SR-Sample.csv', encoding='big5')
     df.replace("\r\n",'<br>', inplace=True,regex = True)
     df.replace("\n",'<br>', inplace=True,regex = True)
     df.replace("1(High)",'Critical', inplace=True)
@@ -324,6 +325,7 @@ def ChangeTime(ID):
 
 @app.route('/calendar',methods=['GET','POST'])
 def calendar():
+    quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
     for i in range(total):
@@ -343,7 +345,8 @@ def calendar():
     
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all())
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR)
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():

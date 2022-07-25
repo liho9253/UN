@@ -150,6 +150,7 @@
       <form action="">
         <p style="font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
         <p>SR 名稱: </p><input type="text">
+        <p>SR ID: </p><input type="text">
         <p>SR Mail: </p><input type="text">
         <input type="button" value="確定" style="right:20px;position: absolute;">
       </form>
@@ -208,6 +209,9 @@
            					 <span class="badge badge-default" sytle="width:100%">聯絡人:</span>
            						 <br>
                                 <select id="sel" name="sel" style="width:55%">
+                                {% for SR in quSR %}
+                                    <option>{{ SR.Name }}({{ SR.ID }})</option>
+                                {% endfor %}
                                 </select>
            					<button type="button" class="btn btn-success" style="bottom:5px;right:15px; position:absolute;">送出</button>
            				</div>

@@ -24,8 +24,6 @@ class User(db.Model):
     CreN = db.Column(db.String(20))
     Major = db.Column(db.String(1))
     State = db.Column(db.String(20))
-    
-
 
     def __init__(self, ID, StartDate, EndDate, Sub, SpN,  CreWGro, SR, CoxT, CreN, Major, State):
         self.ID = ID

@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['FET_user.py', 'z2.py', 'try.py', 'templates\\FET_main.html', 'templates\\calendar.html', 'line.py', 'apschedule.py', 'autorun.py', 'mail.py']
+recent_files = ['FET_user.py', 'SR_db.py', 'z2.py', 'templates\\FET_main.html', 'templates\\calendar.html', 'line.py', 'apschedule.py', 'autorun.py', 'mail.py', 'try.py']
 
 [main]
 version = 0.2.0
