@@ -33,7 +33,7 @@
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
       headerToolbar: {
-        left: 'prev,next today',
+        left: 'prev,next,today',
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       },
@@ -45,7 +45,6 @@
           }
         {% endfor %}
       },
-      initialDate: '2017-11-05',
       navLinks: true,
       businessHours: true, 
       selectable: true,
@@ -136,14 +135,32 @@
       -moz-opacity: 0.8;
       opacity: .80;
     }
+    .te{
+      color: #fff;
+      color: var(--fc-button-text-color, #fff);
+      background-color: #2C3E50;
+      background-color: var(--fc-button-bg-color, #2C3E50);
+      border-color: #2C3E50;
+      border-color: var(--fc-button-border-color, #2C3E50);
+      border-radius: 0.25em;
+      height:30px;
+      margin-bottom:10px;
+    }
+    .te:focus {
+    outline: 0px ;
+  }
+  .te::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+  }
 </style>
 </head>
 <body>
 <div style="max-width: 1100px; align-items: center;">
   <form action="/">
-      <input type="submit" value="返回">
+      <input type="submit" value="返回" class="te" style="width:50px; ">
   </form>
-  <button onclick="showD();" style="float:none;display:inline;">新增聯絡人</button>
+  <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:45px;" class="te" >新增聯絡人</button>
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
@@ -210,7 +227,11 @@
            						 <br>
                                 <select id="sel" name="sel" style="width:55%">
                                 {% for SR in quSR %}
-                                    <option>{{ SR.Name }}({{ SR.ID }})</option>
+                                    {% if SR.ID is not none %}
+                                        <option>{{ SR.Name }}({{ SR.ID }})</option>
+                                    {% else %}
+                                        <option>{{ SR.Name }}()</option>
+                                    {% endif %}
                                 {% endfor %}
                                 </select>
            					<button type="button" class="btn btn-success" style="bottom:5px;right:15px; position:absolute;">送出</button>

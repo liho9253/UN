@@ -2938,11 +2938,6 @@ var FullCalendar = (function (exports) {
         }
     }
     function getInitialDate(options, dateEnv) {
-        var initialDateInput = options.initialDate;
-        // compute the initial ambig-timezone date
-        if (initialDateInput != null) {
-            return dateEnv.createMarker(initialDateInput);
-        }
         return getNow(options.now, dateEnv); // getNow already returns unzoned
     }
     function getNow(nowInput, dateEnv) {
