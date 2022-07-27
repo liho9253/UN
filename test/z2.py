@@ -398,6 +398,35 @@ def calendar():
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR)
 
+@app.route('/calendar_ch/Name,Id,Mail',methods=['GET','POST'])
+def calendar_ch():
+    if request.method =='POST':
+        Name = request.form.get("Name")
+        Id = request.form.get("Id")
+        Mail = request.form.get("Mail")
+        
+        quSR = SR.query.all()
+        qu = User.query.filter_by(Major = "1").all()
+        total = len(qu)  
+        for i in range(total):
+            qs = qu[i].StartDate.split("/")
+            if(len(qs[1]) < 2):
+               qs[1] = str(0)+qs[1]
+            if(len(qs[2]) < 8):
+               qs[2] = str(0)+qs[2]
+            qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+            qe = qu[i].EndDate.split("/")
+            if(len(qe[1]) < 2):
+               qe[1] = str(0)+qe[1]
+            if(len(qe[2]) < 8):
+               qe[2] = str(0)+qe[2]
+            qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+            
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR)
+
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
     qu = User.query.filter_by(Major = "1").all()

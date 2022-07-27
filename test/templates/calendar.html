@@ -11,15 +11,25 @@
 
 <script>
   var dialog;
+  var dialogP;
   window.onload=function(){
     dialog=document.getElementById("infoModal");
+    dialogP=document.getElementById("Per");
   };
   function showD(){
     dialog.style.display='block';
     fade.style.display='block';
   };
+  function showP(){
+    dialogP.style.display='block';
+    fade.style.display='block';
+  };
   function closeD(){
     dialog.style.display='none';
+    fade.style.display='none';
+  };  
+  function closeP(){
+    dialogP.style.display='none';
     fade.style.display='none';
   };  
   function closeDetailed(){
@@ -153,6 +163,12 @@
     padding: 0;
     border-style: none;
   }
+  .circle{
+    border-radius: 25px;
+    width: 20px;
+    height: 20px; 
+    display: inline-block;
+  }
 </style>
 </head>
 <body>
@@ -164,15 +180,29 @@
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
-      <form action="">
+      <form action="calendar_ch" method="post">
         <p style="font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
-        <p>SR 名稱: </p><input type="text">
-        <p>SR ID: </p><input type="text">
-        <p>SR Mail: </p><input type="text">
-        <input type="button" value="確定" style="right:20px;position: absolute;">
+        <p>SR 名稱: </p><input type="text" id="Name" name="Name">
+        <p>SR ID: </p><input type="text" id="Id" name="Id">
+        <p>SR Mail: </p><input type="text" id="Mail" name="Mail">
+        <input type="submit" value="確定" style="right:20px;position: absolute;">
       </form>
     </div>
   </div>
+  <input type="button" value="聯絡人清單" class="te" onclick="showP();">
+  <div>
+    <div id="Per" class="infoModal">
+      <div onclick="closeP();" class="close">X</div>
+      {% for SR in quSR %}
+        <p>{{ SR.Name }}, {{ SR.ID }}, {{ SR.Mail }}</p>
+      {% endfor %}
+    </div>
+  </div>
+  <div style="">
+    <div class="circle" style="background-color: #0B14D9;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
+    <div class="circle" style="background-color: #257e4a;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
+    <div class="circle" style="background-color: #D90B37;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">Completed</p>
+  </div>  
   <div id="fade" class="black_overlay"></div>
 </div>
   <div id="calendar"></div>
