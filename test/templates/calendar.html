@@ -49,7 +49,7 @@
       },
           eventClick: function(arg) {
           {% for i in range(total) %} 
-          if(arg.event.title == '{{ qu[i].Sub }}'){
+          if(arg.event.title == '{{ qu[i].ID }} {{ qu[i].Sub }}'){
             w{{ qu[i].ID }}.style.display='block';
             fade.style.display='block';
           }
@@ -62,23 +62,16 @@
       events: [
               {% for i in range(total) %}
                   {
-                  title: '{{ qu[i].Sub }}',
+                  title: '{{ qu[i].ID }} {{ qu[i].Sub }}',
                   start: '{{ qu[i].StartDate }}',
                   end: '{{ qu[i].EndDate }}',
                     {% if qu[i].State == 'In Coming' %}
-                        color: '#0B14D9',
+                        color: '#696969',
                     {% elif qu[i].State == 'On Going' %}
-                        color: '#257e4a',
+                        color: '#E6D933',
                     {% else %}
-                        color: '#D90B37',
+                        color: '#257e4a',
                     {% endif %}
-          constraint: '1',
-                  },
-                  { 
-                    groupId: '1',
-                    start: '2017-09-04T10:00:00',
-                    end: '2017-09-05T10:00:00',
-                    display: 'background'
                   },
               {% endfor %}
       ]
@@ -87,6 +80,14 @@
     calendar.render();
   });
 
+function che() {
+    var msg = "確定要修改嗎？";
+    if (confirm(msg)==true){
+        return true
+    }else{
+        return false
+        }
+    }
 </script>
 
 <style>
@@ -121,6 +122,22 @@
     background-color: #eee;
     z-index: 10;
     display: none;
+  }
+  .infoModalP{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    border-radius: 10px;
+    position: fixed;
+    top: 10%;
+    width: auto;
+    height: 80%;
+    padding-top: -15px;
+    padding: 15px;
+    margin: auto;
+    background-color: #eee;
+    z-index: 10;
+    display: none;
+    overflow-y:auto;
   }
   #infoModal::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
@@ -169,6 +186,11 @@
     height: 20px; 
     display: inline-block;
   }
+.cont{
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
 </style>
 </head>
 <body>
@@ -176,32 +198,55 @@
   <form action="/">
       <input type="submit" value="返回" class="te" style="width:50px; ">
   </form>
-  <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:45px;" class="te" >新增聯絡人</button>
+  <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:65px;" class="te" >新增聯絡人</button>
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
-      <form action="calendar_ch" method="post">
+      <form action="calendar_ne" method="post">
         <p style="font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
         <p>SR 名稱: </p><input type="text" id="Name" name="Name">
-        <p>SR ID: </p><input type="text" id="Id" name="Id">
-        <p>SR Mail: </p><input type="text" id="Mail" name="Mail">
+        <p>SR MVPN: </p><input type="text" id="MVPN" name="MVPN">
+        <p>SR Mail: </p><input type="email" id="Mail" name="Mail">
         <input type="submit" value="確定" style="right:20px;position: absolute;">
       </form>
     </div>
   </div>
-  <input type="button" value="聯絡人清單" class="te" onclick="showP();">
-  <div>
-    <div id="Per" class="infoModal">
+  <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:180px;" >
+  <div class="cont">
+    <div id="Per" class="infoModalP">
       <div onclick="closeP();" class="close">X</div>
-      {% for SR in quSR %}
-        <p>{{ SR.Name }}, {{ SR.ID }}, {{ SR.Mail }}</p>
-      {% endfor %}
+        <table cellpadding="5" style="border: 1px solid;">
+          <thead>
+              <tr style="border: 1px solid;">
+                  <th style="border: 1px solid;">SR 姓名</th>
+                  <th style="border: 1px solid;">SR MVPN</th>
+                  <th style="border: 1px solid;" colspan="2">SR Mail</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for SR in quSR %}
+            <form  action="calendar_ne" method="post">
+              <tr style="border: 1px solid;">
+                <td style="border: 1px solid;" id="SName" Name="SName">{{ SR.Name }}</dr>
+                {% if SR.MVPN is not none %}
+                    <td style="border: 1px solid;" id="Sid" Name="Sid">{{ SR.MVPN }}</td>
+                {% else %}
+                    <td style="border: 1px solid;" id="Sid" Name="Sid"></td>
+                {% endif %}
+                <td style="border: 1px solid;" id="SMail" Name="SMail">{{ SR.Mail }}</td>
+                <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
+              </tr>
+            <form>
+            {% endfor %}
+          </tbody>
+        </table>    
+      </div>
     </div>
   </div>
-  <div style="">
-    <div class="circle" style="background-color: #0B14D9;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
-    <div class="circle" style="background-color: #257e4a;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
-    <div class="circle" style="background-color: #D90B37;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">Completed</p>
+  <div style="margin-top:-40px;float:right ">
+    <div class="circle" style="background-color: #696969;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
+    <div class="circle" style="background-color: #E6D933;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
+    <div class="circle" style="background-color: #257e4a;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">Completed</p>
   </div>  
   <div id="fade" class="black_overlay"></div>
 </div>

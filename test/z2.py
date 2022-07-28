@@ -1,6 +1,7 @@
 from FET_user import User
 from FET_user import db
 from SR_db import SR
+from SR_db import sr_db
 from flask import Flask, render_template, request, session
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import or_
@@ -17,6 +18,7 @@ path_csv = os.path.isfile('order/SR-Sample.csv')
 path_excel = os.path.isfile('order/SRTT.xls')
  
 db.init_app(app)
+sr_db.init_app(app)
 if(path_csv):
     df = pd.read_csv('order/SR-Sample.csv', encoding='big5')
     df.replace("\r\n",'<br>', inplace=True,regex = True)
@@ -148,7 +150,7 @@ def index():
 
 
 @app.route('/search',methods=['GET','POST'])
-def search():
+def search():   
     qu = User.query.order_by("ID").all()
     if(request.method == 'POST'):
         if request.form.get('pos'):
@@ -398,29 +400,65 @@ def calendar():
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR)
 
-@app.route('/calendar_ch/Name,Id,Mail',methods=['GET','POST'])
-def calendar_ch():
-    if request.method =='POST':
+@app.route('/calendar_ne',methods=['GET','POST'])
+def calendar_ne():
+    if(request.method == 'POST'):
         Name = request.form.get("Name")
-        Id = request.form.get("Id")
+        MVPN = request.form.get("MVPN")
         Mail = request.form.get("Mail")
+        if(Name != "" and Mail != ""):
+            NPe = SR(Name, MVPN, Mail)
+            sr_db.session.add(NPe)
+            sr_db.session.commit()
         
-        quSR = SR.query.all()
-        qu = User.query.filter_by(Major = "1").all()
-        total = len(qu)  
-        for i in range(total):
-            qs = qu[i].StartDate.split("/")
-            if(len(qs[1]) < 2):
-               qs[1] = str(0)+qs[1]
-            if(len(qs[2]) < 8):
-               qs[2] = str(0)+qs[2]
-            qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
-            qe = qu[i].EndDate.split("/")
-            if(len(qe[1]) < 2):
-               qe[1] = str(0)+qe[1]
-            if(len(qe[2]) < 8):
-               qe[2] = str(0)+qe[2]
-            qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+            
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR)
+
+@app.route('/calendar_ch',methods=['GET','POST'])
+def calendar_ch(Name):
+    if(request.method == 'POST'):
+        Name = request.form.get("Name")
+        MVPN = request.form.get("MVPN")
+        Mail = request.form.get("Mail")
+        NPe = SR(Name, MVPN, Mail)
+        sr_db.session.add(NPe)
+        sr_db.session.commit()
+        
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
             
     return render_template('calendar.html',qu=qu
                                           ,total=total
