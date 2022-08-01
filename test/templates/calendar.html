@@ -126,7 +126,6 @@ function che() {
   .infoModalP{
     border: none;
     box-shadow: 0 0px 10px rgb(163, 163, 163);
-    border-radius: 10px;
     position: fixed;
     top: 10%;
     width: auto;
@@ -138,6 +137,7 @@ function che() {
     z-index: 10;
     display: none;
     overflow-y:auto;
+    overflow-x: hidden;
   }
   #infoModal::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
@@ -160,7 +160,7 @@ function che() {
       background-color: black;
       z-index: 5;
       -moz-opacity: 0.8;
-      opacity: .80;
+      opacity: .60;
     }
     .te{
       color: #fff;
@@ -227,14 +227,14 @@ function che() {
             {% for SR in quSR %}
             <form  action="calendar_ne" method="post">
               <tr style="border: 1px solid;">
-                <td style="border: 1px solid;" id="SName" Name="SName">{{ SR.Name }}</dr>
+                <td style="border: 1px solid;" id="SName" Name="SName"><input type="text" value="{{ SR.Name }}" disabled="disabled"></dr>
                 {% if SR.MVPN is not none %}
-                    <td style="border: 1px solid;" id="Sid" Name="Sid">{{ SR.MVPN }}</td>
+                    <td style="border: 1px solid;" id="Sid" Name="Sid"><input type="text" value="{{ SR.MVPN }}" disabled="disabled" size="5px"></td>
                 {% else %}
-                    <td style="border: 1px solid;" id="Sid" Name="Sid"></td>
+                    <td style="border: 1px solid;" id="Sid" Name="Sid"><input type="text" value="" disabled="disabled" size="5px"></td>
                 {% endif %}
-                <td style="border: 1px solid;" id="SMail" Name="SMail">{{ SR.Mail }}</td>
-                <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
+                <td style="border: 1px solid;" id="SMail" Name="SMail"><input type="text" value="{{ SR.Mail }}" disabled="disabled" size="40px"></td>
+                <td><input type="submit" value="修改" onclick="javascript:return che()"></td> 
               </tr>
             <form>
             {% endfor %}
@@ -300,10 +300,10 @@ function che() {
            				<div class="col-md-6">
            					 <span class="badge badge-default" sytle="width:100%">聯絡人:</span>
            						 <br>
-                                <select id="sel" name="sel" style="width:55%">
+                                <select id="sel" name="sel" style="width:250px">
                                 {% for SR in quSR %}
-                                    {% if SR.ID is not none %}
-                                        <option>{{ SR.Name }}({{ SR.ID }})</option>
+                                    {% if SR.MVPN is not none %}
+                                        <option>{{ SR.Name }}({{ SR.MVPN }})</option>
                                     {% else %}
                                         <option>{{ SR.Name }}()</option>
                                     {% endif %}

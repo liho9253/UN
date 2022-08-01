@@ -6,7 +6,11 @@ from flask import Flask, render_template, request, session
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import or_
 import pandas as pd
-import pandas, os
+import pandas, os, sys
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -197,127 +201,8 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
-    if(path_csv):
-        df = pd.read_csv('order/SR-Sample.csv', encoding='big5')
-        df.replace("\r\n",'<br>', inplace=True,regex = True)
-        df.replace("\n",'<br>', inplace=True,regex = True)
-        df.replace("1(High)",'Critical', inplace=True)
-        df.replace("2(Medium)",'Major', inplace=True)
-        df.replace("3(Low)",'Minor', inplace=True)
-        df = df.dropna()
-        df = df.drop_duplicates(subset=["SR_ID"], keep="last")
-        data_csv = df.to_dict(orient = 'records')
-        for row in data_csv:
-            row['Major'] = 0
-            row['State'] = "In Coming"
-            inf = User( row['SR_ID'],
-                        row['PLAN_START_DATE_TEXT'],
-                        row['PLAN_END_DATE_TEXT'],
-                        row['SUBJECT'],
-                        row['SPECIALIST_NAME'],
-                        row['CREATOR_WORKGROUP_CODE'],
-                        row['SR_SUB_CATEGORY'],
-                        row['COX_TEXT'],
-                        row['CREATOR_NAME'],
-                        row['Major'],
-                        row['State'])
-            if (User.query.filter_by(ID=str(row['SR_ID'])).all() != None):
-                inf_db = (User.query.filter_by(ID=str(row['SR_ID'])).all())
-                try:
-                    if inf_db[0].ID != row['SR_ID']:
-                        inf_db[0].ID = row['SR_ID']
-                    if inf_db[0].StartDate != row['PLAN_START_DATE_TEXT']:
-                        inf_db[0].StartDate = row['PLAN_START_DATE_TEXT']
-                    if inf_db[0].EndDate != row['PLAN_END_DATE_TEXT']:
-                        inf_db[0].EndDate = row['PLAN_END_DATE_TEXT']
-                    if inf_db[0].Sub != row['SUBJECT']:
-                        inf_db[0].Sub = row['SUBJECT']
-                    if inf_db[0].SpN != row['SPECIALIST_NAME']:
-                        inf_db[0].SpN = row['SPECIALIST_NAME']
-                    if inf_db[0].CreWGro != row['CREATOR_WORKGROUP_CODE']:
-                        inf_db[0].CreWGro = row['CREATOR_WORKGROUP_CODE']
-                    if inf_db[0].SR != row['SR_SUB_CATEGORY']:
-                        inf_db[0].SR = row['SR_SUB_CATEGORY']
-                    if inf_db[0].CoxT != row['COX_TEXT']:
-                        inf_db[0].CoxT = row['COX_TEXT']
-                    if inf_db[0].CreN != row['CREATOR_NAME']:
-                        inf_db[0].CreN = row['CREATOR_NAME']
-                    if inf_db[0].Major != 0:
-                        inf_db[0].Major = inf_db[0].Major
-                    if inf_db[0].State != "In Coming":
-                        inf_db[0].State = inf_db[0].State
-                    db.session.commit()
-                except IndexError:
-                    db.session.add(inf)
-                    db.session.commit()
-            else:
-                db.session.add(inf)
-                db.session.commit()
-                
-    if(path_excel):
-        df = pandas.read_excel("order/SRTT.xls")
-        df.replace("",'', inplace=True,regex = True)
-        data_excel = df.to_dict(orient = 'records')
-        for row in data_excel:
-            row['Major'] = 0
-            row['State'] = "In Coming"
-            inf = User( row['SR編號'],
-                        row['開始日期'],
-                        row['結束日期'],
-                        row['測試專案名稱'],
-                        row['收單者'],
-                        row['申請部門'],
-                        row['需求分類'],
-                        row['優先順序'],
-                        row['SR開單者'],
-                        row['Major'],
-                        row['State'])
-            if (User.query.filter_by(ID=str(row['SR編號'])).all() != None):
-                inf_db = (User.query.filter_by(ID=str(row['SR編號'])).all())
-                try:
-                    if inf_db[0].ID != row['SR編號']:
-                        inf_db[0].ID = row['SR編號']
-                    if inf_db[0].StartDate != row['開始日期']:
-                        inf_db[0].StartDate = row['開始日期']
-                    if inf_db[0].EndDate != row['結束日期']:
-                        inf_db[0].EndDate = row['結束日期']
-                    if inf_db[0].Sub != row['測試專案名稱']:
-                        inf_db[0].Sub = row['測試專案名稱']
-                    if inf_db[0].SpN != row['收單者']:
-                        inf_db[0].SpN = row['收單者']
-                    if inf_db[0].CreWGro != row['申請部門']:
-                        inf_db[0].CreWGro = row['申請部門']
-                    if inf_db[0].SR != row['需求分類']:
-                        inf_db[0].SR = row['需求分類']
-                    if inf_db[0].CoxT != row['優先順序']:
-                        inf_db[0].CoxT = row['優先順序']
-                    if inf_db[0].CreN != row['SR開單者']:
-                        inf_db[0].CreN = row['SR開單者']
-                    if inf_db[0].Major != 0:
-                        inf_db[0].Major = inf_db[0].Major
-                    if inf_db[0].State != "In Coming":
-                        inf_db[0].State = inf_db[0].State
-                    db.session.commit()
-                except IndexError:
-                    db.session.add(inf)
-                    db.session.commit()
-            else:
-                db.session.add(inf)
-                db.session.commit()
-            
-    total = len(User.query.all())  
-    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    pagination_users = get_page(offset=offset, per_page=per_page, qu=User.query.order_by("ID"))
-    
-    pagination = Pagination(page=page, 
-                            per_page=per_page, 
-                            offset=offset,
-                            total=total,
-                            css_framework='bootstrap4')
-    
-    return render_template('FET_main.html',
-                            qu=pagination_users,
-                            pagination=pagination)
+    os.execl("/usr/bin/python", "python ", "z2.py ", "i ") 
+
 
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
@@ -482,25 +367,40 @@ def Mojor():
                             qu=pagination_users,
                             pagination=pagination)
 
-@app.route('/test',methods=['GET','POST'])
-def test():
-    qu = User.query.filter_by(Major = "1").all()
-    total = len(qu)  
-    for i in range(total):
-        qs = qu[i].StartDate.split("/")
-        if(len(qs[1]) < 2):
-           qs[1] = str(0)+qs[1]
-        if(len(qs[2]) < 8):
-           qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
-        qe = qu[i].EndDate.split("/")
-        if(len(qe[1]) < 2):
-           qe[1] = str(0)+qe[1]
-        if(len(qe[2]) < 8):
-           qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
-    return render_template('testw.html',qu=qu
-                                       ,total=total)
+@app.route('/mailSt/<ID>',methods=['GET','POST'])
+def mailSt(ID):
+    Users = User.query.filter_by(ID=str(ID)).first()
+    content = MIMEMultipart()  #建立MIMEMultipart物件
+    content["subject"] = Users.ID  #郵件標題
+    content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
+    content["to"] = "108111113@mail.aeust.edu.tw" #收件者
+    SpN = "實驗室支援: " + Users.CreN + "\r\n" 
+    StD = "預計" + Users.StartDate + "開始測試" + "\r\n"
+    EnD = "預計" + Users.EndDate + "結束測試" 
+    content.attach(MIMEText(SpN+StD+EnD))
+    with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+        try:
+            smtp.ehlo()  # 驗證SMTP伺服器
+            smtp.starttls()  # 建立加密傳輸
+            smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+            smtp.send_message(content)  # 寄送郵件
+            print("Complete!")
+        except Exception as e:
+            print("Error message: ", e)
+            
+    qu = User.query.all()
+    total = len(qu)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)
