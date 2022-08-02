@@ -148,8 +148,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for user in qu %}    
-                <form action="/revise/{{ user.ID }}" method="post">
+                {% for user in qu %}
+                {% if pagination.page %}
+                <form action="/revise/{{ user.ID }}?page={{ pagination.page }}" method="post">
+                {% endif %}
                 <tr style="text-align: center;">
                     {% if user.Major == '0' %}
                         <td><input type="checkbox" name="cb" style="width:20px;height:20px;"></td>
