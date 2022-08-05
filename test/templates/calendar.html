@@ -12,9 +12,13 @@
 <script>
   var dialog;
   var dialogP;
+  var dialogR;
   window.onload=function(){
     dialog=document.getElementById("infoModal");
     dialogP=document.getElementById("Per");
+    {% for user in arr %}
+      dialogR=document.getElementById("e{{ user.ID }}");
+    {% endfor %}
   };
   function showD(){
     dialog.style.display='block';
@@ -24,13 +28,21 @@
     dialogP.style.display='block';
     fade.style.display='block';
   };
+  function showR(){
+    dialogR.style.display='block';
+    fadeR.style.display='block';
+  };
   function closeD(){
     dialog.style.display='none';
     fade.style.display='none';
   };  
-  function closeP(){
+  function closeP(){dialog
     dialogP.style.display='none';
     fade.style.display='none';
+  };  
+  function closeR(){
+    dialogR.style.display='none';
+    fadeR.style.display='none';
   };  
   function closeDetailed(){
     {% for user in arr %}
@@ -89,12 +101,6 @@ function che() {
     }
 }
 </script>
-<script>
-function self() {
-    var mylist = document.getElementById("sel");
-    document.getElementById("selList").value = mylist.options[mylist.selectedIndex].text;
-}
-</script>
 <style>
   html{
     margin:0 auto;
@@ -139,7 +145,23 @@ function self() {
     padding: 15px;
     margin: auto;
     background-color: #eee;
-    z-index: 10;
+    z-index: 20;
+    display: none;
+    overflow-y:auto;
+    overflow-x: hidden;
+  }
+  .infoModalR{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    position: fixed;
+    top: 10%;
+    width: auto;
+    height: 80%;
+    padding-top: -15px;
+    padding: 15px;
+    margin: auto;
+    background-color: #eee;
+    z-index: 20;
     display: none;
     overflow-y:auto;
     overflow-x: hidden;
@@ -167,6 +189,18 @@ function self() {
       -moz-opacity: 0.8;
       opacity: .60;
     }
+    .black_overlayR {
+        display: none;
+        position: fixed;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        z-index: 15;
+        -moz-opacity: 0.8;
+        opacity: .60;
+      }
     .te{
       color: #fff;
       color: var(--fc-button-text-color, #fff);
@@ -186,10 +220,10 @@ function self() {
     border-style: none;
   }
   .circle{
-    border-radius: 25px;
     width: 20px;
     height: 20px; 
     display: inline-block;
+    margin-left:15px;
   }
 .cont{
   display: flex;
@@ -201,9 +235,9 @@ function self() {
 <body>
 <div style="max-width: 1100px; align-items: center;">
   <form action="/">
-      <input type="submit" value="返回" class="te" style="width:50px; ">
+      <input type="submit" value="工單匯入系統" class="te" style="width:120px; ">
   </form>
-  <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:65px;" class="te" >新增聯絡人</button>
+  <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;" class="te" >新增聯絡人</button>
   <div id="infoModal" class="infoModal">
     <div onclick="closeD();" class="close">X</div>
     <div id="newPer">
@@ -216,7 +250,7 @@ function self() {
       </form>
     </div>
   </div>
-  <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:180px;" >
+  <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:240px;" >
   <div class="cont">
     <div id="Per" class="infoModalP">
       <div onclick="closeP();" class="close">X</div>
@@ -248,12 +282,47 @@ function self() {
       </div>
     </div>
   </div>
+    {% for user in arr %}
+  <div class="cont">
+    <div id="e{{ user.ID }}" class="infoModalR">
+      <div onclick="closeR();" class="close">X</div>
+        <table cellpadding="5" style="border: 1px solid;">
+          <thead>
+              <tr>
+                  <th style="border: 1px solid;"></th>
+                  <th style="border: 1px solid;">SR 姓名</th>
+                  <th style="border: 1px solid;">SR MVPN</th>
+                  <th style="border: 1px solid;">SR Mail</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for SR in quSR %}
+            <form  action="" method="post">
+              <tr style="border: 1px solid;">
+                <td><input type="checkbox" style="width:18px; height:18px;"></td>
+                <td style="border: 1px solid;" id="SName" Name="SName"><label>{{ SR.Name }}</label></td>
+                {% if SR.MVPN is not none %}
+                    <td style="border: 1px solid;" id="Sid" Name="Sid"><label>{{ SR.MVPN }}</label></td>
+                {% else %}
+                    <td style="border: 1px solid;" id="Sid" Name="Sid"></td>
+                {% endif %}
+                <td style="border: 1px solid;" id="SMail" Name="SMail"><label>{{ SR.Mail }}</label></td>
+              </tr>
+            <form>
+            {% endfor %}
+          </tbody>
+        </table>    
+      </div>
+    </div>
+  </div>
+  {% endfor %}
   <div style="margin-top:-40px;float:right ">
     <div class="circle" style="background-color: #696969;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
     <div class="circle" style="background-color: #E6D933;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
     <div class="circle" style="background-color: #257e4a;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">Completed</p>
   </div>  
   <div id="fade" class="black_overlay"></div>
+  <div id="fadeR" class="black_overlayR"></div>
 </div>
   <div id="calendar"></div>
   {% for user in arr %}
@@ -304,22 +373,10 @@ function self() {
            					<textarea name="content" style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea>
                         </div>
     				</div>
-           			<div class="row">
+           			<div class="row" style="margin-top:1.5%">
            				<div class="col-12">
-           					 <span class="badge badge-default" sytle="width:100%">聯絡人:</span>
-           						 <br>
-                                    <select id="sel" name="sel" style="width:250px" onchange="self()">
-                                    {% for SR in quSR %}
-                                        {% if SR.MVPN is not none %}
-                                            <option>{{ SR.Name }}({{ SR.MVPN }})</option>
-                                        {% else %}
-                                            <option>{{ SR.Name }}()</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                    </select>
-                                    <p><input type="text" id="selList" size="20"></p>
-           					<button type="button" class="btn btn-success" style="bottom:30%;right:10%; position:absolute;border-radius: 30px;">收件者</button>
-           					<button type="button" class="btn btn-success" style="bottom:30%;right:3%; position:absolute;border-radius: 30px;">送出</button>
+           					<button type="button" class="btn btn-success" onclick="showR()" style="right:10%; position:absolute;border-radius: 30px;">收件者</button>
+           					<button type="button" class="btn btn-success" style="right:3%; position:absolute;border-radius: 30px;">送出</button>
            				</div>
            			</div>
            		</div>
