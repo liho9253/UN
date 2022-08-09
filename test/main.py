@@ -202,9 +202,9 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
-    
     python = sys.executable
     os.execl(python, python, * sys.argv)
+
 
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
@@ -421,6 +421,55 @@ def mailSt(ID):
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
+
+@app.route('/mailTest/<ID>',methods=['GET','POST'])
+def mailTest(ID):
+    if(request.method == 'POST'):
+        Users = User.query.filter_by(ID=str(ID)).first()
+        msg = request.form.get("msg")
+        sents = request.form.getlist("SMail")
+        recipient = ""
+        for i in range(len(sents)):
+            recipient += sents[i]+","
+        content = MIMEMultipart()  #建立MIMEMultipart物件
+        content["subject"] = "SR 編號: #" + Users.ID  #郵件標題
+        content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
+        content["to"] = recipient #收件者
+        SpN = "實驗室支援: " + Users.SpN + "\r\n" 
+        content.attach(MIMEText(SpN+msg))
+        with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+            try:
+                smtp.ehlo()  # 驗證SMTP伺服器
+                smtp.starttls()  # 建立加密傳輸
+                smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+                smtp.send_message(content)  # 寄送郵件
+                print("Complete!")
+            except Exception as e:
+                print("Error message: ", e)
+        
+    
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+            
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR)
+
 if __name__ == "__main__":
     
     app.run(host="0.0.0.0", port=5000, debug=True)
