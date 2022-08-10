@@ -101,6 +101,20 @@ function che() {
         return false
     }
 }
+  
+function pschecked() {
+    var ps = "";
+{% for user in arr %}
+{% for SR in quSR %}
+    if (document.getElementById("w{{ user.ID }}{{ SR.Mail }}").checked == true) {
+        if(){
+        }
+        ps += "{{ SR.Name }}"+"  ";
+     }
+     document.getElementById("p{{ user.ID }}").innerHTML = ps
+{% endfor %}
+{% endfor %}
+}
 </script>
 <style>
   html{
@@ -243,7 +257,7 @@ function che() {
         <div onclick="closeD();" class="close">X</div>
         <div id="newPer">
           <form action="calendar_ne" method="post">
-            <p style="font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
+            <p style="font-family:'標楷體';font-size:24px;font-weight:bold; margin-top:-5px;">新增聯絡人</p>
             <p>名稱: </p><input type="text" id="Name" name="Name">
             <p>MVPN: </p><input type="text" id="MVPN" name="MVPN">
             <p>Mail: </p><input type="email" id="Mail" name="Mail">
@@ -292,7 +306,7 @@ function che() {
       <div id="calendar"></div>
       {% for user in arr %}
         <div style="justify-content: center; align-items: center; display: flex;" >
-            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 60%;top: 20%;position: fixed;display: none;">
+            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 65%;top: 20%;position: fixed;display: none;">
                     <div onclick="closeDetailed();" class="close">X</div>
                 <table style="width: 100%;text-align: center; font-size: 24px; " class="htm">
                     <tr style="color:#FFFFFF;background-color: crimson;">
@@ -326,18 +340,22 @@ function che() {
                         <td colspan="6">{{ user.Sub }}</td>
                         <td colspan="2">{{ user.CreN }}</td>
                         <td colspan="2">{{ user.SpN }}</td>
-                    <tr>
                     </tr>
                 </table>
                 <form  action="/mailTest/{{ user.ID }}" method="post">
-                   <div class="row" style="position: relative;">
-                       <div class="col-12">
+                   <div class="row" style="position: relative; margin-top:10px;">
+                       <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           <textarea name="msg" style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea>
-                    </div>
-                    </div>
-                   <div class="row" style="margin-top:1.5%">
+                           <textarea name="msg" style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-right: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea>
+                       </div>
+                        <div class="col-12 col-md-5">
+                             <span class="badge badge-default" sytle="width:100%">收件人:</span>
+                            <br>
+                            <textarea style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" id="p{{ user.ID }}"></textarea>
+                        </div>
+                   </div>
+                   <div class="row">
                        <div class="col-12">
                         <div class="cont">
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
@@ -355,8 +373,8 @@ function che() {
                                 <tbody>
                                   {% for SR in quSR %}
                                     <tr style="border: 1px solid;">
-                                      <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" value="{{ SR.Mail }}"></td>
-                                      <td style="border:1px solid;" id="SName" Name="SName"><label>{{ SR.Name }}</label></td>
+                                      <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();"></td>
+                                      <td style="border: 1px solid;" id="SName" Name="SName"><label>{{ SR.Name }}</label></td>
                                       {% if SR.MVPN is not none %}
                                           <td style="border: 1px solid;" id="Sid" Name="Sid"><label>{{ SR.MVPN }}</label></td>
                                       {% else %}
@@ -369,8 +387,11 @@ function che() {
                               </table>    
                             </div>
                         </div>
-                           <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; position:absolute;border-radius: 30px;">收件者</button>
-                           <button type="submit" class="btn btn-success" style="right:3%; position:absolute;border-radius: 30px;">送出</button>
+                        <br><br>
+                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute;">
+                               <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;">選擇收件者</button>
+                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;">送出</button>
+                           </div>
                        </div>
                    </div>
                  </form>
