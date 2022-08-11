@@ -338,15 +338,21 @@ def calendar_ne():
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR)
 
-@app.route('/calendar_ch',methods=['GET','POST'])
-def calendar_ch(Name):
+@app.route('/calendar_ch/<ID>',methods=['GET','POST'])
+def calendar_ch(ID):
     if(request.method == 'POST'):
-        Name = request.form.get("Name")
-        MVPN = request.form.get("MVPN")
-        Mail = request.form.get("Mail")
-        NPe = SR(Name, MVPN, Mail)
-        sr_db.session.add(NPe)
-        sr_db.session.commit()
+        SName = request.form.get("SName")
+        SMVPN = request.form.get("SMVPN")
+        SMail = request.form.get("SMail")
+        nSR = SR.query.filter_by(Name=str(ID)).first()
+        if(SName == ""):
+            sr_db.session.delete(nSR)            
+            sr_db.session.commit()
+        else:
+            nSR = SR.query.filter_by(Name=str(ID)).first()
+            nSR.MVPN = str(SMVPN)  
+            nSR.Mail = str(SMail)
+            sr_db.session.commit()
         
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -391,13 +397,14 @@ def Mojor():
 def mailSt(ID):
     Users = User.query.filter_by(ID=str(ID)).first()
     content = MIMEMultipart()  #建立MIMEMultipart物件
-    content["subject"] = "SR 編號: #"+Users.ID  #郵件標題
+    content["subject"] = "Major SR 狀態更新" #郵件標題
     content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
     content["to"] = "108111113@mail.aeust.edu.tw" #收件者
-    SpN = "實驗室支援: " + Users.SpN + "\r\n" 
-    StD = "預計" + Users.StartDate + "開始測試" + "\r\n"
-    EnD = "預計" + Users.EndDate + "結束測試" 
-    content.attach(MIMEText(SpN+StD+EnD))
+    ma = "1. " + "SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
+    SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
+    StD = "3. 於今日" + Users.StartDate + "開始測試" + "\r\n"
+    EnD = "4. 預計" + Users.EndDate + "結束測試" 
+    content.attach(MIMEText(ma+SpN+StD+EnD))
     with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
         try:
             smtp.ehlo()  # 驗證SMTP伺服器
@@ -426,17 +433,75 @@ def mailSt(ID):
 def mailTest(ID):
     if(request.method == 'POST'):
         Users = User.query.filter_by(ID=str(ID)).first()
-        msg = request.form.get("msg")
+        smsg = request.form.get("msg")
         sents = request.form.getlist("SMail")
         recipient = ""
         for i in range(len(sents)):
             recipient += sents[i]+","
+        ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" + "2. " 
+        SpN = "實驗室支援: " + Users.SpN + "\r\n" 
+        msg = "3. " + smsg
         content = MIMEMultipart()  #建立MIMEMultipart物件
-        content["subject"] = "SR 編號: #" + Users.ID  #郵件標題
+        content["subject"] = "Major SR 狀態更新"  #郵件標題
         content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
         content["to"] = recipient #收件者
         SpN = "實驗室支援: " + Users.SpN + "\r\n" 
-        content.attach(MIMEText(SpN+msg))
+        content.attach(MIMEText(ma+SpN+msg))
+        with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+            try:
+                smtp.ehlo()  # 驗證SMTP伺服器
+                smtp.starttls()  # 建立加密傳輸
+                smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+                smtp.send_message(content)  # 寄送郵件
+                print("Complete!")
+            except Exception as e:
+                print("Error message: ", e)
+        
+    
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+            
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR)
+
+@app.route('/mailEnd/<ID>',methods=['GET','POST'])
+def mailEnd(ID):
+    if(request.method == 'POST'):
+        Users = User.query.filter_by(ID=str(ID)).first()
+        date = request.form.get("date")
+        tot = request.form.get("tot")
+        mpass = request.form.get("mpass")
+        fail = request.form.get("fail")
+        no = request.form.get("no")
+        sents = request.form.get("SMail")
+        content = MIMEMultipart()  #建立MIMEMultipart物件
+        content["subject"] = "Major SR 狀態更新"  #郵件標題
+        content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
+        content["to"] = sents #收件者
+        ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
+        SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
+        msg = "3. 已於 " + date + " 結束測試 " + "\r\n" 
+        msg += "4. 共 " + tot + " 測試 " + "\r\n" 
+        msg += "   Pass: " + mpass + " 項 " + "\r\n" 
+        msg += "   Fail: " + fail + " 項 " + "\r\n" 
+        msg += "   無環境測試: " + no + " 項 " 
+        content.attach(MIMEText(ma+SpN+msg))
         with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
             try:
                 smtp.ehlo()  # 驗證SMTP伺服器

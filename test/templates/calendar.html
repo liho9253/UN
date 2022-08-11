@@ -31,6 +31,12 @@
     f{{ user.ID }}.style.display='block';
   {% endfor %}
   };
+  function showE(){
+  {% for user in arr %}
+    en{{ user.ID }}.style.display='block';
+    f{{ user.ID }}.style.display='block';
+  {% endfor %}
+  };
   function closeD(){
     dialog.style.display='none';
     fade.style.display='none';
@@ -42,6 +48,12 @@
   function closeR(){
   {% for user in arr %}
     e{{ user.ID }}.style.display='none';
+    f{{ user.ID }}.style.display='none';
+  {% endfor %}
+  };  
+  function closeE(){
+  {% for user in arr %}
+    en{{ user.ID }}.style.display='none';
     f{{ user.ID }}.style.display='none';
   {% endfor %}
   };  
@@ -103,17 +115,145 @@ function che() {
 }
   
 function pschecked() {
-    var ps = "";
 {% for user in arr %}
+    var ps = "";
+    var per = "";
 {% for SR in quSR %}
     if (document.getElementById("w{{ user.ID }}{{ SR.Mail }}").checked == true) {
-        if(){
-        }
-        ps += "{{ SR.Name }}"+"  ";
+        ps += "{{ SR.Name }}"+",";
+        per += "{{ SR.Mail }}"+",";
      }
      document.getElementById("p{{ user.ID }}").innerHTML = ps
+     document.getElementById("id{{ user.ID }}").value = per
 {% endfor %}
 {% endfor %}
+}
+
+$(function () {
+  let $table = $(".table_change");
+  let $thRows = $table.find("thead th");
+  $thRows.each(function (key, thRow) {
+    $table
+      .find("tbody tr td:nth-child(" + (key + 1) + ")")
+      .attr("data-th", $(thRow).text());
+  });
+  goPage(1, 7); 
+});
+function goPage(currentPage, pageSize) {
+  
+  var tr = $(".table_change tbody tr");
+  var num = $(".table_change tbody tr").length;
+  var totalPage = Math.ceil(num / pageSize ); 
+
+  $('#numberPage').attr('max',totalPage); 
+
+  $("#numberPage").off('change').on("change",function(){
+    let numberPage =  $("#numberPage").val();
+    if( numberPage > totalPage ){ 
+      console.log("頁數超過")
+      return
+   }
+    goPage(numberPage, 7);
+  });
+
+  var startRow = (currentPage - 1) * pageSize + 1; 
+  var endRow = currentPage * pageSize; 
+  endRow = (endRow > num) ? num : endRow; 
+
+
+  for (var i = 1; i < (num + 1); i++) {
+      var trRow = tr[i - 1];
+      if (i >= startRow && i <= endRow) {
+          trRow.style.display = "";
+      } else {
+          trRow.style.display = "none";
+      }
+  }
+  
+  
+  var tempStr = "";
+  if (currentPage > 1) {
+      tempStr += `<a href="javascript:;" onClick="goPage(1,${pageSize})">首頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage - 1},${pageSize})">上一頁</a>`;      
+  } else {
+      tempStr += `<a href="javascript:;" class="disabled">首頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled">上一頁</a>`;
+  }
+      tempStr += `<div><span>第${currentPage}頁</span>/<span>共${totalPage}頁</span></div>`;
+      
+
+  if (currentPage < totalPage) {
+      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage + 1},${pageSize})">下一頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPage(${totalPage},${pageSize})">尾頁</a>`;
+  } else {
+      tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
+  }
+
+  $("#pageModule").html(tempStr);
+}
+$(function () {
+  let $table = $(".table_changeC");
+  let $thRows = $table.find("thead th");
+  $thRows.each(function (key, thRow) {
+    $table
+      .find("tbody tr td:nth-child(" + (key + 1) + ")")
+      .attr("data-th", $(thRow).text());
+  });
+  goPageC(1, 7); 
+});
+function goPageC(currentPage, pageSize) {
+  
+  var tr = $(".table_changeC tbody tr");
+  var num = $(".table_changeC tbody tr").length;
+  var totalPageC = Math.ceil(num / pageSize ); 
+
+  $('#numberPageC').attr('max',totalPageC); 
+
+  $("#numberPageC").off('change').on("change",function(){
+    let numberPageC =  $("#numberPageC").val();
+    if( numberPageC > totalPageC ){ 
+      console.log("頁數超過")
+      return
+   }
+    goPageC(numberPageC, 7);
+  });
+
+  var startRow = (currentPage - 1) * pageSize + 1; 
+  var endRow = currentPage * pageSize; 
+  endRow = (endRow > num) ? num : endRow; 
+
+
+  for (var i = 1; i < (num + 1); i++) {
+      var trRow = tr[i - 1];
+      if (i >= startRow && i <= endRow) {
+          trRow.style.display = "";
+      } else {
+          trRow.style.display = "none";
+      }
+  }
+  
+  
+  var tempStr = "";
+  if (currentPage > 1) {
+      tempStr += `<a href="javascript:;" onClick="goPageC(1,${pageSize})">首頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPage - 1},${pageSize})">上一頁</a>`;      
+  } else {
+      tempStr += `<a href="javascript:;" class="disabled">首頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled">上一頁</a>`;
+  }
+      tempStr += `<div><span>第${currentPage}頁</span>/<span>共${totalPageC}頁</span></div>`;
+      
+
+  if (currentPage < totalPageC) {
+      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPage + 1},${pageSize})">下一頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPageC(${totalPageC},${pageSize})">尾頁</a>`;
+  } else {
+      tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
+  }
+
+  $("#pageModuleC").html(tempStr);
 }
 </script>
 <style>
@@ -139,10 +279,10 @@ function pschecked() {
     box-shadow: 0 0px 10px rgb(163, 163, 163);
     border-radius: 10px;
     position: fixed;
-    top: 100px;
-    left: 50%;
+    top: 20%;
+    left: 40%;
     transform: translate(-120px, 0px);
-    width: 240px;
+    width: 65vh;
     padding-top: -15px;
     padding: 15px;
     background-color: #eee;
@@ -164,6 +304,7 @@ function pschecked() {
     display: none;
     overflow-y:auto;
     overflow-x: hidden;
+    color: rgb(255, 227, 227);
   }
   .infoModalR{
     border: none;
@@ -181,6 +322,23 @@ function pschecked() {
     overflow-y:auto;
     overflow-x: hidden;
   }
+  .infoModalE{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    position: fixed;
+    top: 30%;
+    width: auto;
+    height: 38%;
+    padding-top: -15px;
+    padding: 30px;
+    margin: auto;
+    padding-right: 5%;
+    z-index: 20;
+    background-color: #eee;
+    display: none;
+    overflow-y:auto;
+    overflow-x: hidden;
+  }
   #infoModal::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
   }
@@ -188,9 +346,17 @@ function pschecked() {
     position: absolute; 
     top: 5px; 
     right:15px;
-    font-size: 15px;
-    cursor: pointer;
     font-size: 30px;
+    cursor: pointer;
+    z-index:11;
+  }
+  .closes{
+    position: absolute; 
+    bottom: 5px; 
+    right:15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index:11;
   }
   .black_overlay {
       display: none;
@@ -244,6 +410,342 @@ function pschecked() {
   display: flex;
   justify-content: center;
   align-items: center; 
+}  
+.closeA{
+    width: 60px;
+    height: 30px;
+    position: absolute;      
+    bottom: 3%;
+    right:20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+    background-color: crimson;
+    text-align: center;
+    border-radius: 20px;
+  }
+section {
+        display: flex;
+        min-height: 60vh;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(to bottom, #f7f7fe, #dff1ff);
+    }
+
+    section .colour {
+        position: absolute;
+        filter: blur(150px);
+    }
+
+    section .colour:nth-child(1) {
+        top: -100px;
+        width: 600px;
+        height: 600px;
+        background: #d44a4a;
+    }
+
+    section .colour:nth-child(2) {
+        left: 100px;
+        width: 500px;
+        height: 500px;
+        bottom: -150px;
+        background: #32acf2;
+    }
+
+    section .colour:nth-child(3) {
+        right: 300px;
+        bottom: 50px;
+        width: 300px;
+        height: 300px;
+        background: #8c429c;
+    }
+
+    .box {
+        position: relative;
+    }
+
+    .box .square {
+        position: absolute;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.1);
+        animation-delay: calc(-1s * var(--i));
+        animation: animate 10s linear infinite;
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    @keyframes animate {
+
+        0%,
+        100% {
+            transform: translateY(-40px);
+        }
+
+        50% {
+            transform: translateY(40px);
+        }
+    }
+
+    .box .square:nth-child(1) {
+        top: -50px;
+        left: -60px;
+        width: 100px;
+        height: 100px;
+    }
+
+    .box .square:nth-child(2) {
+        z-index: 2;
+        top: 150px;
+        left: -100px;
+        width: 120px;
+        height: 120px;
+    }
+
+    .box .square:nth-child(3) {
+        z-index: 2;
+        width: 80px;
+        height: 80px;
+        right: -50px;
+        bottom: -60px;
+    }
+
+    .box .square:nth-child(4) {
+        left: 100px;
+        width: 50px;
+        height: 50px;
+        bottom: -80px;
+    }
+
+    .box .square:nth-child(5) {
+        top: -80px;
+        left: 140px;
+        width: 60px;
+        height: 60px;
+    }
+
+    .container {
+        width: 400px;
+        display: flex;
+        min-height: 400px;
+        position: relative;
+        border-radius: 10px;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form {
+        width: 100%;
+        height: 100%;
+        padding: 40px;
+        position: relative;
+    }
+
+    .form h2::before {
+        left: 0;
+        width: 80px;
+        height: 4px;
+        content: "";
+        bottom: -10px;
+        background: #fff;
+        position: absolute;
+    }
+
+    .form .input__box {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .form .input__box input {
+        width: 100%;
+        color: rgba(0, 0, 0, 0.999);
+        border: none;
+        outline: none;
+        font-size: 16px;
+        padding: 10px 20px;
+        letter-spacing: 1px;
+        border-radius: 35px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form::placeholder {
+        color: #fff;
+    }
+
+    .form .input__box input[type="submit"] {
+        color: #666;
+        cursor: pointer;
+        background: #fff;
+        max-width: 100px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .forget {
+        color: #fff;
+        margin-top: 5px;
+    }
+
+    .forget a {
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    ::placeholder{
+      color: rgb(74, 74, 74);
+    }
+    table {
+	width: 800px;
+	border-collapse: collapse;
+	overflow: hidden;
+	box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+#Per th,
+#Per td {
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.462);
+}
+
+#Per th {
+	text-align: left;
+}
+#Per thead th{	 
+	background-color: crimson;
+    color: rgb(255, 255, 255);
+    text-align:center ;
+}
+#Per tbody tr:hover{
+  background-color: rgba(255, 255, 255, 0.729);
+}
+#Per tbody td{
+  position: relative;
+}
+
+#Per button{
+  background-color: #eee;
+  float: right;
+}
+#Per input[type="text"]{
+  text-align: center;
+}
+{% for user in arr %}
+#e{{ user.ID }} th,
+#e{{ user.ID }} td {
+	padding: 15px;
+	background-color: rgba(255, 255, 255, 0.462);
+}
+
+#e{{ user.ID }} th {
+	text-align: left;
+}
+#e{{ user.ID }} thead th{	 
+	background-color: crimson;
+    color: rgb(255, 255, 255);
+    text-align:center ;
+}
+#e{{ user.ID }} tbody tr:hover{
+  background-color: rgba(255, 255, 255, 0.729);
+}
+#e{{ user.ID }} tbody td{
+  position: relative;
+}
+
+#e{{ user.ID }} button{
+  background-color: #eee;
+  float: right;
+}
+{% endfor %}
+#pageModule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  padding-top: 10px;
+  position: absolute;      
+  top: 87%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+#pageModule  a {
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    color: #fff;
+    border: 1px solid crimson;
+    background-color: crimson;
+}
+#pageModule  a:hover {
+      background-color: rgb(255, 0, 51);
+    }
+
+#pageModule  a.disabled {
+  background-color: #ccc;
+   border: 1px solid #ccc;
+}
+
+#pageModuleC {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  padding-top: 10px;
+  position: absolute;      
+  top: 87%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+#pageModuleC  a {
+    display: block;
+    padding: 5px;
+    margin: 5px;
+    color: #fff;
+    border: 1px solid crimson;
+    background-color: crimson;
+}
+#pageModuleC  a:hover {
+      background-color: rgb(255, 0, 51);
+    }
+
+#pageModuleC  a.disabled {
+  background-color: #ccc;
+   border: 1px solid #ccc;
+}
+#numberPageModule {
+  display: flex;
+  bottom: 90%;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  color: #000;
+  position: absolute;      
+  top: 94.5%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+#numberPageModuleC {
+  display: flex;
+  bottom: 90%;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+  color: #000;
+  position: absolute;      
+  top: 94.5%;
+  left: 50%;
+  transform: translate(-50%,-50%);
 }
 </style>
 </head>
@@ -256,20 +758,43 @@ function pschecked() {
       <div id="infoModal" class="infoModal">
         <div onclick="closeD();" class="close">X</div>
         <div id="newPer">
-          <form action="calendar_ne" method="post">
-            <p style="font-family:'標楷體';font-size:24px;font-weight:bold; margin-top:-5px;">新增聯絡人</p>
-            <p>名稱: </p><input type="text" id="Name" name="Name">
-            <p>MVPN: </p><input type="text" id="MVPN" name="MVPN">
-            <p>Mail: </p><input type="email" id="Mail" name="Mail">
-            <input type="submit" value="確定" style="right:20px;position: absolute;">
-          </form>
+          <section>
+            <div class="colour"></div>
+            <div class="colour"></div>
+            <div class="colour"></div>
+            <div class="box">
+              <div class="square" style="--i:0;"></div>
+              <div class="square" style="--i:1;"></div>
+              <div class="square" style="--i:2;"></div>
+              <div class="square" style="--i:3;"></div>
+              <div class="square" style="--i:4;"></div>
+              <div class="container">
+                <div class="form">
+                  <form action="calendar_ne" method="post">
+                    <p style="color: rgba(252, 243, 243, 0.868); font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
+                    <div class="input__box">
+                      <input type="text" placeholder="SR 名稱:" id="Name" name="Name">
+                    </div>
+                    <div class="input__box">
+                      <input type="text" placeholder="MVPN:" id="MVPN" name="MVPN">
+                    </div>
+                    <div class="input__box">
+                      <input type="email" placeholder="Mail:"id="Mail" name="Mail">
+                    </div>
+                    <div class="input__box">
+                      <input type="submit" value="送出" style="right:20px;position: absolute;">
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
       <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:240px;" >
       <div class="cont">
         <div id="Per" class="infoModalP">
-          <div onclick="closeP();" class="close">X</div>
-            <table cellpadding="5" style="border: 1px solid;">
+            <table cellpadding="5" style="border: 1px solid;" class="table_change">
               <thead>
                   <tr style="border: 1px solid;">
                       <th style="border: 1px solid;">姓名</th>
@@ -279,21 +804,26 @@ function pschecked() {
               </thead>
               <tbody>
                 {% for SR in quSR %}
-                <form  action="calendar_ne" method="post">
+                <form  action="/calendar_ch/{{ SR.Name }}" method="post">
                   <tr style="border: 1px solid;">
-                    <td style="border: 1px solid;" id="SName" Name="SName"><input type="text" value="{{ SR.Name }}" disabled="disabled"></dr>
+                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="SName" Name="SName"></td>
                     {% if SR.MVPN is not none %}
-                        <td style="border: 1px solid;" id="Sid" Name="Sid"><input type="text" value="{{ SR.MVPN }}" disabled="disabled" size="5px"></td>
+                        <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% else %}
-                        <td style="border: 1px solid;" id="Sid" Name="Sid"><input type="text" value="" disabled="disabled" size="5px"></td>
+                        <td style="border: 1px solid;"><input type="text" value="" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% endif %}
-                    <td style="border: 1px solid;" id="SMail" Name="SMail"><input type="text" value="{{ SR.Mail }}" disabled="disabled" size="40px"></td>
+                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" disabled="disabled" size="40px" id="SMail" Name="SMail"></td>
                     <td><input type="submit" value="修改" onclick="javascript:return che()"></td> 
                   </tr>
                 </form>
                 {% endfor %}
               </tbody>
-            </table>    
+            </table>  
+            <div onclick="closeP();" class="closeA" style="z-index: 11;">確定</div>
+            <div id="pageModule"></div>
+            <div id="numberPageModule">
+              <label for="numberPage">跳至第<input id="numberPage" type="number" value="1" min="1" max="100">頁</label>
+            </div>  
           </div>
         </div>
       <div style="margin-top:-40px;float:right ">
@@ -352,15 +882,14 @@ function pschecked() {
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
                             <br>
-                            <textarea style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" id="p{{ user.ID }}"></textarea>
+                            <textarea style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea>
                         </div>
                    </div>
                    <div class="row">
                        <div class="col-12">
-                        <div class="cont">
+                        <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                            <div onclick="closeR();" class="close">X</div>
                               <table cellpadding="5" style="border: 1px solid;">
                                 <thead>
                                     <tr>
@@ -385,16 +914,33 @@ function pschecked() {
                                   {% endfor %}
                                 </tbody>
                               </table>    
+                              <div onclick="closeR();" class="close" style="z-index: 11;">X</div>
+                              <div id="pageModuleC"></div>
                             </div>
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute;">
+                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;">發送結束訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;">送出</button>
                            </div>
                        </div>
                    </div>
                  </form>
+                   <div style="justify-content: center; align-items: center; display: flex;" >
+                    <div id="en{{ user.ID }}" class="infoModalE">
+                        <form  action="/mailEnd/{{ user.ID }}" method="post">
+                            <div onclick="closeE();" class="close">X</div>
+                            <label style="float:right">已於&nbsp;<input type="date" style="width:7em" name="date" id="date">結束測試</label><br>
+                            <label style="float:right">共&nbsp;<input type="number" style="width:9em" name="tot" id="tot" value="0" min="0">測試</label><br>
+                            <label style="float:right">Pass:&nbsp;<input type="number" style="width:10em" name="mpass" id="tot" value="0" min="0">項</label><br>
+                            <label style="float:right">Fail:&nbsp;<input type="number" style="width:10em" name="fail" id="tot" value="0" min="0">項</label><br>
+                            <label style="float:right">無環境測試:&nbsp;<input type="number" style="width:10em" name="no" id="tot" value="0" min="0">項</label><br>
+                            <input type="text" id="id{{ user.ID }}" style="display:none;" name="SMail" ></input>
+                            <button type="submit"  class="btn btn-success" style="right:15px;bottom:20px; border-radius: 30px;position: absolute;">確認送出</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
         {% endfor %}
