@@ -193,7 +193,7 @@ function goPage(currentPage, pageSize) {
   $("#pageModule").html(tempStr);
 }
 $(function () {
-  let $table = $(".table_changeC");
+  let $table = $(".table_change");
   let $thRows = $table.find("thead th");
   $thRows.each(function (key, thRow) {
     $table
@@ -780,7 +780,7 @@ section {
                       <input type="text" placeholder="MVPN:" id="MVPN" name="MVPN">
                     </div>
                     <div class="input__box">
-                      <input type="email" placeholder="Mail:"id="Mail" name="Mail">
+                      <input type="email" placeholder="Mail:" id="Mail" name="Mail">
                     </div>
                     <div class="input__box">
                       <input type="submit" value="送出" style="right:20px;position: absolute;">
@@ -818,6 +818,14 @@ section {
                   </tr>
                 </form>
                 {% endfor %}
+                <form action="calendar_ne" method="post">
+                  <tr style="border: 1px solid;">
+                   <td style="border: 1px solid;"> <input type="text" placeholder="SR 名稱:" id="Name" name="Name"></td>
+                   <td style="border: 1px solid;"> <input type="text" placeholder="MVPN:"  size="5px" id="MVPN" name="MVPN"></td>
+                   <td style="border: 1px solid;"> <input type="email" placeholder="Mail:" size="40px" id="Mail" name="Mail"></td>
+                   <td style="border: 1px solid;"> <input type="submit" value="送出"></td>
+                  </tr>
+                </form>
               </tbody>
             </table>  
             <div onclick="closeP();" class="closeA" style="z-index: 11;">確定</div>
@@ -891,7 +899,7 @@ section {
                         <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                              <table cellpadding="5" style="border: 1px solid;">
+                              <table cellpadding="5" style="border: 1px solid;" >
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -917,6 +925,9 @@ section {
                               </table>    
                               <div onclick="closeR();" class="close" style="z-index: 11;">X</div>
                               <div id="pageModuleC"></div>
+                              <div id="numberPageModuleC">
+                                <label for="numberPageC">跳至第<input id="numberPageC" type="number" value="1" min="1" max="100">頁</label>
+                              </div>  
                             </div>
                         </div>
                         <br><br>
