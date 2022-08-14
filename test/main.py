@@ -136,6 +136,7 @@ qu = User.query.order_by("ID")
 
 def get_page(offset=0, per_page=10, qu=qu):
     return qu[offset: offset + per_page]
+
 @app.route('/', defaults={'page': 1})
 @app.route('/<page>')
 def index(page):
@@ -205,6 +206,19 @@ def update():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
+    qu = User.query.all()
+    total = len(qu)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
 
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
