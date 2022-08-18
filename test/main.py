@@ -433,14 +433,16 @@ def calendar():
 @app.route('/calendar_ne',methods=['GET','POST'])
 def calendar_ne():
     if(request.method == 'POST'):
-        Name = request.form.get("Name")
-        MVPN = request.form.get("MVPN")
-        Mail = request.form.get("Mail")
-        if(Name != "" and Mail != ""):
-            NPe = SR(Name, MVPN, Mail)
-            sr_db.session.add(NPe)
-            sr_db.session.commit()
-        
+        sName = request.form.get("Name")
+        sMVPN = request.form.get("MVPN")
+        sMail = request.form.get("Mail")
+        if(sName != "" and sMail != ""):
+            ss = SR.query.filter_by(Name = sName).all()
+            if(ss.Name[0] != sName) and (ss.Mail[0] != sMail):
+                NPe = SR(sName, sMVPN, sMail)
+                sr_db.session.add(NPe)
+                sr_db.session.commit()
+            
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  

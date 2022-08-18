@@ -189,10 +189,11 @@ function goPage(currentPage, pageSize) {
       tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
       tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
   }
+
   $("#pageModule").html(tempStr);
 }
 $(function () {
-  let $table = $(".table_change");
+  let $table = $(".table_changeC");
   let $thRows = $table.find("thead th");
   $thRows.each(function (key, thRow) {
     $table
@@ -303,7 +304,6 @@ function goPageC(currentPage, pageSize) {
     display: none;
     overflow-y:auto;
     overflow-x: hidden;
-    color: rgb(255, 227, 227);
   }
   .infoModalR{
     border: none;
@@ -794,7 +794,7 @@ section {
       <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:240px;" >
       <div class="cont">
         <div id="Per" class="infoModalP">
-            <table cellpadding="5" style="border: 1px solid;" class="table_change">
+            <table cellpadding="5" style="border:8px #ff9382 groove;;" class="table_change">
               <thead>
                   <tr style="border: 1px solid;">
                       <th style="border: 1px solid;">姓名</th>
@@ -844,9 +844,9 @@ section {
       <div id="calendar"></div>
       {% for user in arr %}
         <div style="justify-content: center; align-items: center; display: flex;" >
-            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 65%;top: 20%;position: fixed;display: none;">
+            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 70%;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
-                <table style="width: 100%;text-align: center; font-size: 24px; " class="htm">
+                <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
                     <tr style="color:#FFFFFF;background-color: crimson;">
                         <th colspan="1" style="text-align: center;">SR 編號</th>
                         <th colspan="4" style="text-align: center;">預計開始日</th>
@@ -881,16 +881,16 @@ section {
                     </tr>
                 </table>
                 <form  action="/mailTest/{{ user.ID }}" method="post">
-                   <div class="row" style="position: relative; margin-top:10px;">
+                   <div class="row" style="position: relative; margin-top:30px;"><!--0701-->
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           <textarea name="msg" style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-right: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea>
+                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-right: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea><!--0701-->
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
                             <br>
-                            <textarea style="width:100%;height:100px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea>
+                            <textarea style="width:100%;height:150px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea><!--0701-->
                         </div>
                    </div>
                    <div class="row">
@@ -898,7 +898,7 @@ section {
                         <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                              <table cellpadding="5" style="border: 1px solid;" >
+                              <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_changeC"><!--0701-->
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -922,15 +922,12 @@ section {
                                   {% endfor %}
                                 </tbody>
                               </table>    
-                              <div onclick="closeR();" class="close" style="z-index: 11;">X</div>
-                              <div id="pageModuleC"></div>
-                              <div id="numberPageModuleC">
-                                <label for="numberPageC">跳至第<input id="numberPageC" type="number" value="1" min="1" max="100">頁</label>
-                              </div>  
+                              <div onclick="closeR();" class="closeA" style="z-index: 11;">確定</div><!--0701-->
+                              <div style="margin-top: 20px;" id="pageModuleC"></div><!--0701-->
                             </div>
                         </div>
                         <br><br>
-                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute;">
+                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;">發送結束訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;">送出</button>
