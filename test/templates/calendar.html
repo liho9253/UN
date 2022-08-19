@@ -192,21 +192,23 @@ function goPage(currentPage, pageSize) {
 
   $("#pageModule").html(tempStr);
 }
+
+
 $(function () {
   let $table = $(".table_changeC");
   let $thRows = $table.find("thead th");
-  $thRows.each(function (key, thRow) {
+  $thRows.each(function (key, thRows) {
     $table
       .find("tbody tr td:nth-child(" + (key + 1) + ")")
       .attr("data-th", $(thRow).text());
   });
   goPageC(1, 7); 
 });
-function goPageC(currentPage, pageSize) {
+function goPageC(currentPageC, pageSizeC) {
   
   var tr = $(".table_changeC tbody tr");
   var num = $(".table_changeC tbody tr").length;
-  var totalPageC = Math.ceil(num / pageSize ); 
+  var totalPageC = Math.ceil(num / pageSizeC ); 
 
   $('#numberPageC').attr('max',totalPageC); 
 
@@ -219,8 +221,8 @@ function goPageC(currentPage, pageSize) {
     goPageC(numberPageC, 7);
   });
 
-  var startRow = (currentPage - 1) * pageSize + 1; 
-  var endRow = currentPage * pageSize; 
+  var startRow = (currentPageC - 1) * pageSizeC + 1; 
+  var endRow = currentPageC * pageSizeC; 
   endRow = (endRow > num) ? num : endRow; 
 
 
@@ -233,21 +235,20 @@ function goPageC(currentPage, pageSize) {
       }
   }
   
-  
   var tempStr = "";
-  if (currentPage > 1) {
-      tempStr += `<a href="javascript:;" onClick="goPageC(1,${pageSize})">首頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPage - 1},${pageSize})">上一頁</a>`;      
+  if (currentPageC > 1) {
+      tempStr += `<a href="javascript:;" onClick="goPageC(1,${pageSizeC})">首頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPageC - 1},${pageSizeC})">上一頁</a>`;      
   } else {
       tempStr += `<a href="javascript:;" class="disabled">首頁</a>`;
       tempStr += `<a href="javascript:;" class="disabled">上一頁</a>`;
   }
-      tempStr += `<div><span>第${currentPage}頁</span>/<span>共${totalPageC}頁</span></div>`;
+      tempStr += `<div><span>第${currentPageC}頁</span>/<span>共${totalPageC}頁</span></div>`;
       
 
-  if (currentPage < totalPageC) {
-      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPage + 1},${pageSize})">下一頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPageC(${totalPageC},${pageSize})">尾頁</a>`;
+  if (currentPageC < totalPageC) {
+      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPageC + 1},${pageSizeC})">下一頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPageC(${totalPageC},${pageSizeC})">尾頁</a>`;
   } else {
       tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
       tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
