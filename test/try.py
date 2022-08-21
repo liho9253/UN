@@ -12,8 +12,6 @@ config['http']['port'] = str(port)
 
 with open('config.ini', 'w') as f:
     config.write(f)
-    
-c
 
 print(config['http']['host'])
 
