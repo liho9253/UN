@@ -755,44 +755,7 @@ section {
       <form action="/">
           <input type="submit" value="工單匯入系統" class="te" style="width:120px; ">
       </form>
-      <button onclick="showD();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;" class="te">新增聯絡人</button>
-      <div id="infoModal" class="infoModal">
-        <div onclick="closeD();" class="close">X</div>
-        <div id="newPer">
-          <section>
-            <div class="colour"></div>
-            <div class="colour"></div>
-            <div class="colour"></div>
-            <div class="box">
-              <div class="square" style="--i:0;"></div>
-              <div class="square" style="--i:1;"></div>
-              <div class="square" style="--i:2;"></div>
-              <div class="square" style="--i:3;"></div>
-              <div class="square" style="--i:4;"></div>
-              <div class="container">
-                <div class="form">
-                  <form action="calendar_ne" method="post">
-                    <p style="color: rgba(252, 243, 243, 0.868); font-family:'標楷體';font-size: 24px;font-weight:bold; margin-top: -5px;">新增聯絡人</p>
-                    <div class="input__box">
-                      <input type="text" placeholder="SR 名稱:" id="Name" name="Name">
-                    </div>
-                    <div class="input__box">
-                      <input type="text" placeholder="MVPN:" id="MVPN" name="MVPN">
-                    </div>
-                    <div class="input__box">
-                      <input type="email" placeholder="Mail:" id="Mail" name="Mail">
-                    </div>
-                    <div class="input__box">
-                      <input type="submit" value="送出" style="right:20px;position: absolute;">
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
-      <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:240px;" >
+      <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;" >
       <div class="cont">
         <div id="Per" class="infoModalP">
             <table cellpadding="5" style="border:8px #ff9382 groove;;" class="table_change">
@@ -813,17 +776,17 @@ section {
                     {% else %}
                         <td style="border: 1px solid;"><input type="text" value="" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% endif %}
-                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" disabled="disabled" size="40px" id="SMail" Name="SMail"></td>
+                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
                     <td><input type="submit" value="修改" onclick="javascript:return che()"></td> 
                   </tr>
                 </form>
                 {% endfor %}
                 <form action="calendar_ne" method="post">
                   <tr style="border: 1px solid;">
-                   <td style="border: 1px solid;"> <input type="text" placeholder="SR 名稱:" id="Name" name="Name"></td>
-                   <td style="border: 1px solid;"> <input type="text" placeholder="MVPN:"  size="5px" id="MVPN" name="MVPN"></td>
-                   <td style="border: 1px solid;"> <input type="email" placeholder="Mail:" size="40px" id="Mail" name="Mail"></td>
-                   <td style="border: 1px solid;"> <input type="submit" value="送出"></td>
+                   <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
+                   <td style="border: 1px solid;"> <input type="text" placeholder="MVPN"  size="5px" id="MVPN" name="MVPN"></td>
+                   <td style="border: 1px solid;"> <input type="email" placeholder="Mail" size="40px" id="Mail" name="Mail"></td>
+                   <td style="border: 1px solid;"> <input type="submit" value="新增"></td>
                   </tr>
                 </form>
               </tbody>

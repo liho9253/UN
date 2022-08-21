@@ -437,8 +437,7 @@ def calendar_ne():
         sMVPN = request.form.get("MVPN")
         sMail = request.form.get("Mail")
         if(sName != "" and sMail != ""):
-            ss = SR.query.filter_by(Name = sName).all()
-            if(ss.Name[0] != sName) and (ss.Mail[0] != sMail):
+            if(SR.query.filter_by(Name = sName).first() == None) and (SR.query.filter_by(Mail = sMail).first() == None):
                 NPe = SR(sName, sMVPN, sMail)
                 sr_db.session.add(NPe)
                 sr_db.session.commit()
@@ -472,13 +471,17 @@ def calendar_ch(ID):
         SMVPN = request.form.get("SMVPN")
         SMail = request.form.get("SMail")
         nSR = SR.query.filter_by(Name=str(ID)).first()
+        if(SR.query.filter_by(Name = SName).first() == None) or (SR.query.filter_by(Name = SName).first() == SName):
+            nSR.Name = str(SName)  
+            sr_db.session.commit()
+        if (SR.query.filter_by(Mail = SMail).first() == None) or (SR.query.filter_by(Mail = SMail).first() == SMail):
+            nSR.Mail = str(SMail)
+            sr_db.session.commit()
+        if(SR.query.filter_by(MVPN = SMVPN).first() == None) or (SR.query.filter_by(MVPN = SMVPN).first() == SMail):
+            nSR.MVPN = str(SMVPN)
+            sr_db.session.commit()
         if(SName == ""):
             sr_db.session.delete(nSR)            
-            sr_db.session.commit()
-        else:
-            nSR = SR.query.filter_by(Name=str(ID)).first()
-            nSR.MVPN = str(SMVPN)  
-            nSR.Mail = str(SMail)
             sr_db.session.commit()
         
     quSR = SR.query.all()
@@ -525,18 +528,18 @@ def mailSt(ID):
     Users = User.query.filter_by(ID=str(ID)).first()
     content = MIMEMultipart()  #建立MIMEMultipart物件
     content["subject"] = "Major SR 狀態更新" #郵件標題
-    content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
-    content["to"] = "108111113@mail.aeust.edu.tw" #收件者
+    content["from"] = "smartfetelab@gmail.com"  #寄件者
+    content["to"] = "timmy89566@gmail.com" #收件者
     ma = "1. " + "SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
     SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
     StD = "3. 於今日" + Users.StartDate + "開始測試" + "\r\n"
     EnD = "4. 預計" + Users.EndDate + "結束測試" 
     content.attach(MIMEText(ma+SpN+StD+EnD))
-    with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+    with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
         try:
             smtp.ehlo()  # 驗證SMTP伺服器
             smtp.starttls()  # 建立加密傳輸
-            smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+            smtp.login("smartfetelab@gmail.com", "5Glab123")
             smtp.send_message(content)  # 寄送郵件
             print("Complete!")
         except Exception as e:
