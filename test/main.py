@@ -528,7 +528,7 @@ def mailSt(ID):
     Users = User.query.filter_by(ID=str(ID)).first()
     content = MIMEMultipart()  #建立MIMEMultipart物件
     content["subject"] = "Major SR 狀態更新" #郵件標題
-    content["from"] = "smartfetelab@gmail.com"  #寄件者
+    content["from"] = "timmy89566@gmail.com"  #寄件者
     content["to"] = "timmy89566@gmail.com" #收件者
     ma = "1. " + "SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
     SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
@@ -539,7 +539,7 @@ def mailSt(ID):
         try:
             smtp.ehlo()  # 驗證SMTP伺服器
             smtp.starttls()  # 建立加密傳輸
-            smtp.login("smartfetelab@gmail.com", "5Glab123")
+            smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
             smtp.send_message(content)  # 寄送郵件
             print("Complete!")
         except Exception as e:
@@ -573,15 +573,15 @@ def mailTest(ID):
         msg = "3. " + smsg
         content = MIMEMultipart()  #建立MIMEMultipart物件
         content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
+        content["from"] = "timmy89566@gmail.com"  #寄件者
         content["to"] = recipient #收件者
         SpN = "實驗室支援: " + Users.SpN + "\r\n" 
         content.attach(MIMEText(ma+SpN+msg))
-        with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
             try:
                 smtp.ehlo()  # 驗證SMTP伺服器
                 smtp.starttls()  # 建立加密傳輸
-                smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+                smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
                 smtp.send_message(content)  # 寄送郵件
                 print("Complete!")
             except Exception as e:
@@ -622,7 +622,7 @@ def mailEnd(ID):
         sents = request.form.get("SMail")
         content = MIMEMultipart()  #建立MIMEMultipart物件
         content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
+        content["from"] = "timmy89566@gmail.com"  #寄件者
         content["to"] = sents #收件者
         ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
         SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
@@ -632,11 +632,11 @@ def mailEnd(ID):
         msg += "   Fail: " + fail + " 項 " + "\r\n" 
         msg += "   無環境測試: " + no + " 項 " 
         content.attach(MIMEText(ma+SpN+msg))
-        with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
+        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
             try:
                 smtp.ehlo()  # 驗證SMTP伺服器
                 smtp.starttls()  # 建立加密傳輸
-                smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
+                smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
                 smtp.send_message(content)  # 寄送郵件
                 print("Complete!")
             except Exception as e:

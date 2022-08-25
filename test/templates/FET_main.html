@@ -23,7 +23,7 @@
             });
         });   
         function che() {
-            var msg = "確定要修改嗎？";
+            var msg = "確定要更新嗎？";
             if (confirm(msg)==true){
                 return true
             }else{
@@ -94,7 +94,7 @@
     <section id="picture">
         <div class="picture-container" style="margin-top: 30px;">
             <h1>遠傳NT工單匯入系統</h1>
-            <h2>FET NT work order import system</h2>
+            <h2>FET NT Work Order Import System</h2>
         </div>
     </section>
     <div class="container" style="padding-top: 50px; width:80%">
@@ -219,7 +219,7 @@
                                     <td colspan="2">{{ user.SpN }}</td>
                                 </tr>
                                 <tr style="text-align: center;">
-                                    <td colspan="5"><input type="submit" onclick="javascript:return che()" value="修改"></td>
+                                    <td colspan="5"><input type="submit" onclick="javascript:return che()" value="更新"></td>
                                     </form>
                                     <form action="/mailSt/{{ user.ID }}" method="post">
                                       <td colspan="5"><input type="submit" value="Mail"></td>

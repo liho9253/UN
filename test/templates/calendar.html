@@ -91,9 +91,9 @@
                   start: '{{ qu[i].StartDate }}',
                   end: '{{ qu[i].EndDate }}',
                     {% if qu[i].State == 'In Coming' %}
-                        color: '#696969',
+                        color: '#A9A9A9',
                     {% elif qu[i].State == 'On Going' %}
-                        color: '#E6D933',
+                        color: '#E6C35C',
                     {% else %}
                         color: '#257e4a',
                     {% endif %}
@@ -797,8 +797,8 @@ section {
           </div>
         </div>
       <div style="margin-top:-40px;float:right ">
-        <div class="circle" style="background-color: #696969;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
-        <div class="circle" style="background-color: #E6D933;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
+        <div class="circle" style="background-color: #A9A9A9;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">In Coming</p>
+        <div class="circle" style="background-color: #E6C35C;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">On Going</p>
         <div class="circle" style="background-color: #257e4a;"></div><p style="display:inline-block; margin-left:5px; vertical-align:middle;">Completed</p>
       </div>  
       <div id="fade" class="black_overlay"></div>
@@ -806,7 +806,7 @@ section {
       <div id="calendar"></div>
       {% for user in arr %}
         <div style="justify-content: center; align-items: center; display: flex;" >
-            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 70%;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
+            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 75%;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
                 <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
                     <tr style="color:#FFFFFF;background-color: crimson;">
@@ -847,12 +847,12 @@ section {
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-right: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea><!--0701-->
+                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea><!--0701-->
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
                             <br>
-                            <textarea style="width:100%;height:150px;margin-top:10px;border-bottom: 3px solid #A9A9A9;border-left: 3px solid #A9A9A9;border-top: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea><!--0701-->
+                            <textarea style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea><!--0701-->
                         </div>
                    </div>
                    <div class="row">
