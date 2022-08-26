@@ -178,8 +178,8 @@
                                     <th colspan="3" style="text-align: center;">SR 狀態</th>
                                 </tr>
                                 <tr>
-                                    <td colspan="3.5"><input type="text"  style="width:70%;height:30px;text-align:center;" name="sd" value="{{ user.StartDate }}"></td>
-                                    <td colspan="3.5"><input type="text"  style="width:80%;height:30px;text-align:center;" name="ed" value="{{ user.EndDate }}"></td>
+                                    <td colspan="3.5">{{ user.StartDate }}</td>
+                                    <td colspan="3.5">{{ user.EndDate }}</td>
                                     <td colspan="3">
                                         <select id="sel" name="sel" style="width:55%">
                                             {% if user.State == 'In Coming' %}

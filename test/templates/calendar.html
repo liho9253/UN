@@ -105,15 +105,31 @@
     calendar.render();
   });
 
-function che() {
-    var msg = "確定要修改嗎？";
+function endsent() {
+    var msg = "確定要送出嗎？";
     if (confirm(msg)==true){
         return true
     }else{
         return false
     }
 }
-  
+   
+function sent() {
+    var msg = "確定要送出嗎？";
+    if (confirm(msg)==true){
+        return true
+    }else{
+        return false
+        }
+    }
+ function add() {
+     var msg = "確定要新增嗎？";
+     if (confirm(msg)==true){
+         return true
+     }else{
+         return false
+         }
+     }
 function pschecked() {
 {% for user in arr %}
     var ps = "";
@@ -784,7 +800,7 @@ section {
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
                    <td style="border: 1px solid;"> <input type="text" placeholder="MVPN"  size="5px" id="MVPN" name="MVPN"></td>
                    <td style="border: 1px solid;"> <input type="email" placeholder="Mail" size="40px" id="Mail" name="Mail"></td>
-                   <td style="border: 1px solid;"> <input type="submit" value="新增"></td>
+                   <td style="border: 1px solid;"> <input type="submit" value="新增" onclick="add()"></td>
                   </tr>
                 </form>
               </tbody>
@@ -892,7 +908,7 @@ section {
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;">發送結束訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;">選擇收件者</button>
-                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;">送出</button>
+                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()">送出</button>
                            </div>
                        </div>
                    </div>
@@ -907,7 +923,7 @@ section {
                             <label style="float:right">Fail:&nbsp;<input type="number" style="width:10em" name="fail" id="tot" value="0" min="0">項</label><br>
                             <label style="float:right">無環境測試:&nbsp;<input type="number" style="width:10em" name="no" id="tot" value="0" min="0">項</label><br>
                             <input type="text" id="id{{ user.ID }}" style="display:none;" name="SMail" ></input>
-                            <button type="submit"  class="btn btn-success" style="right:15px;bottom:20px; border-radius: 30px;position: absolute;">確認送出</button>
+                            <button type="submit"  class="btn btn-success" style="right:15px;bottom:20px; border-radius: 30px;position: absolute;" onclick="javascript:return endsent()">確認送出</button>
                         </form>
                     </div>
                 </div>

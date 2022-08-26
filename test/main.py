@@ -628,9 +628,9 @@ def mailEnd(ID):
         SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
         msg = "3. 已於 " + date + " 結束測試 " + "\r\n" 
         msg += "4. 共 " + tot + " 測試 " + "\r\n" 
-        msg += "   Pass: " + mpass + " 項 " + "\r\n" 
-        msg += "   Fail: " + fail + " 項 " + "\r\n" 
-        msg += "   無環境測試: " + no + " 項 " 
+        msg += "    Pass: " + mpass + " 項 " + "\r\n" 
+        msg += "    Fail: " + fail + " 項 " + "\r\n" 
+        msg += "    無環境測試: " + no + " 項 " 
         content.attach(MIMEText(ma+SpN+msg))
         with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
             try:
