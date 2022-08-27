@@ -130,6 +130,14 @@ function sent() {
          return false
          }
      }
+  function add() {
+      var msg = "確定要新增嗎？";
+      if (confirm(msg)==true){
+          return true
+      }else{
+          return false
+          }
+      }
 function pschecked() {
 {% for user in arr %}
     var ps = "";
