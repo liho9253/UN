@@ -2,6 +2,7 @@ from FET_user import User
 from FET_user import db
 from SR_db import SR
 from SR_db import sr_db
+from SR_ad import AD
 from flask import Flask, render_template, request, session
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import or_
@@ -10,8 +11,13 @@ import pandas, os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
+from apscheduler.schedulers.background import BackgroundScheduler
+from flask_apscheduler import APScheduler
+from datetime import date
 
 app = Flask(__name__)
+
+scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
@@ -384,27 +390,6 @@ def revise(ID):
                                 qu=pagination_users,
                                 pagination=pagination)
 
-@app.route('/ChangeTime',methods=['GET','POST'])
-def ChangeTime(ID):
-    input("時:")
-    input("分:")
-    qu = User.query.order_by("ID")
-    total = len(User.query.all())  
-    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
-    
-    pagination = Pagination(page=page, 
-                            per_page=per_page, 
-                            offset=offset,
-                            total=total,
-                            css_framework='bootstrap4')
-    
-    return render_template('FET_main.html',
-                            qu=pagination_users,
-                            pagination=pagination)
-
-
-
 @app.route('/calendar',methods=['GET','POST'])
 def calendar():
     quSR = SR.query.all()
@@ -428,7 +413,8 @@ def calendar():
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR)
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
 
 @app.route('/calendar_ne',methods=['GET','POST'])
 def calendar_ne():
@@ -462,7 +448,8 @@ def calendar_ne():
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR)
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
 
 @app.route('/calendar_ch/<ID>',methods=['GET','POST'])
 def calendar_ch(ID):
@@ -504,7 +491,8 @@ def calendar_ch(ID):
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR)
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
@@ -608,7 +596,8 @@ def mailTest(ID):
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR)
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
 
 @app.route('/mailEnd/<ID>',methods=['GET','POST'])
 def mailEnd(ID):
@@ -663,9 +652,49 @@ def mailEnd(ID):
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR)
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
+
+# choU = User.query.filter_by(Major = "1").all()
+# for i in choU:
+#     choU[i].StartDate
+today = date.today()
+qus = User.query.filter_by(Major = "1").all()
+total = len(qus)  
+for i in range(total):
+    sd = qus[i].StartDate
+    qs = qus[i].StartDate.split("/")
+    qss = qs[2].split(" ")
+    if(len(qs[1]) < 2):
+       qs[1] = str(0)+qs[1]
+    if(len(qss[0]) < 2):
+       qss[0] = str(0)+qss[0]
+    qus[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qss[0])
+    if(str(today) == qus[i].StartDate):
+        @scheduler.task('interval', id='job', start_date=str(today)+" 06:00:00",end_date=str(today)+" 06:00:00")
+        def job():
+            Users = User.query.filter_by(StartDate = str(sd)).first()
+            content = MIMEMultipart()  #建立MIMEMultipart物件
+            content["subject"] = "Major SR 狀態更新" #郵件標題
+            content["from"] = "timmy89566@gmail.com"  #寄件者
+            content["to"] = "timmy89566@gmail.com" #收件者
+            ma = "1. " + "SR#" + str(Users.ID) + "：" + str(Users.Sub) + "\r\n" 
+            SpN = "2. 實驗室支援: " + str(Users.SpN) + "\r\n" 
+            StD = "3. 於今日" + str(sd) + "開始測試" + "\r\n"
+            EnD = "4. 預計" + str(Users.EndDate) + "結束測試" 
+            content.attach(MIMEText(ma+SpN+StD+EnD))
+            with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+                try:
+                    smtp.ehlo()  # 驗證SMTP伺服器
+                    smtp.starttls()  # 建立加密傳輸
+                    smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
+                    smtp.send_message(content)  # 寄送郵件
+                    print(str(qus[i].StartDate))
+                except Exception as e:
+                    print("Error message: ", e)
 
 if __name__ == "__main__":
-    
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    scheduler.init_app(app)
+    scheduler.start()
+    app.run(host="0.0.0.0", port=5000, debug=False)
 

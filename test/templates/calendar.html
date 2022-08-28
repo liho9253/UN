@@ -16,6 +16,11 @@
   window.onload=function(){
     dialog=document.getElementById("infoModal");
     dialogP=document.getElementById("Per");
+    dialogE=document.getElementById("Ent");
+  };
+  function showEn(){
+    dialogE.style.display='block';
+    fade.style.display='block';
   };
   function showD(){
     dialog.style.display='block';
@@ -31,7 +36,7 @@
     f{{ user.ID }}.style.display='block';
   {% endfor %}
   };
-  function showE(){
+  function ShowE(){
   {% for user in arr %}
     en{{ user.ID }}.style.display='block';
     f{{ user.ID }}.style.display='block';
@@ -43,6 +48,10 @@
   };  
   function closeP(){
     dialogP.style.display='none';
+    fade.style.display='none';
+  };  
+  function closeEn(){
+    dialogE.style.display='none';
     fade.style.display='none';
   };  
   function closeR(){
@@ -113,7 +122,37 @@ function endsent() {
         return false
     }
 }
-   
+
+function enter() {
+    var pa = "";
+    var pm = "";
+    var pn = "";
+{% for AD in quAD %}
+    if(document.getElementById("PMail").value == "Test"){
+        pa += 1;
+        if(document.getElementById("Ppass").value == "123"){
+            pm += 1;
+        }
+    }
+{% endfor %}
+    if(pa != "" && pm != ""){
+        alert("登入成功")
+        s1.style.display='block';
+        s2.style.display='block';
+        enB.style.display='none';
+        Ent.style.display='none';
+        fade.style.display='none';
+        {% for user in arr %}
+            document.getElementById("m{{ user.ID }}").disabled=false;
+            document.getElementById("endout{{ user.ID }}").disabled=false;
+            document.getElementById("out{{ user.ID }}").disabled=false;
+            document.getElementById("chose{{ user.ID }}").disabled=false;
+        {% endfor %}
+        return false;
+    }else{
+        alert("登入失敗")
+    }
+}
 function sent() {
     var msg = "確定要送出嗎？";
     if (confirm(msg)==true){
@@ -122,22 +161,74 @@ function sent() {
         return false
         }
     }
- function add() {
+function add() {
+    var n = "";
+    var m = "";
+    var ma = "";
+{% for SR in quSR %}
+    if(document.getElementById("Name").value == "{{ SR.Name }}"){
+        n += 1;
+    }else if(document.getElementById("MVPN").value != "" && document.getElementById("MVPN").value == "{{ SR.MVPN }}"){
+        m += 1;
+    }else if(document.getElementById("Mail").value == "{{ SR.Mail }}"){
+        ma += 1;
+    }
+{% endfor %}
+    if (document.getElementById("Name").value == ""){
+        alert("請輸入姓名")
+        return false
+    }else if(document.getElementById("Mail").value == ""){
+        alert("請輸入信箱")
+        return false
+    }else if (n != ""){
+        alert("姓名重複 新增失敗!")
+        return false
+    }else if(m != ""){
+        alert("MVPN重複 新增失敗!")
+        return false
+    }else if(ma != ""){
+        alert("信箱重複 新增失敗!")
+        return false
+    }else{
      var msg = "確定要新增嗎？";
      if (confirm(msg)==true){
          return true
      }else{
          return false
          }
-     }
-  function che() {
-      var msg = "確定要修改嗎？";
-      if (confirm(msg)==true){
-          return true
-      }else{
-          return false
-          }
+    }
+}
+function che() {
+      var sn = 0;
+      var sm = 0;
+      var sa = 0;
+  {% for SR in quSR %}
+      if(document.getElementById("SName").value == "{{ SR.Name }}"){
+          sn += 1;
+      }else if(document.getElementById("SMVPN").value == "{{ SR.MVPN }}"){
+          sm += 1;
+      }else if(document.getElementById("SMail").value == "{{ SR.Mail }}"){
+          sa += 1;
       }
+  {% endfor %}
+      if (sn > 1){
+          alert("姓名重複 修改失敗!")
+          return false
+      }else if(sm > 1){
+          alert("MVPN重複 修改失敗!")
+          return false
+      }else if(sa > 1){
+          alert("信箱重複 修改失敗!")
+          return false
+      }else{
+           var msg = "確定要修改嗎？";
+           if (confirm(msg)==true){
+               return true
+           }else{
+               return false
+           }
+      }
+ }
 function pschecked() {
 {% for user in arr %}
     var ps = "";
@@ -313,6 +404,24 @@ function goPageC(currentPageC, pageSizeC) {
     background-color: #eee;
     z-index: 10;
     display: none;
+  }
+  .infoModalEn{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    position: fixed;
+    border-radius:10px;
+    top: 10%;
+    width: 20%;
+    height: 30%;
+    padding-top: -15px;
+    padding: 15px;
+    margin: auto;
+    background-color: #eee;
+    z-index: 20;
+    display: none;
+    overflow-y:auto;
+    overflow-x: hidden;
+    text-align:center;
   }
   .infoModalP{
     border: none;
@@ -774,13 +883,26 @@ section {
 </head>
 <body>
     <div style="max-width: 1100px; align-items: center;">
+      <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
+      <div class="cont">
+          <div id="Ent" class="infoModalEn">
+          <div onclick="closeEn();" class="close">X</div>
+          <form method="post" action="/login">
+            <label style="color:#808080;">管理員信箱</label><br/>
+            <input type="text"  style="border-radius:10px;" Name="PMail" id="PMail"><br/><br/>
+            <label style="color:#808080;">管理員密碼</label><br/>
+            <input type="password"  style="border-radius:10px;" Name="Ppass" id="Ppass"><br/><br/>
+            <input type="button" value="登入"  style="border-radius:10px;" onclick="javascript:return enter();">
+          </form>
+          </div>
+      </div>
       <form action="/">
-          <input type="submit" value="工單匯入系統" class="te" style="width:120px; ">
+          <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;display:none;">
       </form>
-      <input type="button" value="聯絡人清單" class="te" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;" >
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;display:none;">
       <div class="cont">
         <div id="Per" class="infoModalP">
-            <table cellpadding="5" style="border:8px #ff9382 groove;;" class="table_change">
+            <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_change">
               <thead>
                   <tr style="border: 1px solid;">
                       <th style="border: 1px solid;">姓名</th>
@@ -803,7 +925,7 @@ section {
                   </tr>
                 </form>
                 {% endfor %}
-                <form action="calendar_ne" method="post">
+                <form action="calendar_ne" method="post" id="fne">
                   <tr style="border: 1px solid;">
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
                    <td style="border: 1px solid;"> <input type="text" placeholder="MVPN"  size="5px" id="MVPN" name="MVPN"></td>
@@ -863,7 +985,7 @@ section {
                     <tr>
                         <td colspan="6">{{ user.Sub }}</td>
                         <td colspan="2">{{ user.CreN }}</td>
-                        <td colspan="2">{{ user.SpN }}</td>
+                        <td colspan="2" id="che{{ user.SpN }}">{{ user.SpN }}</td>
                     </tr>
                 </table>
                 <form  action="/mailTest/{{ user.ID }}" method="post">
@@ -871,7 +993,7 @@ section {
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" value="內容"></textarea><!--0701-->
+                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
@@ -897,13 +1019,13 @@ section {
                                   {% for SR in quSR %}
                                     <tr style="border: 1px solid;">
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();"></td>
-                                      <td style="border: 1px solid;" id="SName" Name="SName"><label>{{ SR.Name }}</label></td>
+                                      <td style="border: 1px solid;" id="SN" Name="SName"><label>{{ SR.Name }}</label></td>
                                       {% if SR.MVPN is not none %}
                                           <td style="border: 1px solid;" id="Sid" Name="Sid"><label>{{ SR.MVPN }}</label></td>
                                       {% else %}
                                           <td style="border: 1px solid;" id="Sid" Name="Sid"></td>
                                       {% endif %}
-                                      <td style="border: 1px solid;" id="SMail" for="SMail"><label>{{ SR.Mail }}</label></td>
+                                      <td style="border: 1px solid;" id="SM" for="SMail"><label>{{ SR.Mail }}</label></td>
                                     </tr>
                                   {% endfor %}
                                 </tbody>
@@ -914,9 +1036,9 @@ section {
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
-                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;">發送結束訊息</button>
-                               <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;">選擇收件者</button>
-                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()">送出</button>
+                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled">發送結束訊息</button>
+                               <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}" disabled="disabled">選擇收件者</button>
+                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}" disabled="disabled">送出</button>
                            </div>
                        </div>
                    </div>
