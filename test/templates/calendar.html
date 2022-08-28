@@ -130,8 +130,8 @@ function sent() {
          return false
          }
      }
-  function add() {
-      var msg = "確定要新增嗎？";
+  function che() {
+      var msg = "確定要修改嗎？";
       if (confirm(msg)==true){
           return true
       }else{
@@ -144,7 +144,7 @@ function pschecked() {
     var per = "";
 {% for SR in quSR %}
     if (document.getElementById("w{{ user.ID }}{{ SR.Mail }}").checked == true) {
-        ps += "{{ SR.Name }}"+",";
+        ps += "{{ SR.Name }}"+";";
         per += "{{ SR.Mail }}"+",";
      }
      document.getElementById("p{{ user.ID }}").innerHTML = ps
@@ -808,7 +808,7 @@ section {
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
                    <td style="border: 1px solid;"> <input type="text" placeholder="MVPN"  size="5px" id="MVPN" name="MVPN"></td>
                    <td style="border: 1px solid;"> <input type="email" placeholder="Mail" size="40px" id="Mail" name="Mail"></td>
-                   <td style="border: 1px solid;"> <input type="submit" value="新增" onclick="add()"></td>
+                   <td style="border: 1px solid;"> <input type="submit" value="新增" onclick="javascript:return add()"></td>
                   </tr>
                 </form>
               </tbody>
