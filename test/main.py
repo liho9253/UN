@@ -357,25 +357,6 @@ def revise(ID):
         
         db.session.commit()
         
-        if(Users.Major == 1):
-            content = MIMEMultipart()  #建立MIMEMultipart物件
-            content["subject"] = Users.ID  #郵件標題
-            content["from"] = "108111113@mail.aeust.edu.tw"  #寄件者
-            content["to"] = "108111113@mail.aeust.edu.tw" #收件者
-            SpN = "實驗室支援: " + Users.CreN + "\r\n" 
-            StD = "預計" + Users.StartDate + "開始測試" + "\r\n"
-            EnD = "預計" + Users.EndDate + "結束測試" 
-            content.attach(MIMEText(SpN+StD+EnD))
-            with smtplib.SMTP(host="smtp.office365.com", port="587") as smtp:  # 設定SMTP伺服器
-                try:
-                    smtp.ehlo()  # 驗證SMTP伺服器
-                    smtp.starttls()  # 建立加密傳輸
-                    smtp.login("108111113@mail.aeust.edu.tw", "timmy279!")
-                    smtp.send_message(content)  # 寄送郵件
-                    print("Complete!")
-                except Exception as e:
-                    print("Error message: ", e)
-        
         qu = User.query.order_by("ID")
         total = len(User.query.all())  
         page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -516,7 +497,7 @@ def mailSt(ID):
     Users = User.query.filter_by(ID=str(ID)).first()
     content = MIMEMultipart()  #建立MIMEMultipart物件
     content["subject"] = "Major SR 狀態更新" #郵件標題
-    content["from"] = "timmy89566@gmail.com"  #寄件者
+    content["from"] = "smartfetelab@gmail.com"  #寄件者
     content["to"] = "timmy89566@gmail.com" #收件者
     ma = "1. " + "SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
     SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
@@ -527,7 +508,7 @@ def mailSt(ID):
         try:
             smtp.ehlo()  # 驗證SMTP伺服器
             smtp.starttls()  # 建立加密傳輸
-            smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
+            smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
             smtp.send_message(content)  # 寄送郵件
             print("Complete!")
         except Exception as e:
@@ -561,7 +542,7 @@ def mailTest(ID):
         msg = "3. " + smsg
         content = MIMEMultipart()  #建立MIMEMultipart物件
         content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "timmy89566@gmail.com"  #寄件者
+        content["from"] = "smartfetelab@gmail.com"  #寄件者
         content["to"] = recipient #收件者
         SpN = "實驗室支援: " + Users.SpN + "\r\n" 
         content.attach(MIMEText(ma+SpN+msg))
@@ -569,7 +550,7 @@ def mailTest(ID):
             try:
                 smtp.ehlo()  # 驗證SMTP伺服器
                 smtp.starttls()  # 建立加密傳輸
-                smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
+                smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
                 smtp.send_message(content)  # 寄送郵件
                 print("Complete!")
             except Exception as e:
@@ -611,7 +592,7 @@ def mailEnd(ID):
         sents = request.form.get("SMail")
         content = MIMEMultipart()  #建立MIMEMultipart物件
         content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "timmy89566@gmail.com"  #寄件者
+        content["from"] = "smartfetelab@gmail.com"  #寄件者
         content["to"] = sents #收件者
         ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
         SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
@@ -625,7 +606,7 @@ def mailEnd(ID):
             try:
                 smtp.ehlo()  # 驗證SMTP伺服器
                 smtp.starttls()  # 建立加密傳輸
-                smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
+                smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
                 smtp.send_message(content)  # 寄送郵件
                 print("Complete!")
             except Exception as e:
@@ -655,9 +636,6 @@ def mailEnd(ID):
                                           ,quSR=quSR
                                           ,quAD=AD.query.all())
 
-# choU = User.query.filter_by(Major = "1").all()
-# for i in choU:
-#     choU[i].StartDate
 today = date.today()
 qus = User.query.filter_by(Major = "1").all()
 total = len(qus)  
@@ -666,11 +644,10 @@ for i in range(total):
     qs = qus[i].StartDate.split("/")
     qss = qs[2].split(" ")
     if(len(qs[1]) < 2):
-       qs[1] = str(0)+qs[1]
+        qs[1] = str(0)+qs[1]
     if(len(qss[0]) < 2):
-       qss[0] = str(0)+qss[0]
-    qus[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qss[0])
-    if(str(today) == qus[i].StartDate):
+        qss[0] = str(0)+qss[0]
+    if(str(today) == str(qs[0]+"-"+qs[1]+"-"+qss[0])):
         @scheduler.task('interval', id='job', start_date=str(today)+" 06:00:00",end_date=str(today)+" 06:00:00")
         def job():
             Users = User.query.filter_by(StartDate = str(sd)).first()
@@ -689,12 +666,13 @@ for i in range(total):
                     smtp.starttls()  # 建立加密傳輸
                     smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
                     smtp.send_message(content)  # 寄送郵件
-                    print(str(qus[i].StartDate))
+                    # print(str(qus[i].StartDate))
                 except Exception as e:
                     print("Error message: ", e)
-
+    
+    
 if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
 

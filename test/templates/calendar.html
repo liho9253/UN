@@ -127,14 +127,12 @@ function enter() {
     var pa = "";
     var pm = "";
     var pn = "";
-{% for AD in quAD %}
     if(document.getElementById("PMail").value == "Test"){
         pa += 1;
         if(document.getElementById("Ppass").value == "123"){
             pm += 1;
         }
     }
-{% endfor %}
     if(pa != "" && pm != ""){
         alert("登入成功")
         s1.style.display='block';
@@ -235,7 +233,7 @@ function pschecked() {
     var per = "";
 {% for SR in quSR %}
     if (document.getElementById("w{{ user.ID }}{{ SR.Mail }}").checked == true) {
-        ps += "{{ SR.Name }}"+";";
+        ps += "{{ SR.Name }}"+"; ";
         per += "{{ SR.Mail }}"+",";
      }
      document.getElementById("p{{ user.ID }}").innerHTML = ps
@@ -468,7 +466,6 @@ function goPageC(currentPageC, pageSizeC) {
     padding-right: 5%;
     z-index: 20;
     background-color: #eee;
-    display: none;
     overflow-y:auto;
     overflow-x: hidden;
   }
@@ -1036,7 +1033,7 @@ section {
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
-                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled">發送結束訊息</button>
+                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled">發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}" disabled="disabled">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}" disabled="disabled">送出</button>
                            </div>
