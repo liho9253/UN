@@ -653,7 +653,7 @@ for i in range(total):
             Users = User.query.filter_by(StartDate = str(sd)).first()
             content = MIMEMultipart()  #建立MIMEMultipart物件
             content["subject"] = "Major SR 狀態更新" #郵件標題
-            content["from"] = "timmy89566@gmail.com"  #寄件者
+            content["from"] = "smartfetelab@gmail.com"  #寄件者
             content["to"] = "timmy89566@gmail.com" #收件者
             ma = "1. " + "SR#" + str(Users.ID) + "：" + str(Users.Sub) + "\r\n" 
             SpN = "2. 實驗室支援: " + str(Users.SpN) + "\r\n" 
@@ -664,7 +664,7 @@ for i in range(total):
                 try:
                     smtp.ehlo()  # 驗證SMTP伺服器
                     smtp.starttls()  # 建立加密傳輸
-                    smtp.login("timmy89566@gmail.com", "nsajrwcqpwuqrcld")
+                    smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
                     smtp.send_message(content)  # 寄送郵件
                     # print(str(qus[i].StartDate))
                 except Exception as e:

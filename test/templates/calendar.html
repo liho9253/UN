@@ -36,9 +36,9 @@
     f{{ user.ID }}.style.display='block';
   {% endfor %}
   };
-  function ShowE(){
+  function showE(){
   {% for user in arr %}
-    en{{ user.ID }}.style.display='block';
+    n{{ user.ID }}.style.display='block';
     f{{ user.ID }}.style.display='block';
   {% endfor %}
   };
@@ -62,7 +62,7 @@
   };  
   function closeE(){
   {% for user in arr %}
-    en{{ user.ID }}.style.display='none';
+    n{{ user.ID }}.style.display='none';
     f{{ user.ID }}.style.display='none';
   {% endfor %}
   };  
@@ -465,6 +465,7 @@ function goPageC(currentPageC, pageSizeC) {
     margin: auto;
     padding-right: 5%;
     z-index: 20;
+    display: none;
     background-color: #eee;
     overflow-y:auto;
     overflow-x: hidden;
@@ -1033,7 +1034,7 @@ section {
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
-                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled">發送SR結案訊息</button>
+                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled" >發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}" disabled="disabled">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}" disabled="disabled">送出</button>
                            </div>
@@ -1041,7 +1042,7 @@ section {
                    </div>
                  </form>
                    <div style="justify-content: center; align-items: center; display: flex;" >
-                    <div id="en{{ user.ID }}" class="infoModalE">
+                    <div id="n{{ user.ID }}" class="infoModalE">
                         <form  action="/mailEnd/{{ user.ID }}" method="post">
                             <div onclick="closeE();" class="close">X</div>
                             <label style="float:right">已於&nbsp;<input type="date" style="width:7em" name="date" id="date">結束測試</label><br>
