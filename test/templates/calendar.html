@@ -881,7 +881,6 @@ section {
 </head>
 <body>
     <div style="max-width: 1100px; align-items: center;">
-      <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
       <div class="cont">
           <div id="Ent" class="infoModalEn">
           <div onclick="closeEn();" class="close">X</div>
@@ -890,14 +889,21 @@ section {
             <input type="text"  style="border-radius:10px;" Name="PMail" id="PMail"><br/><br/>
             <label style="color:#808080;">管理員密碼</label><br/>
             <input type="password"  style="border-radius:10px;" Name="Ppass" id="Ppass"><br/><br/>
-            <input type="button" value="登入"  style="border-radius:10px;" onclick="javascript:return enter();">
+            <input type="submit" value="登入"  style="border-radius:10px;">
           </form>
           </div>
       </div>
+      {% if current_user.is_authenticated %}
       <form action="/">
-          <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;display:none;">
+          <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
       </form>
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;display:none;">
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;">
+      <form action="/logout" method="post">
+          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:240px;">
+      </form>
+      {% else %}
+        <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
+      {% endif %}
       <div class="cont">
         <div id="Per" class="infoModalP">
             <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_change">
@@ -991,7 +997,11 @@ section {
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
+                           {% if current_user.is_authenticated %}
+                               <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
+                           {% else %}
+                               <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
+                           {% endif %}
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
@@ -1034,9 +1044,15 @@ section {
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
+                            {% if current_user.is_authenticated %}
+                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" >發送SR結案訊息</button>
+                               <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}">選擇收件者</button>
+                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}">送出</button>
+                            {% else %}
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled" >發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}" disabled="disabled">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}" disabled="disabled">送出</button>
+                            {% endif %}
                            </div>
                        </div>
                    </div>

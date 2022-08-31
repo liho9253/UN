@@ -3,6 +3,7 @@ from FET_user import db
 from SR_db import SR
 from SR_db import sr_db
 from SR_ad import AD
+from SR_ad import ad_db
 from flask import Flask, render_template, request, session
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import or_
@@ -14,7 +15,8 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
-
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask import request, render_template, url_for, redirect, flash
 app = Flask(__name__)
 
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
@@ -23,6 +25,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.urandom(24)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.session_protection = "strong"
+login_manager.login_view = 'login'
 
 path_csv = os.path.isfile('order/SR-Sample.csv')
 path_excel = os.path.isfile('order/SRTT.xls')
@@ -636,6 +643,102 @@ def mailEnd(ID):
                                           ,quSR=quSR
                                           ,quAD=AD.query.all())
 
+
+class adUser(UserMixin):
+    pass
+
+@login_manager.user_loader
+def user_loader(SUser):
+    if SUser not in users:
+        return
+
+    auser = adUser()
+    auser.id = SUser  
+    return auser
+
+@login_manager.request_loader
+def request_loader(request):
+    SUser = request.form.get("PMail")
+    if SUser not in users:
+        return
+
+    auser = adUser()
+    auser.id = SUser  
+    return auser
+
+users = {'': {'password': ''}}
+
+adSR = AD.query.all()
+for i in range(AD.query.count()):
+    ensm = adSR[i].Mail
+    ensp = adSR[i].PassWord
+    users.update({ensm: {'password': ensp}})
+
+@app.route('/login',methods=['GET','POST'])
+def login():
+    if(request.method == 'POST'):
+        PMail = request.form.get("PMail")
+        Ppass = request.form.get("Ppass")
+        try:
+            if Ppass == users[PMail]['password']:
+                session['id'] = PMail
+                auser = adUser()
+                auser.id = session.get('id')
+                login_user(auser)
+        except KeyError as e:
+            flash("Error message: ", e)
+            
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    
+    
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
+
+@app.route('/logout', methods=['GET','POST'])
+def logout():
+    logout_user()
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    
+    
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
+
 today = date.today()
 qus = User.query.filter_by(Major = "1").all()
 total = len(qus)  
@@ -670,9 +773,44 @@ for i in range(total):
                 except Exception as e:
                     print("Error message: ", e)
     
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if(request.method == 'POST'):
+        user = request.form.get("user")
+        mail = request.form.get("mail")
+        password = request.form.get("password")
+        
+        nUser = (user, mail, password)
+        ad_db.session.add(nUser)
+        ad_db.session.commit()
+        
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
     
+    
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all())
+        
 if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    # app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 
