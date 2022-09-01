@@ -666,10 +666,12 @@ def request_loader(request):
     auser.id = SUser  
     return auser
 
-users = {'': {'password': ''}}
-
 adSR = AD.query.all()
+users = {adSR[0].Mail: {'password': adSR[0].PassWord}}
+
 for i in range(AD.query.count()):
+    if i == 0:
+        continue
     ensm = adSR[i].Mail
     ensp = adSR[i].PassWord
     users.update({ensm: {'password': ensp}})
@@ -681,13 +683,16 @@ def login():
         Ppass = request.form.get("Ppass")
         try:
             if Ppass == users[PMail]['password']:
+                # qad = AD.query.filter_by(Mail = str(PMail)).first()
                 session['id'] = PMail
                 auser = adUser()
                 auser.id = session.get('id')
                 login_user(auser)
-        except KeyError as e:
-            flash("Error message: ", e)
-            
+                print(PMail, Ppass)
+        except TypeError:
+            pass                  
+        except KeyError:
+            pass                  
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  

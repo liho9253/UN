@@ -309,8 +309,8 @@ function goPage(currentPage, pageSize) {
 
 $(function () {
   let $table = $(".table_changeC");
-  let $thRows = $table.find("thead th");
-  $thRows.each(function (key, thRows) {
+  let $thRowss = $table.find("thead th");
+  $thRowss.each(function (key, thRow) {
     $table
       .find("tbody tr td:nth-child(" + (key + 1) + ")")
       .attr("data-th", $(thRow).text());
@@ -326,27 +326,28 @@ function goPageC(currentPageC, pageSizeC) {
   $('#numberPageC').attr('max',totalPageC); 
 
   $("#numberPageC").off('change').on("change",function(){
-    let numberPageC =  $("#numberPageC").val();
-    if( numberPageC > totalPageC ){ 
+    let numberPage =  $("#numberPageC").val();
+    if( numberPage > totalPageC ){ 
       console.log("頁數超過")
       return
    }
-    goPageC(numberPageC, 7);
+    goPageC(numberPage, 7);
   });
 
-  var startRow = (currentPageC - 1) * pageSizeC + 1; 
-  var endRow = currentPageC * pageSizeC; 
-  endRow = (endRow > num) ? num : endRow; 
+  var startRowC = (currentPageC - 1) * pageSizeC + 1; 
+  var endRowC = currentPageC * pageSizeC; 
+  endRowC = (endRowC > num) ? num : endRowC; 
 
 
   for (var i = 1; i < (num + 1); i++) {
       var trRow = tr[i - 1];
-      if (i >= startRow && i <= endRow) {
+      if (i >= startRowC && i <= endRowC) {
           trRow.style.display = "";
       } else {
           trRow.style.display = "none";
       }
   }
+  
   
   var tempStr = "";
   if (currentPageC > 1) {
@@ -955,8 +956,9 @@ section {
     </div>
       <div id="calendar"></div>
       {% for user in arr %}
+      {% if current_user.is_authenticated %}
         <div style="justify-content: center; align-items: center; display: flex;" >
-            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: 75%;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
+            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
                 <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
                     <tr style="color:#FFFFFF;background-color: crimson;">
@@ -997,11 +999,7 @@ section {
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                           {% if current_user.is_authenticated %}
                                <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
-                           {% else %}
-                               <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
-                           {% endif %}
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
@@ -1040,19 +1038,16 @@ section {
                               </table>    
                               <div onclick="closeR();" class="closeA" style="z-index: 11;">確定</div><!--0701-->
                               <div style="margin-top: 20px;" id="pageModuleC"></div><!--0701-->
+                              <div id="numberPageModuleC">
+                                <label for="numberPageC">跳至第<input id="numberPageC" type="number" value="1" min="1" max="100">頁</label>
+                              </div>  
                             </div>
                         </div>
                         <br><br>
                             <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
-                            {% if current_user.is_authenticated %}
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" >發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}">送出</button>
-                            {% else %}
-                               <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" disabled="disabled" >發送SR結案訊息</button>
-                               <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}" disabled="disabled">選擇收件者</button>
-                               <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}" disabled="disabled">送出</button>
-                            {% endif %}
                            </div>
                        </div>
                    </div>
@@ -1073,6 +1068,47 @@ section {
                 </div>
             </div>
         </div>
+        {% else %}
+          <div style="justify-content: center; align-items: center; display: flex;" >
+              <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
+                      <div onclick="closeDetailed();" class="close">X</div>
+                  <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
+                      <tr style="color:#FFFFFF;background-color: crimson;">
+                          <th colspan="1" style="text-align: center;">SR 編號</th>
+                          <th colspan="4" style="text-align: center;">預計開始日</th>
+                          <th colspan="4" style="text-align: center;">預計結束日</th>
+                          <th colspan="1" style="text-align: center;">SR 狀態</th>
+                      </tr>
+                      <tr>
+                          <td colspan="1">{{ user.ID }}</td>
+                          <td colspan="4">{{ user.StartDate }}</td>
+                          <td colspan="4">{{ user.EndDate }}</td>
+                          <td colspan="1">{{ user.State }}</td>
+                      </tr>
+                      <tr style="color:#FFFFFF;background-color: crimson;">
+                          <th colspan="6" style="text-align: center;">SR 開單部門</th>
+                          <th colspan="2" style="text-align: center;">SR 類別</th>
+                          <th colspan="2" style="text-align: center;">優先等級</th>
+                      </tr>
+                      <tr>
+                          <td colspan="6">{{ user.CreWGro }}</td>
+                          <td colspan="2">{{ user.SR }}</td>
+                          <td colspan="2">{{ user.CoxT }}</td>
+                      </tr>
+                      <tr style="color:#FFFFFF;background-color: crimson;">
+                          <th colspan="6" style="text-align: center;">SR 主旨</th>
+                          <th colspan="2" style="text-align: center;">SR 開單人</th>
+                          <th colspan="2" style="text-align: center;">實驗室支援</th>
+                      </tr>
+                      <tr>
+                          <td colspan="6">{{ user.Sub }}</td>
+                          <td colspan="2">{{ user.CreN }}</td>
+                          <td colspan="2" id="che{{ user.SpN }}">{{ user.SpN }}</td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+        {% endif %}
         {% endfor %}
     </body>
 </html>
