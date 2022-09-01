@@ -681,18 +681,26 @@ def login():
     if(request.method == 'POST'):
         PMail = request.form.get("PMail")
         Ppass = request.form.get("Ppass")
+        session['id'] = PMail
+        session['name'] = ""
         try:
-            if Ppass == users[PMail]['password']:
-                # qad = AD.query.filter_by(Mail = str(PMail)).first()
-                session['id'] = PMail
-                auser = adUser()
-                auser.id = session.get('id')
-                login_user(auser)
-                print(PMail, Ppass)
+            if AD.query.filter_by(Mail = str(PMail)).first() != None:
+                if Ppass == users[PMail]['password']:
+                    qad = AD.query.filter_by(Mail = str(PMail)).first()
+                    session['name'] = qad.Name
+                    auser = adUser()
+                    auser.id = session.get('id')
+                    login_user(auser)
+                else:
+                    session['id'] = False
+                    session['name'] = False
+            else:
+                pass
         except TypeError:
             pass                  
         except KeyError:
-            pass                  
+            pass    
+    sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -715,7 +723,8 @@ def login():
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
 
 @app.route('/logout', methods=['GET','POST'])
 def logout():

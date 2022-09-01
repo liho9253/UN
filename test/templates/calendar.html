@@ -895,13 +895,22 @@ section {
           </div>
       </div>
       {% if current_user.is_authenticated %}
+      {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
       <form action="/">
           <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
       </form>
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:100px;position: absolute; margin-top:-40px;margin-left:130px;">
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:120px;position: absolute; margin-top:-40px;margin-left:130px;">
       <form action="/logout" method="post">
-          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:240px;">
+          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:260px;">
       </form>
+      <p>{{sn}}</p>
+      {% else %}
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:120px;">
+      <form action="/logout" method="post">
+          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:130px;">
+      </form>
+      <p>{{sn}}</p>
+      {% endif %}
       {% else %}
         <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
       {% endif %}
@@ -925,11 +934,16 @@ section {
                     {% else %}
                         <td style="border: 1px solid;"><input type="text" value="" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% endif %}
+                    {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
-                    <td><input type="submit" value="修改" onclick="javascript:return che()"></td> 
+                    <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
+                    {% else %}
+                    <td style="border: 1px solid;" colspan="2"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
+                    {% endif %}
                   </tr>
                 </form>
                 {% endfor %}
+                {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
                 <form action="calendar_ne" method="post" id="fne">
                   <tr style="border: 1px solid;">
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
@@ -938,6 +952,7 @@ section {
                    <td style="border: 1px solid;"> <input type="submit" value="新增" onclick="javascript:return add()"></td>
                   </tr>
                 </form>
+                {% endif %}
               </tbody>
             </table>  
             <div onclick="closeP();" class="closeA" style="z-index: 11;">確定</div>
@@ -957,6 +972,7 @@ section {
       <div id="calendar"></div>
       {% for user in arr %}
       {% if current_user.is_authenticated %}
+      {% if sn == user.SpN or sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
         <div style="justify-content: center; align-items: center; display: flex;" >
             <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
@@ -1068,7 +1084,7 @@ section {
                 </div>
             </div>
         </div>
-        {% else %}
+            {% else %}
           <div style="justify-content: center; align-items: center; display: flex;" >
               <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                       <div onclick="closeDetailed();" class="close">X</div>
@@ -1108,6 +1124,47 @@ section {
                   </table>
               </div>
           </div>
+        {% endif %}
+          {% else %}
+        <div style="justify-content: center; align-items: center; display: flex;" >
+            <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
+                    <div onclick="closeDetailed();" class="close">X</div>
+                <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
+                    <tr style="color:#FFFFFF;background-color: crimson;">
+                        <th colspan="1" style="text-align: center;">SR 編號</th>
+                        <th colspan="4" style="text-align: center;">預計開始日</th>
+                        <th colspan="4" style="text-align: center;">預計結束日</th>
+                        <th colspan="1" style="text-align: center;">SR 狀態</th>
+                    </tr>
+                    <tr>
+                        <td colspan="1">{{ user.ID }}</td>
+                        <td colspan="4">{{ user.StartDate }}</td>
+                        <td colspan="4">{{ user.EndDate }}</td>
+                        <td colspan="1">{{ user.State }}</td>
+                    </tr>
+                    <tr style="color:#FFFFFF;background-color: crimson;">
+                        <th colspan="6" style="text-align: center;">SR 開單部門</th>
+                        <th colspan="2" style="text-align: center;">SR 類別</th>
+                        <th colspan="2" style="text-align: center;">優先等級</th>
+                    </tr>
+                    <tr>
+                        <td colspan="6">{{ user.CreWGro }}</td>
+                        <td colspan="2">{{ user.SR }}</td>
+                        <td colspan="2">{{ user.CoxT }}</td>
+                    </tr>
+                    <tr style="color:#FFFFFF;background-color: crimson;">
+                        <th colspan="6" style="text-align: center;">SR 主旨</th>
+                        <th colspan="2" style="text-align: center;">SR 開單人</th>
+                        <th colspan="2" style="text-align: center;">實驗室支援</th>
+                    </tr>
+                    <tr>
+                        <td colspan="6">{{ user.Sub }}</td>
+                        <td colspan="2">{{ user.CreN }}</td>
+                        <td colspan="2" id="che{{ user.SpN }}">{{ user.SpN }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
         {% endif %}
         {% endfor %}
     </body>
