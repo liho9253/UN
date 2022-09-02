@@ -30,24 +30,14 @@
                 return false
                 }
             }
-        function ct() {
-            let hour = prompt("請輸入想更新的'時':");
-            let min = prompt("請輸入想更新的'分':");
-            if (hour == null || hour == ""){
-                alert("'時'");
-            }else if(hour <= 0 || hour >24){
-                alert("'時'格式不對");
-            }else{
-                alert("'時'更新為..." + hour);
-                }
-            if (min == null || min == ""){
-                alert("'分'");
-            }else if(min < 0 || min >60){
-                alert("'分'格式不對ss");
-            }else{
-                alert("'分'更新為..." + min);
-                }
-        }
+        function showReg(){
+          document.getElementById("Reg").style.display='block';
+          fade.style.display='block';
+        };
+        function closeReg(){
+          document.getElementById("Reg").style.display='none';
+          fade.style.display='none';
+        };  
     </script>
 </head>
 <style>
@@ -88,6 +78,47 @@
         align-items: center; 
     }
     
+  .infoModalReg{
+    border: none;
+    box-shadow: 0 0px 10px rgb(163, 163, 163);
+    position: fixed;
+    border-radius:10px;
+    top: 10%;
+    width: 20%;
+    height: auto;
+    padding-top: -15px;
+    padding: 15px;
+    margin: auto;
+    background-color: #eee;
+    z-index: 20;
+    display: none;
+    text-align:center;
+  }
+  .close{
+    position: absolute; 
+    top: 5px; 
+    right:15px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index:11;
+  }
+.cont{
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}  
+.black_overlay {
+    display: none;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 5;
+    -moz-opacity: 0.8;
+    opacity: .60;
+  }
 </style>
 
 <body>
@@ -97,6 +128,7 @@
             <h2>FET NT Work Order Import System</h2>
         </div>
     </section>
+    <div id="fade" class="black_overlay"></div>
     <div class="container" style="padding-top: 50px; width:80%">
         <div style="float:right; margin-top:-40px; width:80%" >
             <div style="float:left;margin-left:-11%;">
@@ -109,6 +141,25 @@
                     <button type="submit" class="search-submit"
                     style="height:38px;width:180px;">顯示已勾選的項目</button> 
                 </form>
+            </div>
+            <div style="float:right;padding-right:5px">
+                <input type="button" class="search-submit" style="height:38px;width:180px;" onclick="showReg();" value="管理員帳號維護">
+            </div>
+            <div class="cont">
+                <div id="Reg" class="infoModalReg">
+                    <div onclick="closeReg();" class="close">X</div>
+                    <form method="post" action="/register">
+                      <label style="color:#808080;">管理員信箱</label><br/>
+                      <input type="text"  style="border-radius:10px;"><br/><br/>
+                      <label style="color:#808080;">MVPN</label><br/>
+                      <input type="text"  style="border-radius:10px;"><br/><br/>
+                      <label style="color:#808080;">管理員密碼</label><br/>
+                      <input type="password"  style="border-radius:10px;"><br/><br/>
+                      <label style="color:#808080;">確定密碼</label><br/>
+                      <input type="password"  style="border-radius:10px;"><br/><br/>
+                      <input type="submit" value="修改"  style="border-radius:10px;">
+                    </form>
+                </div>
             </div>
             <div style="float:right;padding-right:5px">
                 <form action="/calendar" method="post" style="">

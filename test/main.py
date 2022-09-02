@@ -816,7 +816,7 @@ def register():
         qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
     
     
-    return render_template('calendar.html',qu=qu
+    return render_template('register.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
