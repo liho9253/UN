@@ -17,8 +17,10 @@ from flask_apscheduler import APScheduler
 from datetime import date
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask import request, render_template, url_for, redirect, flash
-app = Flask(__name__)
+from flask_bcrypt import Bcrypt
 
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
@@ -36,6 +38,7 @@ path_excel = os.path.isfile('order/SRTT.xls')
  
 db.init_app(app)
 sr_db.init_app(app)
+ad_db.init_app(app)
 
 if(path_csv):
     df = pd.read_csv('order/SR-Sample.csv', encoding='big5')
@@ -667,7 +670,10 @@ def request_loader(request):
     return auser
 
 adSR = AD.query.all()
-users = {adSR[0].Mail: {'password': adSR[0].PassWord}}
+if AD.query.count() == 0:
+    users = {"": {'password': ""}}
+else:
+    users = {adSR[0].Mail: {'password': adSR[0].PassWord}}
 
 for i in range(AD.query.count()):
     if i == 0:
@@ -685,7 +691,7 @@ def login():
         session['name'] = ""
         try:
             if AD.query.filter_by(Mail = str(PMail)).first() != None:
-                if Ppass == users[PMail]['password']:
+                if bcrypt.check_password_hash(str(users[PMail]['password']), Ppass) == True:
                     qad = AD.query.filter_by(Mail = str(PMail)).first()
                     session['name'] = qad.Name
                     auser = adUser()
@@ -790,37 +796,28 @@ for i in range(total):
 @app.route('/register', methods=['GET','POST'])
 def register():
     if(request.method == 'POST'):
-        user = request.form.get("user")
-        mail = request.form.get("mail")
-        password = request.form.get("password")
+        Ruser = request.form.get("Rname")
+        Rmail = request.form.get("Rmail")
+        Rpassword = request.form.get("Rpass")
+        if(AD.query.filter_by(Name = str(Ruser)).first() == None):
+            p_hash = bcrypt.generate_password_hash(Rpassword).decode('utf-8')
+            RUser = AD(Ruser, Rmail, p_hash)
+            ad_db.session.add(RUser)
+            ad_db.session.commit()
         
-        nUser = (user, mail, password)
-        ad_db.session.add(nUser)
-        ad_db.session.commit()
-        
-    quSR = SR.query.all()
-    qu = User.query.filter_by(Major = "1").all()
-    total = len(qu)  
-    for i in range(total):
-        qs = qu[i].StartDate.split("/")
-        if(len(qs[1]) < 2):
-           qs[1] = str(0)+qs[1]
-        if(len(qs[2]) < 8):
-           qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
-        qe = qu[i].EndDate.split("/")
-        if(len(qe[1]) < 2):
-           qe[1] = str(0)+qe[1]
-        if(len(qe[2]) < 8):
-           qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    qu = User.query.all()
+    total = len(qu)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
     
-    
-    return render_template('register.html',qu=qu
-                                          ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR
-                                          ,quAD=AD.query.all())
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
         
 if __name__ == "__main__":
     scheduler.init_app(app)

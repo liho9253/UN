@@ -84,7 +84,7 @@
     position: fixed;
     border-radius:10px;
     top: 10%;
-    width: 20%;
+    width: 25%;
     height: auto;
     padding-top: -15px;
     padding: 15px;
@@ -149,13 +149,14 @@
                 <div id="Reg" class="infoModalReg">
                     <div onclick="closeReg();" class="close">X</div>
                     <form method="post" action="/register">
-                      <label style="color:#808080;">管理員信箱</label><br/>
-                      <input type="text"  style="border-radius:10px;"><br/><br/>
-                      <label style="color:#808080;">MVPN</label><br/>
-                      <input type="text"  style="border-radius:10px;"><br/><br/>
-                      <label style="color:#808080;">管理員密碼</label><br/>
-                      <input type="password"  style="border-radius:10px;"><br/><br/>
-                      <label style="color:#808080;">確定密碼</label><br/>
+                      <label style="color:#808080;">管理員帳號維護</label><br/><br/>
+                      <label style="color:#808080;">管理員姓名</label>
+                      <input type="text"  style="border-radius:10px;" Name="Rname" id="Rname"><br/><br/>
+                      <label style="color:#808080;">管理員信箱</label>
+                      <input type="text"  style="border-radius:10px;" Name="Rmail" id="Rmail"><br/><br/>
+                      <label style="color:#808080;">管理員密碼</label>
+                      <input type="password"  style="border-radius:10px;" Name="Rpass" id="Rpass"><br/><br/>
+                      <label style="color:#808080;">確定密碼</label>
                       <input type="password"  style="border-radius:10px;"><br/><br/>
                       <input type="submit" value="修改"  style="border-radius:10px;">
                     </form>
