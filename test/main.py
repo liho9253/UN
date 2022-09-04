@@ -759,6 +759,32 @@ def logout():
                                           ,quSR=quSR
                                           ,quAD=AD.query.all())
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if(request.method == 'POST'):
+        Ruser = request.form.get("Rname")
+        Rmail = request.form.get("Rmail")
+        Rpassword = request.form.get("Rpass")
+        if(AD.query.filter_by(Name = str(Ruser)).first() == None):
+            p_hash = bcrypt.generate_password_hash(Rpassword).decode('utf-8')
+            RUser = AD(Ruser, Rmail, p_hash)
+            ad_db.session.add(RUser)
+            ad_db.session.commit()
+        
+    qu = User.query.all()
+    total = len(qu)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)
+        
 today = date.today()
 qus = User.query.filter_by(Major = "1").all()
 total = len(qus)  
@@ -793,32 +819,6 @@ for i in range(total):
                 except Exception as e:
                     print("Error message: ", e)
     
-@app.route('/register', methods=['GET','POST'])
-def register():
-    if(request.method == 'POST'):
-        Ruser = request.form.get("Rname")
-        Rmail = request.form.get("Rmail")
-        Rpassword = request.form.get("Rpass")
-        if(AD.query.filter_by(Name = str(Ruser)).first() == None):
-            p_hash = bcrypt.generate_password_hash(Rpassword).decode('utf-8')
-            RUser = AD(Ruser, Rmail, p_hash)
-            ad_db.session.add(RUser)
-            ad_db.session.commit()
-        
-    qu = User.query.all()
-    total = len(qu)
-    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    pagination_users = get_page(offset=offset, per_page=per_page)
-    pagination = Pagination(page=page, 
-                            per_page=per_page, 
-                            offset=offset,
-                            total=total,
-                            css_framework='bootstrap4')
-    
-    return render_template('FET_main.html',
-                            qu=pagination_users,
-                            pagination=pagination)
-        
 if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
