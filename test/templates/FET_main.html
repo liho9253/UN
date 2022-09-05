@@ -39,6 +39,57 @@
           fade.style.display='none';
         };  
     </script>
+<script>
+function chN() {
+    var name = document.getElementById("Rname").value;
+    if(name == ""){
+        document.getElementById("chname").innerHTML="<font color='red'>姓名不能為空白</font>";
+    }else{
+        document.getElementById("chname").innerHTML="";
+    }
+};
+function chM() {
+    var mail = document.getElementById("Rmail").value;
+    emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+    if(mail.search(emailRule) == -1){
+        document.getElementById("chmail").innerHTML="<font color='red'>信箱格式錯誤</font>";
+    }else{
+        document.getElementById("chmail").innerHTML="";
+    }
+};
+function validate() {
+    var pwd1 = document.getElementById("Rpass").value;
+    var pwd2 = document.getElementById("chRpass").value;
+    if(pwd1 != pwd2){
+       document.getElementById("tishi").innerHTML="<font color='red'>兩次密碼不相同</font>";
+     }else{
+        document.getElementById("tishi").innerHTML="";
+     }
+};
+
+function cheE() {
+    if(document.getElementById("Rname").value == ""){
+        alert("姓名不能為空白")
+        return false
+    }
+    if(document.getElementById("chmail").innerHTML != ""){
+        alert("信箱格式錯誤")
+        return false
+    }
+    if(document.getElementById("Rpass").value == ""){
+        alert("密碼不能為空白")
+        return false
+    }
+    if(document.getElementById("Rpass").value != document.getElementById("chRpass").value){
+        alert("兩次密碼不相同")
+        return false
+    }
+    if(document.getElementById("tishi").innerHTML != ""){
+        alert("兩次密碼不相同")
+        return false
+    }
+};
+</script>
 </head>
 <style>
     .page-item.active .page-link {
@@ -84,7 +135,7 @@
     position: fixed;
     border-radius:10px;
     top: 10%;
-    width: 25%;
+    width: 30%;
     height: auto;
     padding-top: -15px;
     padding: 15px;
@@ -151,14 +202,17 @@
                     <form method="post" action="/register">
                       <label style="color:#808080;">管理員帳號維護</label><br/><br/>
                       <label style="color:#808080;">管理員姓名</label>
-                      <input type="text"  style="border-radius:10px;" Name="Rname" id="Rname"><br/><br/>
+                      <input type="text" style="border-radius:10px;" Name="Rname" id="Rname" onkeyup="chN()">
+                      <span id="chname"></span><br/><br/>
                       <label style="color:#808080;">管理員信箱</label>
-                      <input type="text"  style="border-radius:10px;" Name="Rmail" id="Rmail"><br/><br/>
+                      <input type="text" style="border-radius:10px;" Name="Rmail" id="Rmail" onkeyup="chM()">
+                      <span id="chmail"></span><br/><br/>
                       <label style="color:#808080;">管理員密碼</label>
-                      <input type="password"  style="border-radius:10px;" Name="Rpass" id="Rpass"><br/><br/>
+                      <input type="password" style="border-radius:10px;" Name="Rpass" id="Rpass"><br/><br/>
                       <label style="color:#808080;">確定密碼</label>
-                      <input type="password"  style="border-radius:10px;"><br/><br/>
-                      <input type="submit" value="修改"  style="border-radius:10px;">
+                      <input type="password" style="border-radius:10px;" Name="Rpass" id="chRpass" onkeyup="validate()">
+                      <span id="tishi"></span><br/><br/>
+                      <input type="submit" value="修改" id="go" style="border-radius:10px;" onclick="javascript:return cheE()">
                     </form>
                 </div>
             </div>
@@ -281,6 +335,76 @@
                     </td>
                 </tr>          
                 {% endfor %}
+            </tbody>
+        </table>
+        
+        
+        
+        <table class="table table-hover table-responsive" style="width:100%">
+            <tbody>
+                {% if pagination.page %}
+                <form action="/revise" method="post">
+                {% endif %}
+                <tr style="text-align: center;">
+                    <td><input type="checkbox" name="cb" style="width:20px;height:20px;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style="font-size: 20px; "><a style="text-decoration: none;color: rgb(0, 0, 0);" href="">+</a>
+                    </td>
+                </tr>
+                <tr style="text-align: center;">
+                    <td colspan="10" class="content">
+                        <div id="s" name="ID" style="display:none;">
+                            <table style="width: 100%;" class="htm">
+                                <h2 style="padding: 25px;">詳細內容</h2>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th colspan="3.5" style="text-align: center;">預計開始日</th>
+                                    <th colspan="3.5" style="text-align: center;">預計結束日</th>
+                                    <th colspan="3" style="text-align: center;">SR 狀態</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3.5"></td>
+                                    <td colspan="3.5"></td>
+                                    <td colspan="3">
+                                        <select id="sel" name="sel" style="width:55%">
+                                                <option selected value="In Coming">In Coming</option>
+                                                <option value="On Going">On Going</option>
+                                                <option value="Completed">Completed</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th colspan="3.5" style="text-align: center;">SR 開單部門</th>
+                                    <th colspan="3.5" style="text-align: center;">SR 類別</th>
+                                    <th colspan="3" style="text-align: center;">優先等級</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="3.5"></td>
+                                    <td colspan="3.5"></td>
+                                    <td colspan="3"></td>
+                                </tr>
+                                <tr style="color:#FFFFFF;background-color: crimson;">
+                                    <th colspan="6" style="text-align: center;">SR 主旨</th>
+                                    <th colspan="2" style="text-align: center;">SR 開單人</th>
+                                    <th colspan="2" style="text-align: center;">實驗室支援</th>
+                                </tr>
+                                <tr>
+                                    <td colspan="6"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value=""></td>
+                                    <td colspan="2"></td>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td colspan="5"><input type="submit" onclick="javascript:return che()" value="更新"></td>
+                                    </form>
+                                </tr>
+                            </table>
+                        </div>
+                    </td>
+                </tr>          
             </tbody>
         </table>
         <div class="row">

@@ -382,6 +382,7 @@ function goPageC(currentPageC, pageSizeC) {
     padding: 0;
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
     font-size: 14px;
+    width:1100px;
   }
 
   #calendar {
@@ -896,20 +897,26 @@ section {
       </div>
       {% if current_user.is_authenticated %}
       {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
-      <form action="/">
+      <form action="/" style="display:inline-block;">
           <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
       </form>
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:120px;position: absolute; margin-top:-40px;margin-left:130px;">
-      <form action="/logout" method="post">
-          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:260px;">
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;margin-left:10px;">
+      <form action="/logout" method="post" style="display:inline-block;">
+          <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
       </form>
-      <p>{{sn}}</p>
+    <div style="float:right;display:inline-block;margin-left:5px;">
+      <input type="submit" class="te" style="width:170px;" onclick="show();" value="歡迎 {{sn}}">
+    </div>  
+    </br></br></br>
       {% else %}
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="width:120px;">
-      <form action="/logout" method="post">
-          <input type="submit" value="登出" class="te" id="s1" style="width:120px;position: absolute; margin-top:-40px;margin-left:130px;">
+      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;">
+      <form action="/logout" method="post" style="display:inline-block;">
+          <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
       </form>
-      <p>{{sn}}</p>
+        <div style="float:right;display:inline-block;margin-left:5px;">
+          <input type="submit" class="te" style="width:170px;" onclick="show();" value="歡迎 {{sn}}">
+        </div>  
+        </br></br></br>
       {% endif %}
       {% else %}
         <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
@@ -928,17 +935,23 @@ section {
                 {% for SR in quSR %}
                 <form  action="/calendar_ch/{{ SR.Name }}" method="post">
                   <tr style="border: 1px solid;">
+                  {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="SName" Name="SName"></td>
                     {% if SR.MVPN is not none %}
                         <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% else %}
                         <td style="border: 1px solid;"><input type="text" value="" size="5px" id="SMVPN" Name="SMVPN"></td>
                     {% endif %}
-                    {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
                     <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
                     {% else %}
-                    <td style="border: 1px solid;" colspan="2"><input type="text" value="{{ SR.Mail }}" size="55px" id="SMail" Name="SMail"></td>
+                      <td style="border: 1px solid; width:30%;"><label>{{ SR.Name }}</label></td>
+                      {% if SR.MVPN is not none %}
+                          <td style="border: 1px solid;width:20%;"><label>{{ SR.MVPN }}</label></td>
+                      {% else %}
+                          <td style="border: 1px solid;width:20%;"><label></label></td>
+                      {% endif %}
+                        <td style="border: 1px solid;width:50%;" colspan="2"><label>{{ SR.Mail }}</label></td>
                     {% endif %}
                   </tr>
                 </form>

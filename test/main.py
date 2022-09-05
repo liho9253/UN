@@ -155,7 +155,7 @@ def get_page(offset=0, per_page=10, qu=qu):
 
 @app.route('/', defaults={'page': 1})
 @app.route('/<page>')
-def index(page):
+def index(page):  
     qu = User.query.all()
     total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -400,12 +400,13 @@ def calendar():
            qe[2] = str(0)+qe[2]
         qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
     
-    
+    sn = session.get('name')
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all(),
+                                          sn=sn)
 
 @app.route('/calendar_ne',methods=['GET','POST'])
 def calendar_ne():
@@ -697,9 +698,6 @@ def login():
                     auser = adUser()
                     auser.id = session.get('id')
                     login_user(auser)
-                else:
-                    session['id'] = False
-                    session['name'] = False
             else:
                 pass
         except TypeError:
