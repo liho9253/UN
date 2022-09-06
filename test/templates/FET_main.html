@@ -38,6 +38,14 @@
           document.getElementById("Reg").style.display='none';
           fade.style.display='none';
         };  
+        function showAddnt(){
+          document.getElementById("nt").style.display='block';
+          fade.style.display='block';
+        };
+        function closeAddnt(){
+          document.getElementById("nt").style.display='none';
+          fade.style.display='none';
+        };  
     </script>
 <script>
 function chN() {
@@ -145,6 +153,22 @@ function cheE() {
     display: none;
     text-align:center;
   }
+.infoModalNt{
+  border: none;
+  box-shadow: 0 0px 10px rgb(163, 163, 163);
+  position: fixed;
+  border-radius:10px;
+  top: 20%;
+  width: 1100px;
+  height: auto;
+  padding-top: -15px;
+  padding: 15px;
+  margin: auto;
+  background-color: #eee;
+  z-index: 20;
+  display: none;
+  text-align:center;
+}
   .close{
     position: absolute; 
     top: 5px; 
@@ -190,11 +214,11 @@ function cheE() {
             <div style="float:right;">
                 <form action="/Mojor" method="post" style="">
                     <button type="submit" class="search-submit"
-                    style="height:38px;width:180px;">顯示已勾選的項目</button> 
+                    style="height:38px;width:160px;">顯示已勾選的項目</button> 
                 </form>
             </div>
             <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="height:38px;width:180px;" onclick="showReg();" value="管理員帳號維護">
+                <input type="button" class="search-submit" style="height:38px;width:140px;" onclick="showReg();" value="管理員帳號維護">
             </div>
             <div class="cont">
                 <div id="Reg" class="infoModalReg">
@@ -216,11 +240,72 @@ function cheE() {
                     </form>
                 </div>
             </div>
+            <div class="cont">
+                <div id="nt" class="infoModalNt">
+                    <div onclick="closeAddnt();" class="close">X</div>
+                    <form method="post" action="/addnt"><br/>
+                      <table style="width: 1100px;">
+                        <thead>
+                          <tr style="text-align: center;">
+                            <th style="text-align: center;" colspan="1">SR 編號</th>
+                            <th style="text-align: center;" colspan="5">SR 主旨</th>
+                            <th style="text-align: center;" colspan="2">SR 開單人</th>
+                            <th style="text-align: center;" colspan="2">實驗室支援</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="text-align: center;">
+                            <td style="text-align: center;" colspan="1"><input type="number" Name="srid" id="srid" placeholder="e.g. 47399"></td>
+                            <td style="text-align: center;" colspan="5"><input type="text" Name="srsu" id="srsu"></td>
+                            <td style="text-align: center;" colspan="2"><input type="text" Name="srbi" id="srbi"></td>
+                            <td style="text-align: center;" colspan="2"><input type="text" Name="srla" id="srla"></td>
+                          </tr>
+                            <tr style="text-align: center;">
+                              <th style="text-align: center;" colspan="3.5">預計開始日</th>
+                              <th style="text-align: center;" colspan="3.5">預計結束日</th>
+                              <th style="text-align: center;" colspan="3">SR 狀態</th>
+                            </tr>
+                            <tr style="text-align: center;">
+                              <td colspan="3.5"><input type="text" Name="srsta" id="srsta" placeholder="e.g. 2013/01/14 08:30"></td>
+                              <td colspan="3.5"><input type="text" Name="sren" id="sren" placeholder="e.g. 2013/01/14 08:30"></td>
+                              <td colspan="3">
+                                <select style="width:55%" Name="srst" id="srst">
+                                    <option selected value="In Coming">In Coming</option>
+                                    <option value="On Going">On Going</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                              </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                              <th style="text-align: center;" colspan="3.5">SR 開單部門</th>
+                              <th style="text-align: center;" colspan="3.5">SR 類別</th>
+                              <th style="text-align: center;" colspan="3">優先等級</th>
+                            </tr>
+                            <tr style="text-align: center;">
+                              <td colspan="3.5"><input type="text" Name="srde" id="srde"></td>
+                              <td colspan="3.5"><input type="text" Name="srca" id="srca"></td>
+                              <td colspan="3">
+                                <select style="width:55%" Name="srma" id="srma">
+                                    <option selected value="Major">Major</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="Minor">Minor</option>
+                                </select>
+                              </td>
+                            </tr>
+                        </tbody>
+                      </table><br/>
+                      <input type="submit" value="新增" id="go" style="border-radius:10px;" onclick="javascript:return cheE()">
+                    </form>
+                </div>
+            </div>
             <div style="float:right;padding-right:5px">
                 <form action="/calendar" method="post" style="">
                     <button type="submit" class="search-submit"
                     style="height:38px;width:90px;">行事曆</button> 
                 </form>
+            </div>
+            <div style="float:right;padding-right:5px">
+                <input type="button" class="search-submit" style="height:38px;width:120px;" onclick="showAddnt();" value="新增工單項目">
             </div>
             <div style="float:right;padding-right:5px">
                 <form action="/search" method="post">
@@ -335,76 +420,6 @@ function cheE() {
                     </td>
                 </tr>          
                 {% endfor %}
-            </tbody>
-        </table>
-        
-        
-        
-        <table class="table table-hover table-responsive" style="width:100%">
-            <tbody>
-                {% if pagination.page %}
-                <form action="/revise" method="post">
-                {% endif %}
-                <tr style="text-align: center;">
-                    <td><input type="checkbox" name="cb" style="width:20px;height:20px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td style="font-size: 20px; "><a style="text-decoration: none;color: rgb(0, 0, 0);" href="">+</a>
-                    </td>
-                </tr>
-                <tr style="text-align: center;">
-                    <td colspan="10" class="content">
-                        <div id="s" name="ID" style="display:none;">
-                            <table style="width: 100%;" class="htm">
-                                <h2 style="padding: 25px;">詳細內容</h2>
-                                <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="3.5" style="text-align: center;">預計開始日</th>
-                                    <th colspan="3.5" style="text-align: center;">預計結束日</th>
-                                    <th colspan="3" style="text-align: center;">SR 狀態</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3.5"></td>
-                                    <td colspan="3.5"></td>
-                                    <td colspan="3">
-                                        <select id="sel" name="sel" style="width:55%">
-                                                <option selected value="In Coming">In Coming</option>
-                                                <option value="On Going">On Going</option>
-                                                <option value="Completed">Completed</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="3.5" style="text-align: center;">SR 開單部門</th>
-                                    <th colspan="3.5" style="text-align: center;">SR 類別</th>
-                                    <th colspan="3" style="text-align: center;">優先等級</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="3.5"></td>
-                                    <td colspan="3.5"></td>
-                                    <td colspan="3"></td>
-                                </tr>
-                                <tr style="color:#FFFFFF;background-color: crimson;">
-                                    <th colspan="6" style="text-align: center;">SR 主旨</th>
-                                    <th colspan="2" style="text-align: center;">SR 開單人</th>
-                                    <th colspan="2" style="text-align: center;">實驗室支援</th>
-                                </tr>
-                                <tr>
-                                    <td colspan="6"><input type="text"  style="width:100%;height:30px;text-align:center;" name="sub" value=""></td>
-                                    <td colspan="2"></td>
-                                    <td colspan="2"></td>
-                                </tr>
-                                <tr style="text-align: center;">
-                                    <td colspan="5"><input type="submit" onclick="javascript:return che()" value="更新"></td>
-                                    </form>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>          
             </tbody>
         </table>
         <div class="row">

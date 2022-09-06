@@ -807,7 +807,7 @@ section {
   color: #000;
   padding-top: 10px;
   position: absolute;      
-  top: 87%;
+  top: 91%;
   left: 50%;
   transform: translate(-50%,-50%);
 }
@@ -945,13 +945,13 @@ section {
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
                     <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
                     {% else %}
-                      <td style="border: 1px solid; width:30%;"><label>{{ SR.Name }}</label></td>
+                      <td style="border: 1px solid; width:30%;text-align: center;"><label>{{ SR.Name }}</label></td>
                       {% if SR.MVPN is not none %}
-                          <td style="border: 1px solid;width:20%;"><label>{{ SR.MVPN }}</label></td>
+                          <td style="border: 1px solid;width:20%;text-align: center;"><label>{{ SR.MVPN }}</label></td>
                       {% else %}
-                          <td style="border: 1px solid;width:20%;"><label></label></td>
+                          <td style="border: 1px solid;width:20%;text-align: center;"></td>
                       {% endif %}
-                        <td style="border: 1px solid;width:50%;" colspan="2"><label>{{ SR.Mail }}</label></td>
+                        <td style="border: 1px solid;width:50%;text-align: center;" colspan="2"><label>{{ SR.Mail }}</label></td>
                     {% endif %}
                   </tr>
                 </form>
@@ -970,9 +970,6 @@ section {
             </table>  
             <div onclick="closeP();" class="closeA" style="z-index: 11;">確定</div>
             <div id="pageModule"></div>
-            <div id="numberPageModule">
-              <label for="numberPage">跳至第<input id="numberPage" type="number" value="1" min="1" max="100">頁</label>
-            </div>  
           </div>
         </div>
       <div style="margin-top:-40px;float:right ">
@@ -1033,7 +1030,7 @@ section {
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
                             <br>
-                            <textarea style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" disabled="disabled" id="p{{ user.ID }}"></textarea><!--0701-->
+                            <label style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="p{{ user.ID }}"></label><!--0701-->
                         </div>
                    </div>
                    <div class="row">
@@ -1041,7 +1038,7 @@ section {
                         <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                              <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_changeC"><!--0701-->
+                              <table cellpadding="5" style="border:8px #ff9382 groove;" class=""><!--0701-->
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -1067,9 +1064,6 @@ section {
                               </table>    
                               <div onclick="closeR();" class="closeA" style="z-index: 11;">確定</div><!--0701-->
                               <div style="margin-top: 20px;" id="pageModuleC"></div><!--0701-->
-                              <div id="numberPageModuleC">
-                                <label for="numberPageC">跳至第<input id="numberPageC" type="number" value="1" min="1" max="100">頁</label>
-                              </div>  
                             </div>
                         </div>
                         <br><br>

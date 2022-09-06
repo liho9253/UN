@@ -18,15 +18,23 @@ from datetime import date
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask import request, render_template, url_for, redirect, flash
 from flask_bcrypt import Bcrypt
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = os.urandom(24)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'fet'
+ 
+mysql = MySQL(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -782,7 +790,36 @@ def register():
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination)
-        
+@app.route('/addnt', methods=['GET','POST'])
+def addnt():  
+    if(request.method == 'POST'):
+        srid = request.form.get("srid")
+        srsu = request.form.get("srsu")
+        srbi = request.form.get("srbi")
+        srla = request.form.get("srla")
+        srsta = request.form.get("srsta")
+        sren = request.form.get("sren")
+        srst = request.form.get("srst")
+        srde = request.form.get("srde")
+        srca = request.form.get("srca")
+        srma = request.form.get("srma")
+        if(User.query.filter_by(ID = str(srid)) == None):
+            addnt = User(srid, srsta, sren, srsu, srla, srde, srca, srma, srbi, "0", srst)
+            db.session.add(addnt)
+            db.session.commit()
+    qu = User.query.all()
+    total = len(qu)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    pagination_users = get_page(offset=offset, per_page=per_page)
+    pagination = Pagination(page=page, 
+                            per_page=per_page, 
+                            offset=offset,
+                            total=total,
+                            css_framework='bootstrap4')
+    
+    return render_template('FET_main.html',
+                            qu=pagination_users,
+                            pagination=pagination)      
 today = date.today()
 qus = User.query.filter_by(Major = "1").all()
 total = len(qus)  

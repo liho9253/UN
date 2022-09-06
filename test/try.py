@@ -1,14 +1,30 @@
-from flask import Flask
-from flask_bcrypt import Bcrypt
+from flask import Flask,render_template, request
+from flask_mysqldb import MySQL
 
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'fet'
+mysql = MySQL(app)
 
-# python3环境下需要decode
-pw_hash = bcrypt.generate_password_hash('hunter2').decode('utf-8')
-print(pw_hash)
-# $2b$12$rSXRS7OFI2MmInOB/0tMgelZLCSby3o/okGPpaVUSTl6I2sCX.ogW
+@app.route('/form')
+def form():
+    return render_template('form.html')
+ 
+@app.route('/login', methods = ['POST', 'GET'])
+def login():
+    if request.method == 'GET':
+        return "Login via the login Form"
+     
+    if request.method == 'POST':
+        name = request.form['name']
+        age = request.form['age']
+        pw = request.form['pw']
+        cursor = mysql.connection.cursor()
+        cursor.execute(''' INSERT INTO ad VALUES(%s,%s,%s)''',(name,age,pw))
+        mysql.connection.commit()
+        cursor.close()
+ 
+app.run(host='localhost', port=5000)
 
-ret = bcrypt.check_password_hash('hunter2', pw_hash)
-print(ret)
-print(len(pw_hash))
