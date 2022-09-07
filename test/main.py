@@ -667,6 +667,19 @@ def login():
         Ppass = request.form.get("Ppass")
         session['id'] = PMail
         session['name'] = ""
+        
+        adSR = AD.query.all()
+        if AD.query.count() == 0:
+            users = {"": {'password': ""}}
+        else:
+            users = {adSR[0].Mail: {'password': adSR[0].PassWord}}
+        
+        for i in range(AD.query.count()):
+            if i == 0:
+                continue
+            ensm = adSR[i].Mail
+            ensp = adSR[i].PassWord
+            users.update({ensm: {'password': ensp}})
         try:
             if AD.query.filter_by(Mail = str(PMail)).first() != None:
                 if bcrypt.check_password_hash(str(users[PMail]['password']), Ppass) == True:

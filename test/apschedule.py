@@ -3,8 +3,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 import os
     
-    
-    
 app = Flask(__name__)
 
 class Config(object):
@@ -14,8 +12,8 @@ class Config(object):
             'func': 'apschedule:main',
             'args': (),
             'trigger': 'cron',
-            'hour' : '6',
-            'minute' : '31'
+            'hour' : '05',
+            'minute' : '30'
         }
     ]
     SCHEDULER_TIMEZONE = 'Asia/Shanghai'
@@ -23,22 +21,14 @@ class Config(object):
 
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
-# def msg():
-#     os.system("ipconfig/all")
-
-#     os.system("python line.py")
-
 def main():
     os.system("ipconfig/all")
-
-    os.system("python z2.py")
+    os.system("python main.py")
 
 if __name__ == '__main__':
     app.config.from_object(Config())
-    
     scheduler.init_app(app)
     scheduler.start()
-    
     app.run()
     
     

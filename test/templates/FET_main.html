@@ -8,6 +8,7 @@
     <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/css/style.css" rel="stylesheet">
     <script src="../static/js/jquery.min.js"></script>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
     <script type="text/javascript">
         $(function () {
             $("a").click(function () {
@@ -85,26 +86,21 @@ function cheE() {
     if(document.getElementById("Rname").value == ""){
         alert("姓名不能為空白")
         return false
-    }
-    if(document.getElementById("chmail").innerHTML == ""){
-        alert("信箱不能為空白")
-        return false
-    }
-    if(document.getElementById("chmail").innerHTML != ""){
+    }else if(document.getElementById("chmail").innerHTML != ""){
         alert("信箱格式錯誤")
         return false
-    }
-    if(document.getElementById("Rpass").value == ""){
+    }else if(document.getElementById("Rpass").value == ""){
         alert("密碼不能為空白")
         return false
-    }
-    if(document.getElementById("Rpass").value != document.getElementById("chRpass").value){
+    }else if(document.getElementById("Rpass").value != document.getElementById("chRpass").value){
         alert("兩次密碼不相同")
         return false
-    }
-    if(document.getElementById("tishi").innerHTML != ""){
+    }else if(document.getElementById("tishi").innerHTML != ""){
         alert("兩次密碼不相同")
         return false
+    }else{
+        alert("新增成功")
+        return true
     }
 };
 function addE() {
@@ -192,10 +188,11 @@ function addE() {
     box-shadow: 0 0px 10px rgb(163, 163, 163);
     position: fixed;
     border-radius:10px;
-    top: 10%;
-    width: 30%;
+    top: 20%;
+    width: 35%;
     height: auto;
-    padding-top: -15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     padding: 15px;
     margin: auto;
     background-color: #eee;
@@ -211,8 +208,8 @@ function addE() {
   top: 20%;
   width: 1100px;
   height: auto;
-  padding-top: -15px;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   margin: auto;
   background-color: #eee;
   z-index: 20;
@@ -223,7 +220,6 @@ function addE() {
     position: absolute; 
     top: 5px; 
     right:15px;
-    font-size: 30px;
     cursor: pointer;
     z-index:11;
   }
@@ -244,21 +240,48 @@ function addE() {
     -moz-opacity: 0.8;
     opacity: .60;
   }
+.search-submit{
+    background-color:crimson; 
+    color:white;
+    border-radius:10px;
+    border:none;
+    height:38px;
+}
+.close{color:inherit}
+.close{float:right;font-size:1.5rem;font-weight:700;line-height:1;color:#000;text-shadow:0 1px 0 #fff;opacity:.5}
+.close:focus,.close:hover{color:#000;text-decoration:none;cursor:pointer;opacity:.75}button.close{padding:0;cursor:pointer;background:0 0;border:0;-webkit-appearance:none}
 </style>
 
 <body>
     <section id="picture">
         <div class="picture-container" style="margin-top: 30px;">
             <h1>遠傳NT工單匯入系統</h1>
-            <h2>FET NT Work Order Import System</h2>
+            <p style="color:white;font-size:24px;font-weight:550;">FET NT Work Order Import System</p>
         </div>
     </section>
+    <div class="cont">
+        <div id="Reg" class="infoModalReg">
+            <div onclick="closeReg();" class="close">X</div>
+            <form method="post" action="/register">
+              <label style="font-size:36px;color:#B22222;font-weight:bold;">帳號維護</label><br/><br/>
+              <input type="text" style="border-radius:10px;height:35px;width:240px;" Name="Rname" id="Rname" placeholder="姓名" onkeyup="chN()">
+              <span id="chname"></span><br/><br/>
+              <input type="text" style="border-radius:10px;height:35px;width:240px;" Name="Rmail" id="Rmail" placeholder="信箱" onkeyup="chM()">
+              <span id="chmail"></span><br/><br/>
+              <input type="password" style="border-radius:10px;height:35px;width:240px;" Name="Rpass" id="Rpass" placeholder="密碼"><br/><br/>
+              <input type="password" style="border-radius:10px;height:35px;width:240px;" Name="Rpass" id="chRpass" placeholder="確定密碼" onkeyup="validate()">
+              <span id="tishi"></span><br/><br/>
+              <input type="submit" class="btn btn-success" value="修改" id="go" style="border-radius:10px;width:240px;" onclick="javascript:return cheE()">
+            </form>
+        </div>
+    </div>
     <div id="fade" class="black_overlay"></div>
-    <div class="container" style="padding-top: 50px; width:80%">
+    <div class="container" style="padding-top: 55px;width:80%">
+    
         <div style="float:right; margin-top:-40px; width:80%" >
             <div style="float:left;margin-left:-11%;">
                 <form action="/update" style="position:absolute;margin-left:-130px" method="post">
-                    <input type="submit" name="cancel" style="height:38px;width:60px;" value="更新">
+                    <input type="submit" name="cancel" style="height:38px;width:60px;" class="search-submit" value="更新">
                 </form>
             </div>
             <div style="float:right;">
@@ -268,85 +291,7 @@ function addE() {
                 </form>
             </div>
             <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="height:38px;width:140px;" onclick="showReg();" value="管理員帳號維護">
-            </div>
-            <div class="cont">
-                <div id="Reg" class="infoModalReg">
-                    <div onclick="closeReg();" class="close">X</div>
-                    <form method="post" action="/register">
-                      <label style="color:#808080;">管理員帳號維護</label><br/><br/>
-                      <label style="color:#808080;">管理員姓名</label>
-                      <input type="text" style="border-radius:10px;" Name="Rname" id="Rname" onkeyup="chN()">
-                      <span id="chname"></span><br/><br/>
-                      <label style="color:#808080;">管理員信箱</label>
-                      <input type="text" style="border-radius:10px;" Name="Rmail" id="Rmail" onkeyup="chM()">
-                      <span id="chmail"></span><br/><br/>
-                      <label style="color:#808080;">管理員密碼</label>
-                      <input type="password" style="border-radius:10px;" Name="Rpass" id="Rpass"><br/><br/>
-                      <label style="color:#808080;">確定密碼</label>
-                      <input type="password" style="border-radius:10px;" Name="Rpass" id="chRpass" onkeyup="validate()">
-                      <span id="tishi"></span><br/><br/>
-                      <input type="submit" value="修改" id="go" style="border-radius:10px;" onclick="javascript:return cheE()">
-                    </form>
-                </div>
-            </div>
-            <div class="cont">
-                <div id="nt" class="infoModalNt">
-                    <div onclick="closeAddnt();" class="close">X</div>
-                    <form method="post" action="/addnt"><br/>
-                      <table style="width: 1100px;">
-                        <thead>
-                          <tr style="text-align: center;">
-                            <th style="text-align: center;" colspan="1">SR 編號</th>
-                            <th style="text-align: center;" colspan="5">SR 主旨</th>
-                            <th style="text-align: center;" colspan="2">SR 開單人</th>
-                            <th style="text-align: center;" colspan="2">實驗室支援</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr style="text-align: center;">
-                            <td style="text-align: center;" colspan="1"><input type="number" Name="srid" id="srid" placeholder="e.g. 47399"></td>
-                            <td style="text-align: center;" colspan="5"><input type="text" Name="srsu" id="srsu"></td>
-                            <td style="text-align: center;" colspan="2"><input type="text" Name="srbi" id="srbi"></td>
-                            <td style="text-align: center;" colspan="2"><input type="text" Name="srla" id="srla"></td>
-                          </tr>
-                            <tr style="text-align: center;">
-                              <th style="text-align: center;" colspan="3.5">預計開始日</th>
-                              <th style="text-align: center;" colspan="3.5">預計結束日</th>
-                              <th style="text-align: center;" colspan="3">SR 狀態</th>
-                            </tr>
-                            <tr style="text-align: center;">
-                              <td colspan="3.5"><input type="datetime-local" Name="srsta" id="srsta"></td>
-                              <td colspan="3.5"><input type="datetime-local" Name="sren" id="sren"></td>
-                              <td colspan="3">
-                                <select style="width:55%" Name="srst" id="srst">
-                                    <option value="In Coming">In Coming</option>
-                                    <option value="On Going">On Going</option>
-                                    <option value="Completed">Completed</option>
-                                </select>
-                              </td>
-                            </tr>
-                            <tr style="text-align: center;">
-                              <th style="text-align: center;" colspan="3.5">SR 開單部門</th>
-                              <th style="text-align: center;" colspan="3.5">SR 類別</th>
-                              <th style="text-align: center;" colspan="3">優先等級</th>
-                            </tr>
-                            <tr style="text-align: center;">
-                              <td colspan="3.5"><input type="text" Name="srde" id="srde"></td>
-                              <td colspan="3.5"><input type="text" Name="srca" id="srca"></td>
-                              <td colspan="3">
-                                <select style="width:55%" Name="srma" id="srma">
-                                    <option value="Major">Major</option>
-                                    <option value="Critical">Critical</option>
-                                    <option value="Minor">Minor</option>
-                                </select>
-                              </td>
-                            </tr>
-                        </tbody>
-                      </table><br/>
-                      <input type="submit" value="新增" id="go" style="border-radius:10px;" onclick="javascript:return addE()">
-                    </form>
-                </div>
+                <input type="button" class="search-submit" style="width:110px;" onclick="showReg();" value="帳號維護">
             </div>
             <div style="float:right;padding-right:5px">
                 <form action="/" method="post">
@@ -359,12 +304,73 @@ function addE() {
             </div>
             <div style="float:right;padding-right:5px">
                 <form action="/search" method="post">
-                    <input type="submit" name="cancel" style="height:38px;width:120px;" value="取消搜尋">
+                    <input type="submit" name="cancel" style="height:38px;width:110px;" class="search-submit" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
-                    name="pos" style="height:40px;width:200px;">
+                    name="pos" style="height:40px;width:200px;border-radius:10px;">
                     <button type="submit" class="search-submit"
                     style="height:38px;width:60px;">查詢</button>
                 </form>
+            </div>
+        </div>    
+        <div style="margin-top:10px; " >
+            <div class="cont" style="text-align:center;">
+                <div id="nt" class="infoModalNt">
+                    <div onclick="closeAddnt();" class="close">X</div>
+                    <form method="post" action="/addnt">
+                    <label style="font-size:36px;color:#B22222;font-weight:bold;">新增工單項目</label>
+                      <table style="width: 1100px;">
+                        <thead>
+                          <tr style="text-align: center;color:#FFFFFF;background-color: crimson; height:42px;">
+                            <th style="text-align: center;" colspan="1">SR 編號</th>
+                            <th style="text-align: center;" colspan="5">SR 主旨</th>
+                            <th style="text-align: center;" colspan="2">SR 開單人</th>
+                            <th style="text-align: center;" colspan="2">實驗室支援</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr style="text-align: center;height:42px;">
+                            <td style="text-align: center;" colspan="1"><input type="number" Name="srid" id="srid"></td>
+                            <td style="text-align: center;" colspan="5"><input type="text" Name="srsu" id="srsu"></td>
+                            <td style="text-align: center;" colspan="2"><input type="text" Name="srbi" id="srbi"></td>
+                            <td style="text-align: center;" colspan="2"><input type="text" Name="srla" id="srla"></td>
+                          </tr>
+                            <tr style="text-align: center; color:#FFFFFF;background-color: crimson; height:42px;">
+                              <th style="text-align: center;" colspan="3.5">預計開始日</th>
+                              <th style="text-align: center;" colspan="3.5">預計結束日</th>
+                              <th style="text-align: center;" colspan="3">SR 狀態</th>
+                            </tr>
+                            <tr style="text-align: center;height:42px;">
+                              <td colspan="3.5"><input type="datetime-local" Name="srsta" id="srsta"></td>
+                              <td colspan="3.5"><input type="datetime-local" Name="sren" id="sren"></td>
+                              <td colspan="3">
+                                <select style="width:55%" Name="srst" id="srst">
+                                    <option value="In Coming">In Coming</option>
+                                    <option value="On Going">On Going</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                              </td>
+                            </tr>
+                            <tr style="text-align: center;color:#FFFFFF;background-color: crimson; height:42px;">
+                              <th style="text-align: center;" colspan="3.5">SR 開單部門</th>
+                              <th style="text-align: center;" colspan="3.5">SR 類別</th>
+                              <th style="text-align: center;" colspan="3">優先等級</th>
+                            </tr>
+                            <tr style="text-align: center;height:42px;">
+                              <td colspan="3.5"><input type="text" Name="srde" id="srde"></td>
+                              <td colspan="3.5"><input type="text" Name="srca" id="srca"></td>
+                              <td colspan="3">
+                                <select style="width:55%" Name="srma" id="srma">
+                                    <option value="Major">Major</option>
+                                    <option value="Critical">Critical</option>
+                                    <option value="Minor">Minor</option>
+                                </select>
+                              </td>
+                            </tr>
+                        </tbody>
+                      </table><br/>
+                      <input type="submit" value="新增" id="go" class="btn btn-success" style="border-radius:10px;" onclick="javascript:return addE()">
+                    </form>
+                </div>
             </div>
         </div>
         <table class="table table-hover table-responsive" style="width:100%">
@@ -459,7 +465,7 @@ function addE() {
                                     <td colspan="2">{{ user.SpN }}</td>
                                 </tr>
                                 <tr style="text-align: center;">
-                                    <td  colspan="10"><input type="submit" onclick="javascript:return che()" value="更新"></td>
+                                    <td colspan="10"><input type="submit" onclick="javascript:return che()" value="更新"></td>
                                     </form>
                                 </tr>
                             </table>

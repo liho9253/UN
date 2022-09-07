@@ -174,38 +174,13 @@ function add() {
     }
 }
 function che() {
-      var sn = 0;
-      var sm = 0;
-      var sa = 0;
-  {% for SR in quSR %}
-      if(document.getElementById("CName").value == "{{ SR.Name }}"){
-          sn += 1;
-      }else if(document.getElementById("CMVPN").value == "{{ SR.MVPN }}"){
-          sm += 1;
-      }else if(document.getElementById("CMail").value == "{{ SR.Mail }}"){
-          sa += 1;
-      }
-  {% endfor %}
-      if(document.getElementById("CName").value == ""){
-          alert("請輸入姓名")
-          return false
-      }else if(document.getElementById("CMail").value == ""){
-          alert("請輸入信箱")
-          return false
-      }else if(sn != 0){
-          alert(sn)
-          return false
-      }else if(sa != 0){
-          alert("信箱重複 修改失敗!")
-          return false
-      }else{
-           var msg = "確定要修改嗎？";
-           if (confirm(msg)==true){
-               return true
-           }else{
-               return false
-           }
-      }
+    var msg = "確定要修改嗎？";
+    if (confirm(msg)==true){
+        return true
+    }else{
+        return false
+    }
+      
  }
 function pschecked() {
 {% for user in arr %}
@@ -266,94 +241,33 @@ function goPage(currentPage, pageSize) {
   
   var tempStr = "";
   if (currentPage > 1) {
-      tempStr += `<a href="javascript:;" onClick="goPage(1,${pageSize})">首頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage - 1},${pageSize})">上一頁</a>`;      
+      tempStr += `<a href="javascript:;" onClick="goPage(1,${pageSize})" class="redB">首頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage - 1},${pageSize})" class="redB">上一頁</a>`;      
   } else {
-      tempStr += `<a href="javascript:;" class="disabled">首頁</a>`;
-      tempStr += `<a href="javascript:;" class="disabled">上一頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled redB">首頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled redB">上一頁</a>`;
   }
       tempStr += `<div><span>第${currentPage}頁</span>/<span>共${totalPage}頁</span></div>`;
       
 
   if (currentPage < totalPage) {
-      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage + 1},${pageSize})">下一頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPage(${totalPage},${pageSize})">尾頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPage(${currentPage + 1},${pageSize})" class="redB">下一頁</a>`;
+      tempStr += `<a href="javascript:;" onClick="goPage(${totalPage},${pageSize})" class="redB">尾頁</a>`;
   } else {
-      tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
-      tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled redB">下一頁</a>`;
+      tempStr += `<a href="javascript:;" class="disabled redB">尾頁</a>`;
   }
 
   $("#pageModule").html(tempStr);
 }
 
-
-$(function () {
-  let $table = $(".table_changeC");
-  let $thRowss = $table.find("thead th");
-  $thRowss.each(function (key, thRow) {
-    $table
-      .find("tbody tr td:nth-child(" + (key + 1) + ")")
-      .attr("data-th", $(thRow).text());
-  });
-  goPageC(1, 7); 
-});
-function goPageC(currentPageC, pageSizeC) {
-  
-  var tr = $(".table_changeC tbody tr");
-  var num = $(".table_changeC tbody tr").length;
-  var totalPageC = Math.ceil(num / pageSizeC ); 
-
-  $('#numberPageC').attr('max',totalPageC); 
-
-  $("#numberPageC").off('change').on("change",function(){
-    let numberPage =  $("#numberPageC").val();
-    if( numberPage > totalPageC ){ 
-      console.log("頁數超過")
-      return
-   }
-    goPageC(numberPage, 7);
-  });
-
-  var startRowC = (currentPageC - 1) * pageSizeC + 1; 
-  var endRowC = currentPageC * pageSizeC; 
-  endRowC = (endRowC > num) ? num : endRowC; 
-
-
-  for (var i = 1; i < (num + 1); i++) {
-      var trRow = tr[i - 1];
-      if (i >= startRowC && i <= endRowC) {
-          trRow.style.display = "";
-      } else {
-          trRow.style.display = "none";
-      }
-  }
-  
-  
-  var tempStr = "";
-  if (currentPageC > 1) {
-      tempStr += `<a href="javascript:;" onClick="goPageC(1,${pageSizeC})">首頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPageC - 1},${pageSizeC})">上一頁</a>`;      
-  } else {
-      tempStr += `<a href="javascript:;" class="disabled">首頁</a>`;
-      tempStr += `<a href="javascript:;" class="disabled">上一頁</a>`;
-  }
-      tempStr += `<div><span>第${currentPageC}頁</span>/<span>共${totalPageC}頁</span></div>`;
-      
-
-  if (currentPageC < totalPageC) {
-      tempStr += `<a href="javascript:;" onClick="goPageC(${currentPageC + 1},${pageSizeC})">下一頁</a>`;
-      tempStr += `<a href="javascript:;" onClick="goPageC(${totalPageC},${pageSizeC})">尾頁</a>`;
-  } else {
-      tempStr += `<a href="javascript:;" class="disabled">下一頁</a>`;
-      tempStr += `<a href="javascript:;" class="disabled">尾頁</a>`;
-  }
-
-  $("#pageModuleC").html(tempStr);
-}
-
-
 </script>
 <style>
+.redB{
+    border-radius:10px;
+    
+}
+.redB:hover{ text-decoration:none; }
   html{
     margin:0 auto;
     max-width: 1100px;
@@ -394,7 +308,7 @@ function goPageC(currentPageC, pageSizeC) {
     border-radius:10px;
     top: 10%;
     width: 20%;
-    height: 30%;
+    height: 40%;
     padding-top: -15px;
     padding: 15px;
     margin: auto;
@@ -434,25 +348,22 @@ function goPageC(currentPageC, pageSizeC) {
     z-index: 20;
     background-color: #eee;
     display: none;
+    text-align:center;
     overflow-y:auto;
     overflow-x: hidden;
   }
   .infoModalE{
-    border: none;
     box-shadow: 0 0px 10px rgb(163, 163, 163);
     position: fixed;
     top: 30%;
-    width: auto;
-    height: 38%;
-    padding-top: -15px;
+    width: 25%;
+    height: auto;
     padding: 30px;
-    margin: auto;
-    padding-right: 5%;
     z-index: 20;
     display: none;
+    text-align:center;
     background-color: #eee;
-    overflow-y:auto;
-    overflow-x: hidden;
+    border-radius: 10px;
   }
   #infoModal::backdrop {
     background-color: rgba(0, 0, 0, 0.1);
@@ -527,9 +438,11 @@ function goPageC(currentPageC, pageSizeC) {
   align-items: center; 
 }  
 .closeA{
+    border-radius:10px;
     width: 60px;
     height: 30px;
-    position: absolute;      
+    position: absolute;   
+    padding:auto;
     bottom: 3%;
     right:20px;
     font-size: 20px;
@@ -537,7 +450,6 @@ function goPageC(currentPageC, pageSizeC) {
     color: white;
     background-color: crimson;
     text-align: center;
-    border-radius: 20px;
   }
 section {
         display: flex;
@@ -869,11 +781,10 @@ section {
           <div id="Ent" class="infoModalEn">
           <div onclick="closeEn();" class="close">X</div>
           <form method="post" action="/login">
-            <label style="color:#808080;">管理員信箱</label><br/>
-            <input type="text"  style="border-radius:10px;" Name="PMail" id="PMail"><br/><br/>
-            <label style="color:#808080;">管理員密碼</label><br/>
-            <input type="password"  style="border-radius:10px;" Name="Ppass" id="Ppass"><br/><br/>
-            <input type="submit" value="登入"  style="border-radius:10px;">
+            <label style="font-size:36px;">LOGIN</label><br><br>
+            <input type="text"  style="border-radius:10px; width:200px; height:35px;" Name="PMail" id="PMail" placeholder="Mail"><br/><br/>
+            <input type="password"  style="border-radius:10px; width:200px; height:35px;" Name="Ppass" id="Ppass" placeholder="PassWord"><br/><br/>
+            <input type="submit" class="btn btn-success" value="登入"  style="border-radius:10px;width:200px;" onclick="javascript:return ench()">
           </form>
           </div>
       </div>
@@ -887,7 +798,7 @@ section {
           <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
       </form>
     <div style="float:right;display:inline-block;margin-left:5px;">
-      <input type="submit" class="te" style="width:170px;" onclick="show();" value="歡迎 {{sn}}">
+      <input type="submit" class="te" style="width:200px;" onclick="show();" value="歡迎 {{sn}}">
     </div>  
     </br></br></br>
       {% else %}
@@ -896,7 +807,7 @@ section {
           <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
       </form>
         <div style="float:right;display:inline-block;margin-left:5px;">
-          <input type="submit" class="te" style="width:170px;" onclick="show();" value="歡迎 {{sn}}">
+          <input type="submit" class="te" style="width:200px;" onclick="show();" value="歡迎 {{sn}}">
         </div>  
         </br></br></br>
       {% endif %}
@@ -1020,7 +931,8 @@ section {
                         <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                              <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_changeC"><!--0701-->
+                            <label style="font-size:36px;color:#B22222;font-weight:bold;">選擇收件人</label>
+                              <table cellpadding="5" style="border:8px #ff9382 groove;" class=""><!--0701-->
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -1048,8 +960,7 @@ section {
                                   {% endfor %}
                                 </tbody>
                               </table>    
-                              <div onclick="closeR();" class="closeA" style="z-index: 11;">確定</div><!--0701-->
-                              <div style="margin-top: 20px;" id="pageModuleC"></div><!--0701-->
+                              <div onclick="closeR();" class="close" style="z-index: 11;">X</div>
                             </div>
                         </div>
                         <br><br>
@@ -1063,15 +974,16 @@ section {
                  </form>
                    <div style="justify-content: center; align-items: center; display: flex;" >
                     <div id="n{{ user.ID }}" class="infoModalE">
-                        <form  action="/mailEnd/{{ user.ID }}" method="post">
+                        <label style="font-size:36px;color:#B22222;font-weight:bold;">SR結案訊息</label>
+                        <form  action="/mailEnd/{{ user.ID }}" method="post" style="padding-right:20%">
                             <div onclick="closeE();" class="close">X</div>
-                            <label style="float:right">已於&nbsp;<input type="date" style="width:7em" name="date" id="date">結束測試</label><br>
-                            <label style="float:right">共&nbsp;<input type="number" style="width:9em" name="tot" id="tot" value="0" min="0">測試</label><br>
-                            <label style="float:right">Pass:&nbsp;<input type="number" style="width:10em" name="mpass" id="tot" value="0" min="0">項</label><br>
-                            <label style="float:right">Fail:&nbsp;<input type="number" style="width:10em" name="fail" id="tot" value="0" min="0">項</label><br>
-                            <label style="float:right">無環境測試:&nbsp;<input type="number" style="width:10em" name="no" id="tot" value="0" min="0">項</label><br>
-                            <input type="text" id="id{{ user.ID }}" style="display:none;" name="SMail" ></input>
-                            <button type="submit"  class="btn btn-success" style="right:15px;bottom:20px; border-radius: 30px;position: absolute;" onclick="javascript:return endsent()">確認送出</button>
+                            <label style="float:right">已於&nbsp;<input type="date" style="width:7em" name="date" id="date">結束測試</label><br/>
+                            <label style="float:right">共&nbsp;<input type="number" style="width:9em" name="tot" id="tot" value="0" min="0">測試</label><br/>
+                            <label style="float:right">Pass:&nbsp;<input type="number" style="width:10em" name="mpass" id="tot" value="0" min="0">項</label><br/>
+                            <label style="float:right">Fail:&nbsp;<input type="number" style="width:10em" name="fail" id="tot" value="0" min="0">項</label><br/>
+                            <label style="float:right">無環境測試:&nbsp;<input type="number" style="width:10em" name="no" id="tot" value="0" min="0">項</label><br/>
+                            <input type="text" id="id{{ user.ID }}" style="display:none;" name="SMail" ><br/>
+                            <input type="submit"  class="btn btn-success" style="border-radius: 30px;margin-left:20%;margin-top:5%" onclick="javascript:return endsent()" value="確認送出">
                         </form>
                     </div>
                 </div>
