@@ -16,7 +16,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
-from flask import request, render_template, url_for, redirect, flash
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
 
@@ -24,15 +23,9 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 scheduler = APScheduler(BackgroundScheduler(timezone="Asia/Shanghai"))
 
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:timmy279@localhost:5432/postgres"
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost:3306/fet"
 app.config['SECRET_KEY'] = os.urandom(24)
-
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'fet'
  
 mysql = MySQL(app)
 
@@ -106,8 +99,9 @@ if(path_csv):
             db.session.commit()
             
 if(path_excel):
-    df = pandas.read_excel("order/SRTT.xls")
+    df = pandas.read_excel("order/SRTT.xls", usecols=['SR編號', '開始日期', '結束日期', '測試專案名稱', '收單者', '申請部門', '需求分類', '優先順序', 'SR開單者'])
     df.replace("",'', inplace=True,regex = True)
+    df = df.dropna()
     data_excel = df.to_dict(orient = 'records')
     for row in data_excel:
         row['Major'] = 0
@@ -124,7 +118,7 @@ if(path_excel):
                     row['Major'],
                     row['State'])
         if (User.query.filter_by(ID=str(row['SR編號'])).all() != None):
-            inf_db = (User.query.filter_by(ID=str(row['SR編號'])).all())
+            inf_db = User.query.filter_by(ID=str(row['SR編號'])).all()
             try:
                 if inf_db[0].ID != row['SR編號']:
                     inf_db[0].ID = row['SR編號']
@@ -150,6 +144,7 @@ if(path_excel):
                     inf_db[0].State = inf_db[0].State
                 db.session.commit()
             except IndexError:
+                
                 db.session.add(inf)
                 db.session.commit()
         else:
@@ -161,9 +156,40 @@ qu = User.query.order_by("ID")
 def get_page(offset=0, per_page=10, qu=qu):
     return qu[offset: offset + per_page]
 
-@app.route('/', defaults={'page': 1})
-@app.route('/<page>')
-def index(page):  
+@app.route('/',methods=['GET','POST'])
+def index():
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+    
+    sn = session.get('name')
+    qu = User.query.all()
+    total = len(qu)
+    
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,quSR=quSR
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
+
+@app.route('/fetnt', defaults={'page': 1})
+@app.route('/fetnt/<page>')
+@login_required
+def fetnt(page):  
     qu = User.query.all()
     total = len(qu)
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
@@ -176,7 +202,8 @@ def index(page):
     
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)
+                            pagination=pagination,
+                            sad=AD.query.all())
 
 
 @app.route('/search',methods=['GET','POST'])
@@ -227,7 +254,6 @@ def search():
 
 @app.route('/update',methods=['GET','POST'])
 def update():
-    
     if(path_csv):
         df = pd.read_csv('order/SR-Sample.csv', encoding='big5')
         df.replace("\r\n",'<br>', inplace=True,regex = True)
@@ -286,8 +312,9 @@ def update():
                 db.session.commit()
                 
     if(path_excel):
-        df = pandas.read_excel("order/SRTT.xls")
+        df = pandas.read_excel("order/SRTT.xls", usecols=['SR編號', '開始日期', '結束日期', '測試專案名稱', '收單者', '申請部門', '需求分類', '優先順序', 'SR開單者'])
         df.replace("",'', inplace=True,regex = True)
+        df = df.dropna()
         data_excel = df.to_dict(orient = 'records')
         for row in data_excel:
             row['Major'] = 0
@@ -359,14 +386,10 @@ def update():
 def revise(ID):
     if(request.method == 'POST'):
         rev = request.form.get("sub")
-        sd = request.form.get("sd")
-        ed = request.form.get("ed")
         sel = request.form.get("sel")
         
         Users = User.query.filter_by(ID=str(ID)).first()
         Users.Sub = str(rev)
-        Users.StartDate = str(sd)  
-        Users.EndDate = str(ed)
         Users.State = str(sel)
         if(request.form.get("cb") == None):
             Users.Major = 0  
@@ -389,32 +412,6 @@ def revise(ID):
                                 qu=pagination_users,
                                 pagination=pagination)
 
-@app.route('/calendar',methods=['GET','POST'])
-def calendar():
-    quSR = SR.query.all()
-    qu = User.query.filter_by(Major = "1").all()
-    total = len(qu)  
-    for i in range(total):
-        qs = qu[i].StartDate.split("/")
-        if(len(qs[1]) < 2):
-           qs[1] = str(0)+qs[1]
-        if(len(qs[2]) < 8):
-           qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
-        qe = qu[i].EndDate.split("/")
-        if(len(qe[1]) < 2):
-           qe[1] = str(0)+qe[1]
-        if(len(qe[2]) < 8):
-           qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
-    
-    sn = session.get('name')
-    return render_template('calendar.html',qu=qu
-                                          ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
-                                          ,quSR=quSR
-                                          ,quAD=AD.query.all(),
-                                          sn=sn)
 
 @app.route('/calendar_ne',methods=['GET','POST'])
 def calendar_ne():
@@ -428,6 +425,7 @@ def calendar_ne():
                 sr_db.session.add(NPe)
                 sr_db.session.commit()
             
+    sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -449,14 +447,15 @@ def calendar_ne():
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
 
 @app.route('/calendar_ch/<ID>',methods=['GET','POST'])
 def calendar_ch(ID):
     if(request.method == 'POST'):
-        SName = request.form.get("SName")
-        SMVPN = request.form.get("SMVPN")
-        SMail = request.form.get("SMail")
+        SName = request.form.get("CName")
+        SMVPN = request.form.get("CMVPN")
+        SMail = request.form.get("CMail")
         nSR = SR.query.filter_by(Name=str(ID)).first()
         if(SR.query.filter_by(Name = SName).first() == None) or (SR.query.filter_by(Name = SName).first() == SName):
             nSR.Name = str(SName)  
@@ -471,6 +470,7 @@ def calendar_ch(ID):
             sr_db.session.delete(nSR)            
             sr_db.session.commit()
         
+    sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -492,7 +492,8 @@ def calendar_ch(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
@@ -501,42 +502,6 @@ def Mojor():
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
     
-    pagination = Pagination(page=page, 
-                            per_page=per_page, 
-                            offset=offset,
-                            total=total,
-                            css_framework='bootstrap4')
-    
-    return render_template('FET_main.html',
-                            qu=pagination_users,
-                            pagination=pagination)
-
-@app.route('/mailSt/<ID>',methods=['GET','POST'])
-def mailSt(ID):
-    Users = User.query.filter_by(ID=str(ID)).first()
-    content = MIMEMultipart()  #建立MIMEMultipart物件
-    content["subject"] = "Major SR 狀態更新" #郵件標題
-    content["from"] = "smartfetelab@gmail.com"  #寄件者
-    content["to"] = "timmy89566@gmail.com" #收件者
-    ma = "1. " + "SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
-    SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
-    StD = "3. 於今日" + Users.StartDate + "開始測試" + "\r\n"
-    EnD = "4. 預計" + Users.EndDate + "結束測試" 
-    content.attach(MIMEText(ma+SpN+StD+EnD))
-    with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
-        try:
-            smtp.ehlo()  # 驗證SMTP伺服器
-            smtp.starttls()  # 建立加密傳輸
-            smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
-            smtp.send_message(content)  # 寄送郵件
-            print("Complete!")
-        except Exception as e:
-            print("Error message: ", e)
-            
-    qu = User.query.all()
-    total = len(qu)
-    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-    pagination_users = get_page(offset=offset, per_page=per_page)
     pagination = Pagination(page=page, 
                             per_page=per_page, 
                             offset=offset,
@@ -559,23 +524,24 @@ def mailTest(ID):
         ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" + "2. " 
         SpN = "實驗室支援: " + Users.SpN + "\r\n" 
         msg = "3. " + smsg
-        content = MIMEMultipart()  #建立MIMEMultipart物件
-        content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "smartfetelab@gmail.com"  #寄件者
-        content["to"] = recipient #收件者
+        content = MIMEMultipart() 
+        content["subject"] = "Major SR 狀態更新"
+        content["from"] = "smartfetelab@gmail.com"
+        content["to"] = recipient
         SpN = "實驗室支援: " + Users.SpN + "\r\n" 
         content.attach(MIMEText(ma+SpN+msg))
-        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:
             try:
-                smtp.ehlo()  # 驗證SMTP伺服器
-                smtp.starttls()  # 建立加密傳輸
+                smtp.ehlo()
+                smtp.starttls()
                 smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
-                smtp.send_message(content)  # 寄送郵件
+                smtp.send_message(content)
                 print("Complete!")
             except Exception as e:
                 print("Error message: ", e)
         
     
+    sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -597,7 +563,8 @@ def mailTest(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
 
 @app.route('/mailEnd/<ID>',methods=['GET','POST'])
 def mailEnd(ID):
@@ -609,10 +576,10 @@ def mailEnd(ID):
         fail = request.form.get("fail")
         no = request.form.get("no")
         sents = request.form.get("SMail")
-        content = MIMEMultipart()  #建立MIMEMultipart物件
-        content["subject"] = "Major SR 狀態更新"  #郵件標題
-        content["from"] = "smartfetelab@gmail.com"  #寄件者
-        content["to"] = sents #收件者
+        content = MIMEMultipart() 
+        content["subject"] = "Major SR 狀態更新" 
+        content["from"] = "smartfetelab@gmail.com" 
+        content["to"] = sents
         ma = "1. SR#" + Users.ID + "：" + Users.Sub + "\r\n" 
         SpN = "2. 實驗室支援: " + Users.SpN + "\r\n" 
         msg = "3. 已於 " + date + " 結束測試 " + "\r\n" 
@@ -621,17 +588,18 @@ def mailEnd(ID):
         msg += "    Fail: " + fail + " 項 " + "\r\n" 
         msg += "    無環境測試: " + no + " 項 " 
         content.attach(MIMEText(ma+SpN+msg))
-        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+        with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:
             try:
-                smtp.ehlo()  # 驗證SMTP伺服器
-                smtp.starttls()  # 建立加密傳輸
+                smtp.ehlo() 
+                smtp.starttls() 
                 smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
-                smtp.send_message(content)  # 寄送郵件
+                smtp.send_message(content)
                 print("Complete!")
             except Exception as e:
                 print("Error message: ", e)
         
     
+    sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -653,7 +621,8 @@ def mailEnd(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.all()
+                                          ,sn=sn)
 
 
 class adUser(UserMixin):
@@ -803,7 +772,16 @@ def addnt():
         srde = request.form.get("srde")
         srca = request.form.get("srca")
         srma = request.form.get("srma")
-        if(User.query.filter_by(ID = str(srid)) == None):
+        
+        st = srsta.split("-")
+        sta = st[2].split("T")
+        srsta = st[0]+"/"+st[1]+"/"+sta[0]+" "+sta[1]
+        
+        sen = sren.split("-")
+        send = sen[2].split("T")
+        sren = sen[0]+"/"+sen[1]+"/"+send[0]+" "+send[1]
+        
+        if(User.query.filter_by(ID = str(srid)).first() == None):
             addnt = User(srid, srsta, sren, srsu, srla, srde, srca, srma, srbi, "0", srst)
             db.session.add(addnt)
             db.session.commit()
@@ -835,22 +813,28 @@ for i in range(total):
         @scheduler.task('interval', id='job', start_date=str(today)+" 06:00:00",end_date=str(today)+" 06:00:00")
         def job():
             Users = User.query.filter_by(StartDate = str(sd)).first()
-            content = MIMEMultipart()  #建立MIMEMultipart物件
-            content["subject"] = "Major SR 狀態更新" #郵件標題
-            content["from"] = "smartfetelab@gmail.com"  #寄件者
-            content["to"] = "timmy89566@gmail.com" #收件者
+            sent = "cdchang@fareastone.com.tw,vchiang@fareastone.com.tw,sheyang@fareastone.com.tw,tcyang@fareastone.com.tw"
+            se1 = AD.query.filter_by(Name = str(Users.SpN)).first()
+            se2 = AD.query.filter_by(Name = str(Users.CreN)).first()
+            if(se1 != None):
+                sent = sent + "," + se1.Mail
+            if(se2 != None):
+                sent = sent + "," + se2.Mail
+            content = MIMEMultipart()
+            content["subject"] = "Major SR 狀態更新"
+            content["from"] = "smartfetelab@gmail.com"
+            content["to"] = "timmy89566@gmail.com"  #sent
             ma = "1. " + "SR#" + str(Users.ID) + "：" + str(Users.Sub) + "\r\n" 
             SpN = "2. 實驗室支援: " + str(Users.SpN) + "\r\n" 
             StD = "3. 於今日" + str(sd) + "開始測試" + "\r\n"
             EnD = "4. 預計" + str(Users.EndDate) + "結束測試" 
             content.attach(MIMEText(ma+SpN+StD+EnD))
-            with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+            with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:
                 try:
-                    smtp.ehlo()  # 驗證SMTP伺服器
-                    smtp.starttls()  # 建立加密傳輸
+                    smtp.ehlo()
+                    smtp.starttls()
                     smtp.login("smartfetelab@gmail.com", "klingpbxmgptihmm")
-                    smtp.send_message(content)  # 寄送郵件
-                    # print(str(qus[i].StartDate))
+                    smtp.send_message(content) 
                 except Exception as e:
                     print("Error message: ", e)
     

@@ -17,6 +17,7 @@
     dialog=document.getElementById("infoModal");
     dialogP=document.getElementById("Per");
     dialogE=document.getElementById("Ent");
+    pschecked()
   };
   function showEn(){
     dialogE.style.display='block';
@@ -123,34 +124,6 @@ function endsent() {
     }
 }
 
-function enter() {
-    var pa = "";
-    var pm = "";
-    var pn = "";
-    if(document.getElementById("PMail").value == "Test"){
-        pa += 1;
-        if(document.getElementById("Ppass").value == "123"){
-            pm += 1;
-        }
-    }
-    if(pa != "" && pm != ""){
-        alert("登入成功")
-        s1.style.display='block';
-        s2.style.display='block';
-        enB.style.display='none';
-        Ent.style.display='none';
-        fade.style.display='none';
-        {% for user in arr %}
-            document.getElementById("m{{ user.ID }}").disabled=false;
-            document.getElementById("endout{{ user.ID }}").disabled=false;
-            document.getElementById("out{{ user.ID }}").disabled=false;
-            document.getElementById("chose{{ user.ID }}").disabled=false;
-        {% endfor %}
-        return false;
-    }else{
-        alert("登入失敗")
-    }
-}
 function sent() {
     var msg = "確定要送出嗎？";
     if (confirm(msg)==true){
@@ -163,6 +136,7 @@ function add() {
     var n = "";
     var m = "";
     var ma = "";
+    emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
 {% for SR in quSR %}
     if(document.getElementById("Name").value == "{{ SR.Name }}"){
         n += 1;
@@ -177,6 +151,9 @@ function add() {
         return false
     }else if(document.getElementById("Mail").value == ""){
         alert("請輸入信箱")
+        return false
+    }else if(document.getElementById("Mail").value.search(emailRule) == -1){
+        alert("信箱格式錯誤")
         return false
     }else if (n != ""){
         alert("姓名重複 新增失敗!")
@@ -201,21 +178,24 @@ function che() {
       var sm = 0;
       var sa = 0;
   {% for SR in quSR %}
-      if(document.getElementById("SName").value == "{{ SR.Name }}"){
+      if(document.getElementById("CName").value == "{{ SR.Name }}"){
           sn += 1;
-      }else if(document.getElementById("SMVPN").value == "{{ SR.MVPN }}"){
+      }else if(document.getElementById("CMVPN").value == "{{ SR.MVPN }}"){
           sm += 1;
-      }else if(document.getElementById("SMail").value == "{{ SR.Mail }}"){
+      }else if(document.getElementById("CMail").value == "{{ SR.Mail }}"){
           sa += 1;
       }
   {% endfor %}
-      if (sn > 1){
-          alert("姓名重複 修改失敗!")
+      if(document.getElementById("CName").value == ""){
+          alert("請輸入姓名")
           return false
-      }else if(sm > 1){
-          alert("MVPN重複 修改失敗!")
+      }else if(document.getElementById("CMail").value == ""){
+          alert("請輸入信箱")
           return false
-      }else if(sa > 1){
+      }else if(sn != 0){
+          alert(sn)
+          return false
+      }else if(sa != 0){
           alert("信箱重複 修改失敗!")
           return false
       }else{
@@ -370,6 +350,8 @@ function goPageC(currentPageC, pageSizeC) {
 
   $("#pageModuleC").html(tempStr);
 }
+
+
 </script>
 <style>
   html{
@@ -897,7 +879,7 @@ section {
       </div>
       {% if current_user.is_authenticated %}
       {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
-      <form action="/" style="display:inline-block;">
+      <form action="/fetnt" style="display:inline-block;">
           <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
       </form>
       <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;margin-left:10px;">
@@ -919,7 +901,7 @@ section {
         </br></br></br>
       {% endif %}
       {% else %}
-        <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();" id="enB">
+        <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();">
       {% endif %}
       <div class="cont">
         <div id="Per" class="infoModalP">
@@ -936,13 +918,13 @@ section {
                 <form  action="/calendar_ch/{{ SR.Name }}" method="post">
                   <tr style="border: 1px solid;">
                   {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
-                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="SName" Name="SName"></td>
+                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="CName" Name="CName"></td>
                     {% if SR.MVPN is not none %}
-                        <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="SMVPN" Name="SMVPN"></td>
+                        <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="CMVPN" Name="CMVPN"></td>
                     {% else %}
-                        <td style="border: 1px solid;"><input type="text" value="" size="5px" id="SMVPN" Name="SMVPN"></td>
+                        <td style="border: 1px solid;"><input type="text" value="" size="5px" id="CMVPN" Name="CMVPN"></td>
                     {% endif %}
-                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="SMail" Name="SMail"></td>
+                    <td style="border: 1px solid;"><input type="text" value="{{ SR.Mail }}" size="40px" id="CMail" Name="CMail"></td>
                     <td><input type="submit" value="修改" onclick="javascript:return che()"></td>
                     {% else %}
                       <td style="border: 1px solid; width:30%;text-align: center;"><label>{{ SR.Name }}</label></td>
@@ -961,7 +943,7 @@ section {
                   <tr style="border: 1px solid;">
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
                    <td style="border: 1px solid;"> <input type="text" placeholder="MVPN"  size="5px" id="MVPN" name="MVPN"></td>
-                   <td style="border: 1px solid;"> <input type="email" placeholder="Mail" size="40px" id="Mail" name="Mail"></td>
+                   <td style="border: 1px solid;"> <input type="text" placeholder="Mail" size="40px" id="Mail" name="Mail"></td>
                    <td style="border: 1px solid;"> <input type="submit" value="新增" onclick="javascript:return add()"></td>
                   </tr>
                 </form>
@@ -983,7 +965,7 @@ section {
       {% for user in arr %}
       {% if current_user.is_authenticated %}
       {% if sn == user.SpN or sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
-        <div style="justify-content: center; align-items: center; display: flex;" >
+        <div style="justify-content: center; align-items: center; display: flex;" id="ex">
             <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
                 <table style="width: 100%;text-align: center; font-size: 24px; border-radius: 10px;" class="htm">
@@ -1038,7 +1020,7 @@ section {
                         <div class="cont" >
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
-                              <table cellpadding="5" style="border:8px #ff9382 groove;" class=""><!--0701-->
+                              <table cellpadding="5" style="border:8px #ff9382 groove;" class="table_changeC"><!--0701-->
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -1050,7 +1032,11 @@ section {
                                 <tbody>
                                   {% for SR in quSR %}
                                     <tr style="border: 1px solid;">
+                                    {% if SR.Name == "Yang, Allen 楊甡" or SR.Name == "Yang, Rafter 楊登傑" or SR.Name == "Chang, Darrow 張旗達" or SR.Name == "Chiang, Vivian 江華珮" or SR.Name == user.CreN %}
+                                      <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();" checked="checked"></td>
+                                    {% else %}
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();"></td>
+                                    {% endif %}
                                       <td style="border: 1px solid;" id="SN" Name="SName"><label>{{ SR.Name }}</label></td>
                                       {% if SR.MVPN is not none %}
                                           <td style="border: 1px solid;" id="Sid" Name="Sid"><label>{{ SR.MVPN }}</label></td>
