@@ -914,16 +914,16 @@ section {
                     </tr>
                 </table>
                 <form  action="/mailTest/{{ user.ID }}" method="post">
-                   <div class="row" style="position: relative; margin-top:30px;"><!--0701-->
+                   <div class="row" style="position: relative; margin-top:30px;">
                        <div class="col-12 col-md-7">
                             <span class="badge badge-default" sytle="width:100%">信件內容:</span>
                            <br>
-                               <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="m{{ user.ID }}" value="內容"></textarea><!--0701-->
+                               <textarea name="msg" style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="m{{ user.ID }}" value="內容"></textarea>
                        </div>
                         <div class="col-12 col-md-5">
                              <span class="badge badge-default" sytle="width:100%">收件人:</span>
                             <br>
-                            <label style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="p{{ user.ID }}"></label><!--0701-->
+                            <label style="width:100%;height:150px;margin-top:10px;border: 3px solid #A9A9A9;resize: none;font-size:20px;" id="p{{ user.ID }}"></label>
                         </div>
                    </div>
                    <div class="row">
@@ -932,7 +932,7 @@ section {
                         <div id="f{{ user.ID }}" class="black_overlayR"></div>
                             <div id="e{{ user.ID }}" class="infoModalR">
                             <label style="font-size:36px;color:#B22222;font-weight:bold;">選擇收件人</label>
-                              <table cellpadding="5" style="border:8px #ff9382 groove;" class=""><!--0701-->
+                              <table cellpadding="5" style="border:8px #ff9382 groove;" class="">
                                 <thead>
                                     <tr>
                                         <th style="border: 1px solid;"></th>
@@ -944,7 +944,7 @@ section {
                                 <tbody>
                                   {% for SR in quSR %}
                                     <tr style="border: 1px solid;">
-                                    {% if SR.Name == "Yang, Allen 楊甡" or SR.Name == "Yang, Rafter 楊登傑" or SR.Name == "Chang, Darrow 張旗達" or SR.Name == "Chiang, Vivian 江華珮" or SR.Name == user.CreN %}
+                                    {% if SR.Name == "Yang, Allen 楊甡" or SR.Name == "Yang, Rafter 楊登傑" or SR.Name == "Chang, Darrow 張旗達" or SR.Name == "Chiang, Vivian 江華珮" or SR.Name == user.CreN or SR.Name == user.SpN %}
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();" checked="checked"></td>
                                     {% else %}
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();"></td>
@@ -964,7 +964,7 @@ section {
                             </div>
                         </div>
                         <br><br>
-                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;"><!--0701-->
+                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;">
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" >發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}">送出</button>

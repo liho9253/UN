@@ -15,7 +15,7 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
 
@@ -836,7 +836,7 @@ for i in range(total):
             content = MIMEMultipart()
             content["subject"] = "Major SR 狀態更新"
             content["from"] = "smartfetelab@gmail.com"
-            content["to"] = "timmy89566@gmail.com"  #sent
+            content["to"] = sent  
             ma = "1. " + "SR#" + str(Users.ID) + "：" + str(Users.Sub) + "\r\n" 
             SpN = "2. 實驗室支援: " + str(Users.SpN) + "\r\n" 
             StD = "3. 於今日" + str(sd) + "開始測試" + "\r\n"
