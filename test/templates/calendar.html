@@ -789,7 +789,7 @@ section {
           </div>
       </div>
       {% if current_user.is_authenticated %}
-      {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
+      {% if sn == "Allen Yang 楊甡" %}
       <form action="/fetnt" style="display:inline-block;">
           <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
       </form>
@@ -828,7 +828,7 @@ section {
                 {% for SR in quSR %}
                 <form  action="/calendar_ch/{{ SR.Name }}" method="post">
                   <tr style="border: 1px solid;">
-                  {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
+                  {% if sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="CName" Name="CName"></td>
                     {% if SR.MVPN is not none %}
                         <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="CMVPN" Name="CMVPN"></td>
@@ -849,7 +849,7 @@ section {
                   </tr>
                 </form>
                 {% endfor %}
-                {% if sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
+                {% if sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
                 <form action="calendar_ne" method="post" id="fne">
                   <tr style="border: 1px solid;">
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
@@ -875,7 +875,7 @@ section {
       <div id="calendar"></div>
       {% for user in arr %}
       {% if current_user.is_authenticated %}
-      {% if sn == user.SpN or sn == "Yang, Allen 楊甡" or sn == "Yang, Rafter 楊登傑" or sn == "Chang, Darrow 張旗達" or sn == "Chiang, Vivian 江華珮" %}
+      {% if sn == user.SpN or sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
         <div style="justify-content: center; align-items: center; display: flex;" id="ex">
             <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
@@ -944,7 +944,7 @@ section {
                                 <tbody>
                                   {% for SR in quSR %}
                                     <tr style="border: 1px solid;">
-                                    {% if SR.Name == "Yang, Allen 楊甡" or SR.Name == "Yang, Rafter 楊登傑" or SR.Name == "Chang, Darrow 張旗達" or SR.Name == "Chiang, Vivian 江華珮" or SR.Name == user.CreN or SR.Name == user.SpN %}
+                                    {% if SR.Name == "Allen Yang 楊甡" or SR.Name == "Rafter Yang 楊登傑" or SR.Name == "Darrow Chang 張旗達" or SR.Name == "Vivian Chiang 江華珮" or SR.Name == user.CreN or SR.Name == user.SpN %}
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();" checked="checked"></td>
                                     {% else %}
                                       <td><input type="checkbox" style="width:18px; height:18px;" Name="SMail" id="w{{ user.ID }}{{ SR.Mail }}" value="{{ SR.Mail }}" onclick="pschecked();"></td>

@@ -15,7 +15,7 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, decorator
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
 
@@ -36,6 +36,7 @@ login_manager.login_view = 'login'
 
 path_csv = os.path.isfile('order/SR-Sample.csv')
 path_excel = os.path.isfile('order/SRTT.xls')
+sr_csv = os.path.isfile('order/SR.csv')
  
 db.init_app(app)
 sr_db.init_app(app)
@@ -106,6 +107,10 @@ if(path_excel):
     for row in data_excel:
         row['Major'] = 0
         row['State'] = "In Coming"
+        ssr = row['SR開單者'].split(",")
+        row['SR開單者'] = ssr[0]+ssr[1]
+        ssr = row['收單者'].split(",")
+        row['收單者'] = ssr[0]+ssr[1]
         inf = User( row['SR編號'],
                     row['開始日期'],
                     row['結束日期'],
@@ -150,7 +155,33 @@ if(path_excel):
         else:
             db.session.add(inf)
             db.session.commit()
-        
+
+if(sr_csv):
+    df = pd.read_csv('order/SR.csv')
+    df = df.fillna(value="")
+    data_csv = df.to_dict(orient = 'records')
+    for row in data_csv:
+        inf = SR( row['Name'],
+                  row['MVPN'],
+                  row['Mail'])
+        if (SR.query.filter_by(Name=str(row['Name'])).all() != None):
+            inf_db = (SR.query.filter_by(Name=str(row['Name'])).all())
+            try:
+                if inf_db[0].Name != row['Name']:
+                    inf_db[0].Name = row['Name']
+                if row['MVPN'] != "":
+                    if inf_db[0].MVPN != row['MVPN']:
+                        inf_db[0].MVPN = row['MVPN']
+                if inf_db[0].Mail != row['Mail']:
+                    inf_db[0].Mail = row['Mail']
+                sr_db.session.commit()
+            except IndexError:
+                sr_db.session.add(inf)
+                sr_db.session.commit()
+        else:
+            sr_db.session.add(inf)
+            sr_db.session.commit()
+            
 qu = User.query.order_by("ID")
 
 def get_page(offset=0, per_page=10, qu=qu):
@@ -188,7 +219,7 @@ def index():
 
 @app.route('/fetnt', defaults={'page': 1})
 @app.route('/fetnt/<page>')
-@login_required
+@decorator("321@1.c", "321")
 def fetnt(page):  
     qu = User.query.all()
     total = len(qu)
