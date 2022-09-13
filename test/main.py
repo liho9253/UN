@@ -15,9 +15,10 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, decorator
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
+from functools import wraps
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -37,6 +38,7 @@ login_manager.login_view = 'login'
 path_csv = os.path.isfile('order/SR-Sample.csv')
 path_excel = os.path.isfile('order/SRTT.xls')
 sr_csv = os.path.isfile('order/SR.csv')
+ad_csv = os.path.isfile('order/AD.csv')
  
 db.init_app(app)
 sr_db.init_app(app)
@@ -182,6 +184,33 @@ if(sr_csv):
             sr_db.session.add(inf)
             sr_db.session.commit()
             
+if(ad_csv):
+    df = pd.read_csv('order/AD.csv')
+    df = df.fillna(value="")
+    data_csv = df.to_dict(orient = 'records')
+    for row in data_csv:
+        inf = AD( row['Name'],
+                  row['Mail'],
+                  row['PassWord'],
+                  row['Permission'])
+        if (AD.query.filter_by(Name=str(row['Name'])).all() != None):
+            inf_db = (AD.query.filter_by(Name=str(row['Name'])).all())
+            try:
+                if inf_db[0].Name != row['Name']:
+                    inf_db[0].Name = row['Name']
+                if inf_db[0].Mail != row['Mail']:
+                    inf_db[0].Mail = row['Mail']
+                if inf_db[0].PassWord != row['PassWord']:
+                    inf_db[0].PassWord = bcrypt.generate_password_hash(str(row['PassWord'])).decode('utf-8')
+                if inf_db[0].Permission != row['Permission']:
+                    inf_db[0].Permission = row['Permission']
+                ad_db.session.commit()
+            except IndexError:
+                ad_db.session.add(inf)
+                ad_db.session.commit()
+        else:
+            ad_db.session.add(inf)
+            ad_db.session.commit()
 qu = User.query.order_by("ID")
 
 def get_page(offset=0, per_page=10, qu=qu):
@@ -214,12 +243,12 @@ def index():
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
+                                          ,quAD=AD.query.filter_by(Name = sn).first()
                                           ,sn=sn)
 
 @app.route('/fetnt', defaults={'page': 1})
 @app.route('/fetnt/<page>')
-@decorator("321@1.c", "321")
+@login_required
 def fetnt(page):  
     qu = User.query.all()
     total = len(qu)
@@ -748,7 +777,7 @@ def login():
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
+                                          ,quAD=AD.query.filter_by(Name = sn).first()
                                           ,sn=sn)
 
 @app.route('/logout', methods=['GET','POST'])
@@ -786,7 +815,7 @@ def register():
         Rpassword = request.form.get("Rpass")
         if(AD.query.filter_by(Name = str(Ruser)).first() == None):
             p_hash = bcrypt.generate_password_hash(Rpassword).decode('utf-8')
-            RUser = AD(Ruser, Rmail, p_hash)
+            RUser = AD(Ruser, Rmail, p_hash, "0")
             ad_db.session.add(RUser)
             ad_db.session.commit()
         
@@ -886,5 +915,5 @@ if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
     # app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
 

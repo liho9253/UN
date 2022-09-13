@@ -789,28 +789,28 @@ section {
           </div>
       </div>
       {% if current_user.is_authenticated %}
-      {% if sn == "Allen Yang 楊甡" %}
-      <form action="/fetnt" style="display:inline-block;">
-          <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
-      </form>
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;margin-left:10px;">
-      <form action="/logout" method="post" style="display:inline-block;">
-          <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
-      </form>
-    <div style="float:right;display:inline-block;margin-left:5px;">
-      <input type="submit" class="te" style="width:200px;" onclick="show();" value="歡迎 {{sn}}">
-    </div>  
-    </br></br></br>
-      {% else %}
-      <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;">
-      <form action="/logout" method="post" style="display:inline-block;">
-          <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
-      </form>
+          {% if quAD.Permission == "1" %}
+          <form action="/fetnt" style="display:inline-block;">
+              <input type="submit" value="工單匯入系統" class="te" id="s1" style="width:120px;">
+          </form>
+          <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;margin-left:10px;">
+          <form action="/logout" method="post" style="display:inline-block;">
+              <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
+          </form>
         <div style="float:right;display:inline-block;margin-left:5px;">
           <input type="submit" class="te" style="width:200px;" onclick="show();" value="歡迎 {{sn}}">
         </div>  
         </br></br></br>
-      {% endif %}
+          {% else %}
+          <input type="button" value="聯絡人清單" class="te" id="s2" onclick="showP();" style="display:inline-block;width:120px;">
+          <form action="/logout" method="post" style="display:inline-block;">
+              <input type="submit" value="登出" class="te" id="s1" style="width:120px;margin-left:10px;">
+          </form>
+            <div style="float:right;display:inline-block;margin-left:5px;">
+              <input type="submit" class="te" style="width:200px;" onclick="show();" value="歡迎 {{sn}}">
+            </div>  
+            </br></br></br>
+          {% endif %}
       {% else %}
         <input type="submit" value="登入" class="te" style="width:120px;" onclick="showEn();">
       {% endif %}
