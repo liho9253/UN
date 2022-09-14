@@ -15,10 +15,9 @@ import smtplib
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask_apscheduler import APScheduler
 from datetime import date
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 from flask_mysqldb import MySQL
-from functools import wraps
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -260,10 +259,12 @@ def fetnt(page):
                             total=total,
                             css_framework='bootstrap4')
     
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
                             pagination=pagination,
-                            sad=AD.query.all())
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first())
 
 
 @app.route('/search',methods=['GET','POST'])
@@ -308,9 +309,12 @@ def search():
                             total=total,
                             css_framework='bootstrap4')
     
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)
+                            pagination=pagination,
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first())
 
 @app.route('/update',methods=['GET','POST'])
 def update():
@@ -438,10 +442,41 @@ def update():
                             total=total,
                             css_framework='bootstrap4')
     
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)
+                            pagination=pagination,
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first())
 
+@app.route('/arevise/<Name>', methods=['GET','POST'])
+def arevise(Name):
+    if(request.method == 'POST'):
+        ads = AD.query.filter_by(Name = str(Name)).first()
+        
+        if request.form.get("Acheck"):
+            ads.Permission = 1
+        else:
+            ads.Permission = 0  
+            
+        ad_db.session.commit()
+        
+        total = len(User.query.all())  
+        page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+        pagination_users = get_page(offset=offset, per_page=per_page, qu=qu)
+        pagination = Pagination(page=page, 
+                                per_page=per_page, 
+                                offset=offset,
+                                total=total,
+                                css_framework='bootstrap4')
+        
+        sn = session.get('name')
+        return render_template('FET_main.html',
+                                qu=pagination_users,
+                                pagination=pagination,
+                                ad=AD.query.all(),
+                                quAD=AD.query.filter_by(Name = sn).first())
+    
 @app.route('/revise/<ID>',methods=['GET','POST'])
 def revise(ID):
     if(request.method == 'POST'):
@@ -468,9 +503,12 @@ def revise(ID):
                                 total=total,
                                 css_framework='bootstrap4')
         
+        sn = session.get('name')
         return render_template('FET_main.html',
                                 qu=pagination_users,
-                                pagination=pagination)
+                                pagination=pagination,
+                                ad=AD.query.all(),
+                                quAD=AD.query.filter_by(Name = sn).first())
 
 
 @app.route('/calendar_ne',methods=['GET','POST'])
@@ -507,8 +545,9 @@ def calendar_ne():
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
-                                          ,sn=sn)
+                                          ,ad=AD.query.all()
+                                          ,sn=sn
+                                          ,quAD=AD.query.filter_by(Name = sn).first())
 
 @app.route('/calendar_ch/<ID>',methods=['GET','POST'])
 def calendar_ch(ID):
@@ -552,8 +591,9 @@ def calendar_ch(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
-                                          ,sn=sn)
+                                          ,ad=AD.query.all()
+                                          ,sn=sn
+                                          ,quAD=AD.query.filter_by(Name = sn).first())
 
 @app.route('/Mojor',methods=['GET','POST'])
 def Mojor():
@@ -567,10 +607,12 @@ def Mojor():
                             offset=offset,
                             total=total,
                             css_framework='bootstrap4')
-    
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)
+                            pagination=pagination,
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first())
 
 @app.route('/mailTest/<ID>',methods=['GET','POST'])
 def mailTest(ID):
@@ -623,8 +665,9 @@ def mailTest(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
-                                          ,sn=sn)
+                                          ,ad=AD.query.all()
+                                          ,sn=sn
+                                          ,quAD=AD.query.filter_by(Name = sn).first())
 
 @app.route('/mailEnd/<ID>',methods=['GET','POST'])
 def mailEnd(ID):
@@ -681,8 +724,9 @@ def mailEnd(ID):
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all()
-                                          ,sn=sn)
+                                          ,ad=AD.query.all()
+                                          ,sn=sn
+                                          ,quAD=AD.query.filter_by(Name = sn).first())
 
 
 class adUser(UserMixin):
@@ -778,7 +822,8 @@ def login():
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
                                           ,quAD=AD.query.filter_by(Name = sn).first()
-                                          ,sn=sn)
+                                          ,sn=sn
+                                          ,ad=AD.query.all())
 
 @app.route('/logout', methods=['GET','POST'])
 def logout():
@@ -801,11 +846,13 @@ def logout():
         qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
     
     
+    sn = session.get('name')
     return render_template('calendar.html',qu=qu
                                           ,total=total
                                           ,arr=User.query.filter_by(Major = "1").all()
                                           ,quSR=quSR
-                                          ,quAD=AD.query.all())
+                                          ,quAD=AD.query.filter_by(Name = sn).first()
+                                          ,ad=AD.query.all())
 
 @app.route('/register', methods=['GET','POST'])
 def register():
@@ -829,9 +876,13 @@ def register():
                             total=total,
                             css_framework='bootstrap4')
     
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)
+                            pagination=pagination,
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first())
+
 @app.route('/addnt', methods=['GET','POST'])
 def addnt():  
     if(request.method == 'POST'):
@@ -868,9 +919,12 @@ def addnt():
                             total=total,
                             css_framework='bootstrap4')
     
+    sn = session.get('name')
     return render_template('FET_main.html',
                             qu=pagination_users,
-                            pagination=pagination)      
+                            pagination=pagination,
+                            ad=AD.query.all(),
+                            quAD=AD.query.filter_by(Name = sn).first()) 
 today = date.today()
 qus = User.query.filter_by(Major = "1").all()
 total = len(qus)  
@@ -914,6 +968,5 @@ for i in range(total):
 if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
-    # app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
 

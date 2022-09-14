@@ -39,6 +39,14 @@
           document.getElementById("Reg").style.display='none';
           fade.style.display='none';
         };  
+        function showMan(){
+          document.getElementById("man").style.display='block';
+          fade.style.display='block';
+        };
+        function closeMan(){
+          document.getElementById("man").style.display='none';
+          fade.style.display='none';
+        };  
         function showAddnt(){
           document.getElementById("nt").style.display='block';
           fade.style.display='block';
@@ -75,6 +83,14 @@ function validate() {
         document.getElementById("tishi").innerHTML="";
      }
 };
+function check() {
+    var msg = "確定要修改嗎？";
+    if (confirm(msg)==true){
+        return true
+    }else{
+        return false
+    }
+ };
 
 function cheE() {
 {% for AD in sad %}
@@ -200,6 +216,23 @@ function addE() {
     display: none;
     text-align:center;
   }
+.infoModalMan{
+  border: none;
+  box-shadow: 0 0px 10px rgb(163, 163, 163);
+  position: fixed;
+  border-radius:10px;
+  top: 20%;
+  width: auto;
+  height: auto;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding: 15px;
+  margin: auto;
+  background-color: #eee;
+  z-index: 20;
+  display: none;
+  text-align:center;
+}
 .infoModalNt{
   border: none;
   box-shadow: 0 0px 10px rgb(163, 163, 163);
@@ -263,7 +296,7 @@ function addE() {
         <div id="Reg" class="infoModalReg">
             <div onclick="closeReg();" class="close">X</div>
             <form method="post" action="/register">
-              <label style="font-size:36px;color:#B22222;font-weight:bold;">帳號維護</label><br/><br/>
+              <label style="font-size:36px;color:#B22222;font-weight:bold;">帳號新增</label><br/><br/>
               <input type="text" style="border-radius:10px;height:35px;width:240px;" Name="Rname" id="Rname" placeholder="姓名" onkeyup="chN()">
               <span id="chname"></span><br/><br/>
               <input type="text" style="border-radius:10px;height:35px;width:240px;" Name="Rmail" id="Rmail" placeholder="信箱" onkeyup="chM()">
@@ -275,6 +308,38 @@ function addE() {
             </form>
         </div>
     </div>
+    <div class="cont">
+        <div id="man" class="infoModalMan">
+            <div onclick="closeMan();" class="close">X</div>
+              <label style="font-size:36px;color:#B22222;font-weight:bold;">帳號維護</label><br/><br/>
+                <table cellpadding="5" style="border:8px #ff9382 groove;text-align:center;width:100%;" >
+                  <thead>
+                      <tr>
+                          <th style="border: 1px solid;width:10%">管理員</th>
+                          <th cellpadding="2" style="border: 1px solid;width:30%;text-align:center;">姓名</th>
+                          <th cellpadding="2" style="border: 1px solid;width:40%;text-align:center;">Mail</th>
+                          <th style="border: 1px solid;width:20%"></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for qad in ad %}
+                    <form method="post" action="/arevise/{{ qad.Name }}">
+                      <tr style="border: 1px solid;">
+                      {% if qad.Permission == "1" %}
+                        <td><input checked type="checkbox" style="width:18px; height:18px;" Name="Acheck" ></td>
+                      {% else %}
+                        <td><input type="checkbox" style="width:18px; height:18px;" Name="Acheck"></td>
+                      {% endif %}
+                        <td style="border: 1px solid;" id="AName" Name="AName" value="{{ qad.Name }}"><label>{{ qad.Name }}</label></td>
+                        <td style="border: 1px solid;" id="AMail"><label>{{ qad.Mail }}</label></td>
+                        <td style="border: 1px solid;"><input type="submit" value="修改" onclick="javascript:return check()"></td>
+                      </tr>
+                  </form>
+                    {% endfor %}
+                  </tbody>
+                </table>    
+        </div>
+    </div>
     <div id="fade" class="black_overlay"></div>
     <div class="container" style="padding-top: 55px;width:80%">
     
@@ -284,25 +349,13 @@ function addE() {
                     <input type="submit" name="cancel" style="height:38px;width:60px;" class="search-submit" value="更新">
                 </form>
             </div>
-            <div style="float:right;">
-                <form action="/Mojor" method="post" style="">
-                    <button type="submit" class="search-submit"
-                    style="height:38px;width:160px;">顯示已勾選的項目</button> 
-                </form>
-            </div>
-            <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="width:110px;" onclick="showReg();" value="帳號維護">
-            </div>
-            <div style="float:right;padding-right:5px">
+            <div style="float:left;margin-left:-170px">
                 <form action="/" method="post">
                     <button type="submit" class="search-submit"
                     style="height:38px;width:90px;">行事曆</button> 
                 </form>
             </div>
-            <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="height:38px;width:120px;" onclick="showAddnt();" value="新增工單項目">
-            </div>
-            <div style="float:right;padding-right:5px">
+            <div style="float:right;">
                 <form action="/search" method="post">
                     <input type="submit" name="cancel" style="height:38px;width:110px;" class="search-submit" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
@@ -310,6 +363,21 @@ function addE() {
                     <button type="submit" class="search-submit"
                     style="height:38px;width:60px;">查詢</button>
                 </form>
+            </div>
+            <div style="float:right;padding-right:5px">
+                <form action="/Mojor" method="post" style="">
+                    <button type="submit" class="search-submit"
+                    style="height:38px;width:160px;">顯示已勾選的項目</button> 
+                </form>
+            </div>
+            <div style="float:right;padding-right:5px">
+                <input type="button" class="search-submit" style="width:110px;" onclick="showReg();" value="帳號新增">
+            </div>
+            <div style="float:right;padding-right:5px">
+                <input type="button" class="search-submit" style="width:110px;" onclick="showMan();" value="帳號維護">
+            </div>
+            <div style="float:right;padding-right:5px">
+                <input type="button" class="search-submit" style="height:38px;width:120px;" onclick="showAddnt();" value="新增工單項目">
             </div>
         </div>    
         <div style="margin-top:10px; " >
@@ -482,5 +550,4 @@ function addE() {
         </div>
     </div>
 </body>
-
 </html>
