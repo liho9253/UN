@@ -218,29 +218,28 @@ def get_page(offset=0, per_page=10, qu=qu):
 @app.route('/',methods=['GET','POST'])
 def index():
     quSR = SR.query.all()
+    arr = User.query.filter_by(Major = "1").all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
     for i in range(total):
         qs = qu[i].StartDate.split("/")
         if(len(qs[1]) < 2):
-           qs[1] = str(0)+qs[1]
+            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
-           qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+            qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
-           qe[1] = str(0)+qe[1]
+            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
-           qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+            qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
     
     sn = session.get('name')
-    qu = User.query.all()
-    total = len(qu)
     
-    return render_template('calendar.html',qu=qu
-                                          ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+    return render_template('calendar.html',total=total
+                                          ,arr=arr
+                                          ,qu=qu
                                           ,quSR=quSR
                                           ,quAD=AD.query.filter_by(Name = sn).first()
                                           ,sn=sn)
@@ -522,7 +521,7 @@ def calendar_ne():
                 NPe = SR(sName, sMVPN, sMail)
                 sr_db.session.add(NPe)
                 sr_db.session.commit()
-            
+    arr=User.query.filter_by(Major = "1").all()
     sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -533,17 +532,51 @@ def calendar_ne():
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
             
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
+                                          ,quSR=quSR
+                                          ,ad=AD.query.all()
+                                          ,sn=sn
+                                          ,quAD=AD.query.filter_by(Name = sn).first())
+
+@app.route('/calendar_ma/<ID>',methods=['GET','POST'])
+def calendar_ma(ID):
+    if(request.method == 'POST'):
+        asel = request.form.get("asel")
+        ama = User.query.filter_by(ID=str(ID)).first()
+        ama.State = asel
+        db.session.commit()
+    arr=User.query.filter_by(Major = "1").all()    
+    sn = session.get('name')
+    quSR = SR.query.all()
+    qu = User.query.filter_by(Major = "1").all()
+    total = len(qu)  
+    for i in range(total):
+        qs = qu[i].StartDate.split("/")
+        if(len(qs[1]) < 2):
+           qs[1] = str(0)+qs[1]
+        if(len(qs[2]) < 8):
+           qs[2] = str(0)+qs[2]
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
+        qe = qu[i].EndDate.split("/")
+        if(len(qe[1]) < 2):
+           qe[1] = str(0)+qe[1]
+        if(len(qe[2]) < 8):
+           qe[2] = str(0)+qe[2]
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
+            
+    return render_template('calendar.html',qu=qu
+                                          ,total=total
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,ad=AD.query.all()
                                           ,sn=sn
@@ -568,7 +601,7 @@ def calendar_ch(ID):
         if(SName == ""):
             sr_db.session.delete(nSR)            
             sr_db.session.commit()
-        
+    arr=User.query.filter_by(Major = "1").all()    
     sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -579,17 +612,17 @@ def calendar_ch(ID):
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
             
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,ad=AD.query.all()
                                           ,sn=sn
@@ -642,7 +675,7 @@ def mailTest(ID):
             except Exception as e:
                 print("Error message: ", e)
         
-    
+    arr=User.query.filter_by(Major = "1").all()
     sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -653,17 +686,17 @@ def mailTest(ID):
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
             
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,ad=AD.query.all()
                                           ,sn=sn
@@ -701,7 +734,7 @@ def mailEnd(ID):
             except Exception as e:
                 print("Error message: ", e)
         
-    
+    arr=User.query.filter_by(Major = "1").all()
     sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -712,17 +745,17 @@ def mailEnd(ID):
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
             
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,ad=AD.query.all()
                                           ,sn=sn
@@ -798,6 +831,7 @@ def login():
             pass                  
         except KeyError:
             pass    
+    arr=User.query.filter_by(Major = "1").all()
     sn = session.get('name')
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
@@ -808,18 +842,18 @@ def login():
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
     
     
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,quAD=AD.query.filter_by(Name = sn).first()
                                           ,sn=sn
@@ -828,6 +862,7 @@ def login():
 @app.route('/logout', methods=['GET','POST'])
 def logout():
     logout_user()
+    arr=User.query.filter_by(Major = "1").all()
     quSR = SR.query.all()
     qu = User.query.filter_by(Major = "1").all()
     total = len(qu)  
@@ -837,19 +872,19 @@ def logout():
            qs[1] = str(0)+qs[1]
         if(len(qs[2]) < 8):
            qs[2] = str(0)+qs[2]
-        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" ","T")
+        qu[i].StartDate = (qs[0]+"-"+qs[1]+"-"+qs[2]).replace(" "," ")
         qe = qu[i].EndDate.split("/")
         if(len(qe[1]) < 2):
            qe[1] = str(0)+qe[1]
         if(len(qe[2]) < 8):
            qe[2] = str(0)+qe[2]
-        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" ","T")
+        qu[i].EndDate = (qe[0]+"-"+qe[1]+"-"+qe[2]).replace(" "," ")
     
     
     sn = session.get('name')
     return render_template('calendar.html',qu=qu
                                           ,total=total
-                                          ,arr=User.query.filter_by(Major = "1").all()
+                                          ,arr=arr
                                           ,quSR=quSR
                                           ,quAD=AD.query.filter_by(Name = sn).first()
                                           ,ad=AD.query.all())
@@ -968,5 +1003,6 @@ for i in range(total):
 if __name__ == "__main__":
     scheduler.init_app(app)
     scheduler.start()
-    app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    # app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 

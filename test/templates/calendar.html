@@ -84,7 +84,7 @@
       },
           eventClick: function(arg) {
           {% for i in range(total) %} 
-          if(arg.event.title == '{{ qu[i].ID }} {{ qu[i].Sub }}'){
+          if(arg.event.title == '#SR {{ qu[i].ID }}: {{ qu[i].Sub }}'){
             w{{ qu[i].ID }}.style.display='block';
             fade.style.display='block';
           }
@@ -97,7 +97,7 @@
       events: [
               {% for i in range(total) %}
                   {
-                  title: '{{ qu[i].ID }} {{ qu[i].Sub }}',
+                  title: '#SR {{ qu[i].ID }}: {{ qu[i].Sub }}',
                   start: '{{ qu[i].StartDate }}',
                   end: '{{ qu[i].EndDate }}',
                     {% if qu[i].State == 'In Coming' %}
@@ -126,6 +126,14 @@ function endsent() {
 
 function sent() {
     var msg = "確定要送出嗎？";
+    if (confirm(msg)==true){
+        return true
+    }else{
+        return false
+        }
+    }
+function chma() {
+    var msg = "確定要修改嗎？";
     if (confirm(msg)==true){
         return true
     }else{
@@ -827,7 +835,7 @@ section {
                 {% for SR in quSR %}
                 <form  action="/calendar_ch/{{ SR.Name }}" method="post">
                   <tr style="border: 1px solid;">
-                  {% if sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
+                  {% if quAD.Permission == "1" %}
                     <td style="border: 1px solid;"><input type="text" value="{{ SR.Name }}" id="CName" Name="CName"></td>
                     {% if SR.MVPN is not none %}
                         <td style="border: 1px solid;"><input type="text" value="{{ SR.MVPN }}" size="5px" id="CMVPN" Name="CMVPN"></td>
@@ -848,7 +856,7 @@ section {
                   </tr>
                 </form>
                 {% endfor %}
-                {% if sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
+                {% if quAD.Permission == "1" %}
                 <form action="calendar_ne" method="post" id="fne">
                   <tr style="border: 1px solid;">
                    <td style="border: 1px solid;"> <input type="text" placeholder="姓名" id="Name" name="Name"></td>
@@ -874,7 +882,7 @@ section {
       <div id="calendar"></div>
       {% for user in arr %}
       {% if current_user.is_authenticated %}
-      {% if sn == user.SpN or sn == "Allen Yang 楊甡" or sn == "Rafter Yang 楊登傑" or sn == "Darrow Chang 張旗達" or sn == "Vivian Chiang 江華珮" %}
+      {% if quAD.Permission == "1" %}
         <div style="justify-content: center; align-items: center; display: flex;" id="ex">
             <div id="w{{ user.ID }}" name="ID"  style="background-color: white;align-items: center;z-index: 12; width: 80%; height: auto;top: 20%;position: fixed;display: none; padding: 20px;border-radius: 10px;"><!--0701-->
                     <div onclick="closeDetailed();" class="close">X</div>
@@ -886,10 +894,27 @@ section {
                         <th colspan="1" style="text-align: center;">SR 狀態</th>
                     </tr>
                     <tr>
-                        <td colspan="1">{{ user.ID }}</td>
+                    <form action="/calendar_ma/{{ user.ID }}" method="post">
+                        <td colspan="1" name="aid" >{{ user.ID }}</td>
                         <td colspan="4">{{ user.StartDate }}</td>
                         <td colspan="4">{{ user.EndDate }}</td>
-                        <td colspan="1">{{ user.State }}</td>
+                        <td colspan="1">
+                            <select id="asel" name="asel">
+                            {% if user.State == 'In Coming' %}
+                                <option selected value="In Coming">In Coming</option>
+                                <option value="On Going">On Going</option>
+                                <option value="Completed">Completed</option>
+                            {% elif user.State == 'On Going' %}
+                                <option value="In Coming">In Coming</option>
+                                <option selected value="On Going">On Going</option>
+                                <option value="Completed">Completed</option>
+                            {% else %}
+                                <option value="In Coming">In Coming</option>
+                                <option value="On Going">On Going</option>
+                                <option selected value="Completed">Completed</option>
+                            {% endif %}
+                        </select>
+                        </td>
                     </tr>
                     <tr style="color:#FFFFFF;background-color: crimson;">
                         <th colspan="6" style="text-align: center;">SR 開單部門</th>
@@ -912,6 +937,10 @@ section {
                         <td colspan="2" id="che{{ user.SpN }}">{{ user.SpN }}</td>
                     </tr>
                 </table>
+                    <div style="left:0; padding-left:2%; padding-top:20.5%;position: absolute; margin-top: -2%;z-index:10;">
+                       <button type="submit" class="btn btn-success" onclick="javascript:return chma()" style="right:10%; border-radius: 30px;" >修改SR狀態</button>
+                      </div>
+                </form>
                 <form  action="/mailTest/{{ user.ID }}" method="post">
                    <div class="row" style="position: relative; margin-top:30px;">
                        <div class="col-12 col-md-7">
@@ -963,14 +992,14 @@ section {
                             </div>
                         </div>
                         <br><br>
-                            <div style="right:0; padding-right:2%; margin-bottom:0;position: absolute; margin-top: -2%;">
+                            <div style="right:0; padding-right:2%; margin-bottom:5;position: absolute; margin-top: -3%;">
                                <button type="button" class="btn btn-success" onclick="showE()" style="right:10%; border-radius: 30px;" id="endout{{ user.ID }}" >發送SR結案訊息</button>
                                <button type="button" class="btn btn-success" onclick="showR()" style="right:10%; border-radius: 30px;" id="chose{{ user.ID }}">選擇收件者</button>
                                <button type="submit" class="btn btn-success" style="right:3%; border-radius: 30px;" onclick="javascript:return sent()" id="out{{ user.ID }}">送出</button>
                            </div>
+                         </form>
                        </div>
                    </div>
-                 </form>
                    <div style="justify-content: center; align-items: center; display: flex;" >
                     <div id="n{{ user.ID }}" class="infoModalE">
                         <label style="font-size:36px;color:#B22222;font-weight:bold;">SR結案訊息</label>
