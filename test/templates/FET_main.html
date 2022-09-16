@@ -239,7 +239,7 @@ function addE() {
   position: fixed;
   border-radius:10px;
   top: 20%;
-  width: 1100px;
+  width: auto;
   height: auto;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -341,52 +341,51 @@ function addE() {
         </div>
     </div>
     <div id="fade" class="black_overlay"></div>
-    <div class="container" style="padding-top: 55px;width:80%">
-    
-        <div style="float:right; margin-top:-40px; width:80%" >
-            <div style="float:left;margin-left:-11%;">
-                <form action="/update" style="position:absolute;margin-left:-130px" method="post">
-                    <input type="submit" name="cancel" style="height:38px;width:60px;" class="search-submit" value="更新">
+    <div class="container" style="padding-top: 55px;">
+        <div style="float:right; margin-top:-40px; width:1100px;" >
+            <div style="float:left;padding-right:5px">
+                <form action="/update" method="post">
+                    <input type="submit" name="cancel" style="height:38px;width:auto;" class="search-submit" value="更新">
                 </form>
             </div>
-            <div style="float:left;margin-left:-170px">
+            <div style="float:left;">
                 <form action="/" method="post">
                     <button type="submit" class="search-submit"
-                    style="height:38px;width:90px;">行事曆</button> 
+                    style="height:38px;width:auto;">行事曆</button> 
                 </form>
             </div>
             <div style="float:right;">
                 <form action="/search" method="post">
-                    <input type="submit" name="cancel" style="height:38px;width:110px;" class="search-submit" value="取消搜尋">
+                    <input type="submit" name="cancel" style="height:38px;width:auto;" class="search-submit" value="取消搜尋">
                     <input type="txt" cols="40" placeholder="  查詢..."  
                     name="pos" style="height:40px;width:200px;border-radius:10px;">
                     <button type="submit" class="search-submit"
-                    style="height:38px;width:60px;">查詢</button>
+                    style="height:38px;width:auto;">查詢</button>
                 </form>
             </div>
             <div style="float:right;padding-right:5px">
                 <form action="/Mojor" method="post" style="">
                     <button type="submit" class="search-submit"
-                    style="height:38px;width:160px;">顯示已勾選的項目</button> 
+                    style="height:38px;width:auto;">顯示已勾選的項目</button> 
                 </form>
             </div>
             <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="width:110px;" onclick="showReg();" value="帳號新增">
+                <input type="button" class="search-submit" style="width:auto;" onclick="showReg();" value="帳號新增">
             </div>
             <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="width:110px;" onclick="showMan();" value="帳號維護">
+                <input type="button" class="search-submit" style="width:auto;" onclick="showMan();" value="帳號維護">
             </div>
             <div style="float:right;padding-right:5px">
-                <input type="button" class="search-submit" style="height:38px;width:120px;" onclick="showAddnt();" value="新增工單項目">
+                <input type="button" class="search-submit" style="height:38px;width:auto;" onclick="showAddnt();" value="新增工單項目">
             </div>
         </div>    
-        <div style="margin-top:10px; " >
+        <div style="margin-top:10px;">
             <div class="cont" style="text-align:center;">
                 <div id="nt" class="infoModalNt">
                     <div onclick="closeAddnt();" class="close">X</div>
                     <form method="post" action="/addnt">
                     <label style="font-size:36px;color:#B22222;font-weight:bold;">新增工單項目</label>
-                      <table style="width: 1100px;">
+                      <table style="width:100%;">
                         <thead>
                           <tr style="text-align: center;color:#FFFFFF;background-color: crimson; height:42px;">
                             <th style="text-align: center;" colspan="1">SR 編號</th>

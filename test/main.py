@@ -382,6 +382,10 @@ def update():
         for row in data_excel:
             row['Major'] = 0
             row['State'] = "In Coming"
+            ssr = row['SR開單者'].split(",")
+            row['SR開單者'] = ssr[0]+ssr[1]
+            ssr = row['收單者'].split(",")
+            row['收單者'] = ssr[0]+ssr[1]
             inf = User( row['SR編號'],
                         row['開始日期'],
                         row['結束日期'],
@@ -394,7 +398,7 @@ def update():
                         row['Major'],
                         row['State'])
             if (User.query.filter_by(ID=str(row['SR編號'])).all() != None):
-                inf_db = (User.query.filter_by(ID=str(row['SR編號'])).all())
+                inf_db = User.query.filter_by(ID=str(row['SR編號'])).all()
                 try:
                     if inf_db[0].ID != row['SR編號']:
                         inf_db[0].ID = row['SR編號']
@@ -420,12 +424,13 @@ def update():
                         inf_db[0].State = inf_db[0].State
                     db.session.commit()
                 except IndexError:
+                    
                     db.session.add(inf)
                     db.session.commit()
             else:
                 db.session.add(inf)
                 db.session.commit()
-            
+                
     qu = User.query.order_by("ID")
     
     def get_page(offset=0, per_page=10, qu=qu):
