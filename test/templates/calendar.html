@@ -446,9 +446,10 @@ function goPage(currentPage, pageSize) {
     border-radius:10px;
     width: 60px;
     height: 30px;
-    position: absolute;   
+    position: relative;       
     padding:auto;
-    bottom: 3%;
+    float: right;
+    top: 5%;
     right:20px;
     font-size: 20px;
     cursor: pointer;
@@ -705,8 +706,8 @@ section {
   justify-content: center;
   color: #000;
   padding-top: 10px;
-  position: absolute;      
-  top: 91%;
+  position: relative;      
+  top: 5%;
   left: 50%;
   transform: translate(-50%,-50%);
 }
@@ -866,7 +867,7 @@ section {
                 {% endif %}
               </tbody>
             </table>  
-            <div onclick="closeP();" class="closeA" style="z-index: 11;">確定</div>
+            <div onclick="closeP();" class="closeA" style="z-index: 11;">離開</div>
             <div id="pageModule"></div>
           </div>
         </div>

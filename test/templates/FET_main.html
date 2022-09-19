@@ -410,11 +410,23 @@ function addE() {
                               <td colspan="3.5"><input type="datetime-local" Name="srsta" id="srsta"></td>
                               <td colspan="3.5"><input type="datetime-local" Name="sren" id="sren"></td>
                               <td colspan="3">
+                              {% for user in qu %}
                                 <select style="width:55%" Name="srst" id="srst">
-                                    <option value="In Coming">In Coming</option>
-                                    <option value="On Going">On Going</option>
-                                    <option value="Completed">Completed</option>
+                                    {% if user.State == 'In Coming' %}
+                                        <option selected value="In Coming">In Coming</option>
+                                        <option value="On Going">On Going</option>
+                                        <option value="Completed">Completed</option>
+                                    {% elif user.State == 'On Going' %}
+                                        <option value="In Coming">In Coming</option>
+                                        <option selected value="On Going">On Going</option>
+                                        <option value="Completed">Completed</option>
+                                    {% else %}
+                                        <option value="In Coming">In Coming</option>
+                                        <option value="On Going">On Going</option>
+                                        <option selected value="Completed">Completed</option>
+                                    {% endif %}
                                 </select>
+                                {% endfor %}
                               </td>
                             </tr>
                             <tr style="text-align: center;color:#FFFFFF;background-color: crimson; height:42px;">
