@@ -11,7 +11,6 @@ height = 960
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-# 計算畫面面積
 area = width * height
 
 # 初始化平均影像
