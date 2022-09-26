@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 
 cap = cv2.VideoCapture(0)
-mpHands = mp.solutions.hands
+mpHands = mp.solutions.hands #手部模型
 hands = mpHands.Hands()
 mpDraw = mp.solutions.drawing_utils
 
