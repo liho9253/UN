@@ -47,7 +47,6 @@ key = cv2.waitKey(0)
 if key==27: #按esc鍵時，關閉所有視窗
     print(key)
     cv2.destroyAllWindows()
-    
 contours, hierarchy = cv2.findContours(th, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)       #得到輪廓
 
 cnt = contours[0]               #取出輪廓
