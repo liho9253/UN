@@ -11,6 +11,8 @@ Ghandimg = cv2.GaussianBlur(handimg, (15, 15), 0)
 canny = cv2.Canny(handimg, 150, 100)
 adimg = cv2.adaptiveThreshold(Ghandimg, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 13, 2)
 
+edged = cv2.dilate(adimg, None, iterations=1)
+edged = cv2.erode(edged, None, iterations=1)
 # img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY);
 # img_gray = cv2.medianBlur(img_gray, 5)
 # output = cv2.adaptiveThreshold(img_gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)

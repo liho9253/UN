@@ -23,8 +23,8 @@ def PointInvert(img):
 
 
 
-img=cv2.imread(".\img\h7.jpg",0)                #載入彩色圖
-img1=cv2.imread(".\img\h7.jpg",1)               #載入灰度圖
+img=cv2.imread(".\img\h8.jpg",0)                #載入彩色圖
+img1=cv2.imread(".\img\h8.jpg",1)               #載入灰度圖
 
 img = cv2.resize(img, (550, 730))          #載入彩色圖
 img1=cv2.resize(img1, (550, 730))
@@ -40,6 +40,8 @@ kernel = np.ones((5, 5), np.uint8)
 edges = cv2.Canny(recimg, 30, 70) 
 th = cv2.adaptiveThreshold(recimg, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
 th = cv.morphologyEx(th, cv.MORPH_OPEN, kernel)
+edged = cv2.dilate(th, None, iterations=1)
+th = cv2.erode(edged, None, iterations=1)
 res=PointInvert(th)                           #顏色反轉
 #顯示圖片
 cv2.imshow('original', res)                       #顯示二值化後的圖，主題為白色，背景為黑色 更加容易找出輪廓
