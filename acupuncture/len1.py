@@ -23,8 +23,8 @@ def PointInvert(img):
 
 
 
-img=cv2.imread(".\img\h8.jpg",0)                #載入彩色圖
-img1=cv2.imread(".\img\h8.jpg",1)               #載入灰度圖
+img=cv2.imread(".\img\h9.jpg",0)                #載入彩色圖
+img1=cv2.imread(".\img\h9.jpg",1)               #載入灰度圖
 
 img = cv2.resize(img, (550, 730))          #載入彩色圖
 img1=cv2.resize(img1, (550, 730))

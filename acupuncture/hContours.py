@@ -1,7 +1,7 @@
 import cv2
 import mediapipe
 
-handimg = cv2.imread(".\img\h7.jpg")
+handimg = cv2.imread(".\img\h9.jpg")
 handimg = cv2.resize(handimg, (550, 730))
 imgC = handimg.copy()
 
