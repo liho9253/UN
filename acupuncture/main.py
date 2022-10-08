@@ -13,5 +13,5 @@ contours, hierarchy = cv.findContours(
 # 繪製輪廓
 cv.drawContours(src, contours, 45, (0, 0, 255), 2)
 
-cv.imshow('title', src)
+cv.imshow('test', src)
 cv.waitKey(0)
