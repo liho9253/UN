@@ -10,20 +10,17 @@ Canny = cv2.Canny(Gauss, 150, 200)
 # a, b = cv2.findContours(Canny.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 
-# imgContour = img.copy()
+imgContour = img.copy()
 
-# # cv2.drawContours(imgContour, b, -1, (0, 255, 0), 2)
+# cv2.drawContours(imgContour, b, -1, (0, 255, 0), 2)
 
-# # displayIMG(coins, Coins)
+# displayIMG(coins, Coins)
 
-# a, b=cv2.findContours(Canny, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
+a, b=cv2.findContours(Canny, cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 
-# for cnt in a:
-#     cv2.drawContours(imgContour, cnt, -1, (255, 0, 0), 4)
-#     print(cnt)
-
-
-
+for cnt in a:
+    cv2.drawContours(imgContour, cnt, -1, (255, 0, 0), 4)
+    print(cnt)
 
 cv2.imshow('imgContour', Canny)
 # cv2.imshow('img', image)
