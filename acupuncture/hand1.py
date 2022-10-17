@@ -43,7 +43,7 @@ while True:
                         
                 # len67 = ((xp6-xp7)**2+(yp6-yp7)**2)**0.5
                 len67 = ((xp6-xp7)**2+(yp6-yp7)**2+(zp6-zp7)**2)**0.5
-                print(len67)
+                print(int(len67))
                 
         cv2.imshow("img", img)
     

@@ -1,8 +1,6 @@
 import cv2 
 
-
-
-img = cv2.imread(".\img\h16.jpg")
+img = cv2.imread(".\img\h20.jpg")
 h, w = img.shape[0], img.shape[1]
 neww = 550
 newh = 730
@@ -34,12 +32,14 @@ max_area = 0
 for cnt in a:
     x, y, w, h =cv2.boundingRect(cnt)
     rec = cv2.rectangle(opened,(x, y), (x + w, y + h), (255, 255, 0), 2)
-    coinlen = w / 96 * 25.4
+    
+coinlen = w / 96 * 25.4
     
 #十塊錢直徑為2.6公分
 
 
 cv2.imshow('imgContour', rec)
 print(coinlen)
+print(w)
 cv2.waitKey(0)
 

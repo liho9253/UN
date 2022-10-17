@@ -26,7 +26,7 @@ def plot_landmark(img_base, facial_area_name, facial_area_obj):
     
     print(facial_area_name, ":")
     
-    img = img_base.copy()
+    # img = img_base.copy()
     
     for source_idx, target_idx in facial_area_obj:
         source = landmarks.landmark[source_idx]
