@@ -73,7 +73,6 @@ with mp_hands.Hands(
           len67 = ((xp6-xp7)**2+(yp6-yp7)**2+(zp6-zp7)**2)**0.5
           inc = str(round(len67/prop, 2))
           print("1吋 = " + inc)
-          
           mp_drawing.draw_landmarks(
               annotated_image,
               hand_landmarks,
