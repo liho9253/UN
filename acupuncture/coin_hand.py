@@ -4,7 +4,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-IMAGE_FILES = [".\img\h27.jpg"]
+IMAGE_FILES = [".\img\h20.jpg"]
 with mp_hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
@@ -55,6 +55,7 @@ with mp_hands.Hands(
         
         if not results.multi_hand_landmarks:
           continue
+      
         annotated_image = image.copy()
         for hand_landmarks in results.multi_hand_landmarks:
           for i, lm in enumerate(hand_landmarks.landmark):
