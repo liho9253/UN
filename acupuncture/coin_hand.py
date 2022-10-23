@@ -4,7 +4,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-IMAGE_FILES = [".\img\h25.jpg"]
+IMAGE_FILES = [".\img\h29.jpg"]
 with mp_hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
