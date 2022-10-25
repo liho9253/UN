@@ -4,7 +4,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-IMAGE_FILES = [".\img\h20.jpg"]
+IMAGE_FILES = [".\img\h15.jpg"]
 with mp_hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
@@ -38,7 +38,8 @@ with mp_hands.Hands(
         thresh = cv2.erode(thresh, kernel)
         closed = cv2.morphologyEx(thresh,cv2.MORPH_CLOSE, kernel, iterations=5)
         opened = cv2.morphologyEx(closed,cv2.MORPH_OPEN, kernel, iterations=5)
-        
+
+
         max_area = 0
         for cnt in a:
             x, y, w, h = cv2.boundingRect(cnt)
@@ -46,11 +47,10 @@ with mp_hands.Hands(
             
         # coinlen = w / 96 * 25.4
         cv2.imshow('imgContour', rec)
-        print("硬幣: " + str(round((w/2.6) / (w/2.6) *25, 1)))
-        prop = (w/2.6)
-        
-        # (w/2.6) : len67/(w/2.6) = 25 : X
-        # X = len67/(w/2.6) *25 / (w/2.6)
+        print("硬幣: " + str(w))
+        prop = w 
+        # w : 2.6 = len67 : X 
+        # X = len67 * 2.6 / w
         
         
         
@@ -77,8 +77,9 @@ with mp_hands.Hands(
                       zp7 =  int(lm.z)
                       
           len67 = ((xp6-xp7)**2+(yp6-yp7)**2+(zp6-zp7)**2)**0.5
-          inc = str(round(len67/prop/ (w/2.6) * 25, 2))
-          print("1吋 = " + inc)
+          inc = str(round(len67 * 2.6 /prop, 2))
+          print("1吋 = " + str(len67) + "px")
+          print("1吋 = " + inc + "cm")
           mp_drawing.draw_landmarks(
               annotated_image,
               hand_landmarks,
