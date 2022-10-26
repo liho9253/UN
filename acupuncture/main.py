@@ -28,6 +28,7 @@ if(path_txt):
         inf = Acup( row['merd_id'],
                     row['acup_id'],
                     row['acup_name'],
+                    row['acup_enname'],
                     row['acup_alias'],
                     row['acup_take'],
                     row['acpu_acupuncture'],
@@ -42,6 +43,8 @@ if(path_txt):
                     inf_db[0].acup_id = row['acup_id']
                 if inf_db[0].acup_name != row['acup_name']:
                     inf_db[0].acup_name = row['acup_name']
+                if inf_db[0].acup_enname != row['acup_enname']:
+                    inf_db[0].acup_enname = row['acup_enname']
                 if inf_db[0].acup_alias != row['acup_alias']:
                     inf_db[0].acup_alias = row['acup_alias']
                 if inf_db[0].acup_take != row['acup_take']:
