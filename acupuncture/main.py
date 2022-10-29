@@ -18,7 +18,7 @@ app.config['SECRET_KEY'] = os.urandom(24)
 
 adb.init_app(app)
 
-path_txt = os.path.isfile('acupall.csv')
+path_txt = os.path.isfile('acupalls.csv')
 if(path_txt):
     df = pd.read_csv('acupall.csv', error_bad_lines=False)
     df = df.drop_duplicates(subset=["acup_id"], keep="last")
@@ -66,7 +66,11 @@ if(path_txt):
 
 @app.route('/',methods=['GET','POST'])
 def index():
-    return render_template('BL01.html')
+    
+    
+    
+    
+    return render_template('monitor.html')
 
 
 if __name__ == "__main__":
