@@ -70,7 +70,7 @@ def index():
     
     
     
-    return render_template('monitor.html')
+    return render_template('BL01.html')
 
 
 if __name__ == "__main__":
