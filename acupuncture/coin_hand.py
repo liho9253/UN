@@ -4,7 +4,7 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
-IMAGE_FILES = [".\img\h15.jpg"]
+IMAGE_FILES = [".\img\h37.jpg"]
 with mp_hands.Hands(
     static_image_mode=True,
     max_num_hands=2,
@@ -26,7 +26,7 @@ with mp_hands.Hands(
             coinimage = img[250:490, 0:190]
         else:
             coinimage = img[120:300, 0:190]
-            
+        coinimage = img[550:750, 190:500]
         coinimage = cv2.cvtColor(coinimage, cv2.COLOR_BGR2GRAY)
         Gauss = cv2.GaussianBlur(coinimage, (3, 3), 0)
         Canny = cv2.Canny(Gauss, 10, 100)
@@ -39,6 +39,7 @@ with mp_hands.Hands(
         closed = cv2.morphologyEx(thresh,cv2.MORPH_CLOSE, kernel, iterations=5)
         opened = cv2.morphologyEx(closed,cv2.MORPH_OPEN, kernel, iterations=5)
 
+        cv2.imshow('2',Canny)
 
         max_area = 0
         for cnt in a:
@@ -87,11 +88,13 @@ with mp_hands.Hands(
               mp_drawing_styles.get_default_hand_landmarks_style(),
               mp_drawing_styles.get_default_hand_connections_style())
         
-        print('Handedness:', results.multi_handedness)
-        if not results.multi_hand_world_landmarks:
-          continue
-        for hand_world_landmarks in results.multi_hand_world_landmarks:
-          mp_drawing.plot_landmarks(
-            hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)
+        # print('Handedness:', results.multi_handedness)
+        # if not results.multi_hand_world_landmarks:
+        #   continue
+        # for hand_world_landmarks in results.multi_hand_world_landmarks:
+        #   mp_drawing.plot_landmarks(
+        #     hand_world_landmarks, mp_hands.HAND_CONNECTIONS, azimuth=5)
   
         
+cv2.waitKey(0)
+cv2.destroyAllWindows()
